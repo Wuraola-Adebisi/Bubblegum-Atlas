@@ -19,7 +19,7 @@ export default function SceneStrip() {
       <ul className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         {sceneKeyframes.map((k) => (
           <li key={k.name} className="rounded-panel bg-paper p-3">
-            <div className="flex h-12 overflow-hidden rounded-pill border-2 border-water">
+            <div className="flex h-12 overflow-hidden rounded-pill border-hair border-water-deep">
               {[k.sky, k.water, k.land, k.park].map((c, i) => (
                 <span key={i} className="h-full flex-1" style={{ backgroundColor: c }} />
               ))}
@@ -34,12 +34,18 @@ export default function SceneStrip() {
         <svg viewBox="0 0 640 340" role="img" aria-label={`A small island scene at ${clock}, ${s.name.toLowerCase()}`} className="block h-auto w-full" style={{ background: 'var(--scene-sky)' }}>
           <circle cx={sunX} cy={sunY} r={30} fill="var(--color-glow)" opacity={sunOpacity} />
           <rect x={0} y={200} width={640} height={140} fill="var(--scene-water)" />
-          <path d={landD} fill="var(--scene-land)" stroke="var(--color-paper)" strokeWidth={5} strokeLinejoin="round" />
-          <path d="M120 215 C130 185 190 180 215 200 C235 222 190 245 150 240 C130 237 118 228 120 215 Z" fill="var(--scene-park)" />
-          <g className="sticker-edge">
+          <path d={landD} fill="var(--scene-land)" stroke="var(--color-accent)" strokeWidth={1.5} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <path
+            d="M120 215 C130 185 190 180 215 200 C235 222 190 245 150 240 C130 237 118 228 120 215 Z"
+            fill="var(--scene-park)"
+            stroke="var(--color-park-deep)"
+            strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
+          />
+          <g className="line-art">
             <path d="M300 210 L350 150 L400 210 Z" fill="var(--color-flag)" />
-            <rect x={284} y={170} width={4} height={46} rx={2} fill="var(--color-ink)" />
-            <rect x={412} y={170} width={4} height={46} rx={2} fill="var(--color-ink)" />
+            <rect x={284} y={170} width={4} height={46} rx={2} fill="var(--color-paper)" />
+            <rect x={412} y={170} width={4} height={46} rx={2} fill="var(--color-paper)" />
           </g>
           <g fill="var(--color-glow)" style={{ opacity: 'var(--scene-glow)' }}>
             {bulbs.map((b) => (
@@ -47,17 +53,17 @@ export default function SceneStrip() {
             ))}
             <rect x={160} y={196} width={10} height={10} rx={2} />
           </g>
-          <g fill="none" stroke="var(--color-paper)" strokeWidth={3} strokeLinecap="round">
-            <path d="M40 270 q12 -10 24 0 t24 0" />
-            <path d="M520 300 q12 -10 24 0 t24 0" />
+          <g fill="none" stroke="var(--color-water-deep)" strokeWidth={1.5} strokeLinecap="round" className="pointer-events-none">
+            <path d="M40 270 q12 -10 24 0 t24 0" vectorEffect="non-scaling-stroke" />
+            <path d="M520 300 q12 -10 24 0 t24 0" vectorEffect="non-scaling-stroke" />
           </g>
         </svg>
       </div>
 
-      <div className="mt-8 rounded-panel bg-paper p-6 sm:p-8">
+      <div className="mt-8 rounded-panel border-hair border-dashed border-water-deep bg-paper p-6 sm:p-8">
         <label htmlFor="scrubber" className="flex flex-wrap items-baseline justify-between gap-2">
           <span className="font-display text-h3 font-extrabold">Time of day</span>
-          <span className="font-hand text-label font-semibold">
+          <span className="font-hand text-label font-semibold tabular-nums">
             {clock}, {s.name.toLowerCase()}
           </span>
         </label>

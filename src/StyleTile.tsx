@@ -26,10 +26,10 @@ export default function StyleTile() {
         Skip to content
       </a>
       <nav aria-label="Style tile sections" className="mx-auto w-fit max-w-full px-4 pt-4 sm:sticky sm:top-4 sm:z-10 sm:pt-0">
-        <ul className="flex flex-wrap justify-center gap-1 rounded-panel border-2 border-water bg-paper p-2 sm:rounded-pill">
+        <ul className="flex flex-wrap justify-center gap-1 rounded-panel border-hair border-water-deep bg-paper p-2 sm:rounded-pill">
           {links.map((l) => (
             <li key={l.id}>
-              <a href={`#${l.id}`} className="block rounded-pill px-4 py-2 text-small font-medium transition duration-micro ease-standard hover:bg-land">
+              <a href={`#${l.id}`} className="block rounded-pill px-4 py-2 text-small font-medium transition duration-micro ease-standard hover:bg-land-wash">
                 {l.label}
               </a>
             </li>
@@ -39,7 +39,7 @@ export default function StyleTile() {
 
       <main id="main">
         <Hero />
-        <Section id="palette" title="Color" note="Pink is the ground and the land, never a small accent. White does the structural work: roads, label cards and sticker outlines. Hex values are read live from the CSS variables.">
+        <Section id="palette" title="Color" note="Pink is the ground and the land, never a small accent. White fills roads, label cards and panels, and is never used as a heavy border. Hex values are read live from the CSS variables.">
           <Palette />
         </Section>
         <Section id="contrast" title="Contrast" note="Every text and background pair is measured from the live token values. Text never sits directly on bright pink or on strong blue in white.">
@@ -51,7 +51,7 @@ export default function StyleTile() {
         <Section id="lines" title="Lines" note="Roads, leader lines, routes and contours. The route draws on once when the page loads, and the replay button runs it again.">
           <LineSystem />
         </Section>
-        <Section id="shape" title="Shape, depth and controls" note="Radius is a scale, not one value. Shadows are off by default. The only shadow is a flat offset under buttons.">
+        <Section id="shape" title="Shape, depth and controls" note="Radius is a scale, not one value. Lines are 1.5px hairlines. Shadows are off by default. The only shadow is a flat 3px offset under primary buttons.">
           <ShapesControls />
         </Section>
         <Section id="scene" title="Scene shift" note="The signature interaction in miniature. One value drives the sky, water, land and park colors, and the lights switch on toward dusk.">

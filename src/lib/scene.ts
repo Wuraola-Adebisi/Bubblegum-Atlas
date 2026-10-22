@@ -14,10 +14,10 @@ export interface SceneKeyframe {
 
 /** Starter keyframes. In the real build these live in each event config. */
 export const sceneKeyframes: SceneKeyframe[] = [
-  { t: 0, name: 'Morning', moment: 'Getting ready', sky: '#FFE9EF', water: '#CBE8F2', land: '#FFC9DB', park: '#B6E4CD', glow: 0 },
-  { t: 0.33, name: 'Midday', moment: 'Guests arrive by ferry', sky: '#F4FBFF', water: '#BFE4F0', land: '#FFC9DB', park: '#A8DEC3', glow: 0 },
-  { t: 0.66, name: 'Golden hour', moment: 'Cocktail hour on the lawn', sky: '#FFE8CC', water: '#B8C9E6', land: '#FFB9C9', park: '#A5D4B4', glow: 0.3 },
-  { t: 1, name: 'Dusk', moment: 'First dance, lights on', sky: '#D9D3F3', water: '#6F8FDB', land: '#F7A8C8', park: '#7FBF9F', glow: 1 },
+  { t: 0, name: 'Morning', moment: 'Getting ready', sky: '#FFF1F5', water: '#DDF0F6', land: '#FFE3EC', park: '#CDEBDC', glow: 0 },
+  { t: 0.33, name: 'Midday', moment: 'Guests arrive by ferry', sky: '#F8FCFF', water: '#D3ECF5', land: '#FFE3EC', park: '#BFE6D2', glow: 0 },
+  { t: 0.66, name: 'Golden hour', moment: 'Cocktail hour on the lawn', sky: '#FFF0DD', water: '#CBD8EE', land: '#FFD6E1', park: '#BCDCC6', glow: 0.3 },
+  { t: 1, name: 'Dusk', moment: 'First dance, lights on', sky: '#E6E0F7', water: '#C9D2F0', land: '#FBD0E1', park: '#A9D6BE', glow: 1 },
 ]
 
 export interface SceneState {

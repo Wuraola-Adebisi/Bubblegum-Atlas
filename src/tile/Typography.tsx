@@ -26,7 +26,7 @@ export default function Typography() {
         </div>
       </div>
 
-      <div className="mt-12 divide-y-2 divide-ground rounded-panel bg-paper px-6 sm:px-10">
+      <div className="mt-12 divide-y divide-land-wash rounded-panel bg-paper px-6 sm:px-10">
         {scale.map((s) => (
           <div key={s.name} className="py-8">
             <p className="font-hand text-label">

@@ -10,7 +10,7 @@ function Swatch({ token }: { token: string }) {
   const hex = hexOf(token)
   return (
     <li className="rounded-panel bg-paper p-3">
-      <div className="h-20 rounded-pill border-2 border-water" style={{ backgroundColor: `var(--color-${token})` }} />
+      <div className="h-20 rounded-pill border-hair border-water-deep" style={{ backgroundColor: `var(--color-${token})` }} />
       <p className="mt-3 text-small font-medium">{token}</p>
       <p className="text-small">{hex}</p>
     </li>
@@ -41,10 +41,10 @@ export default function Palette() {
           </thead>
           <tbody>
             {semantic.map((s) => (
-              <tr key={s.name} className="border-t-2 border-ground">
+              <tr key={s.name} className="border-t border-land-wash">
                 <td className="p-3">
                   <span
-                    className="inline-block h-8 w-8 rounded-pill border-2 border-water align-middle"
+                    className="inline-block h-8 w-8 rounded-pill border-hair border-water-deep align-middle"
                     style={{ backgroundColor: `var(--color-${s.name})` }}
                     aria-hidden="true"
                   />

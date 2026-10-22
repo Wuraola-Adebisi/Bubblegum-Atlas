@@ -29,10 +29,10 @@ export default function Contrast() {
             const ratio = contrastRatio(fg, bg)
             const v = verdict(ratio, p.intent)
             return (
-              <tr key={`${p.fg}-${p.bg}`} className="border-t-2 border-ground">
+              <tr key={`${p.fg}-${p.bg}`} className="border-t border-land-wash">
                 <td className="p-3">
                   <span
-                    className="inline-block rounded-pill border-2 border-water px-4 py-1 font-display font-extrabold"
+                    className="inline-block rounded-pill border-hair border-water-deep px-4 py-1 font-display font-extrabold"
                     style={{ color: `var(--color-${p.fg})`, backgroundColor: `var(--color-${p.bg})` }}
                   >
                     Aa

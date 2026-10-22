@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-21. Stage: 6 (illustration test sheet drawn, awaiting approval). Tokens built and verified on a style tile.
+Last updated: 2026-10-22. Stage: 6 (light style v2 of the test sheet and style tile built, awaiting approval). Tokens built and verified on a style tile.
 
 ---
 
@@ -611,3 +611,76 @@ Open questions: Whether the estate house reads as a lakeside wedding venue or as
 Files created or changed: `src/assets/illustrations/wedding/landmark-ferry.svg`, `landmark-estate.svg`, `src/assets/illustrations/shared/prop-tree-round.svg`, `person-guest-01.svg`, `person-guest-02.svg`, `public/illustration-sheet.html`, `tools/illustrations/gen.py`
 Parked issues: none.
 Next step: Owner reviews the test sheet and approves or redirects the shape language. Then the remaining wedding landmarks and the map engine with a mock config (step 3).
+
+---
+
+## 21. Lightness pass (2026-10-22)
+
+Applies to the whole system: style tile, tokens, illustration kit, scene keyframes and controls. Where this section disagrees with section 3 (signature move 4), 5.1 to 5.5, 7 (outline and shading), 16 or 19, this section wins.
+
+### 21.1 Why
+Feedback: the style tile look and the illustration direction are approved, but blobs, islands, the ground and buttons feel thick. The cause is the heavy white border (about 10 px around the land, 6 to 10 px roads, 4 px sticker edge) plus solid pink masses and a 6 px offset shadow. Target: light, airy, cotton-candy, with light line art where possible. Four storefront references were added (monoline cafe line art, Kismet cafe, Val Mont Lac pop-up poster, Kiss coffee shop). Principles taken: thin even lines, pale tint fills, one solid accent, one line color per piece, empty space. Kiss contributes warmth only.
+
+### 21.2 Decisions
+Decided: the pass covers the whole style tile and the illustration kit. Everything below is Proposed until the owner approves the v2 renders.
+
+### 21.3 Rules
+- White is a fill, never a border. No white stroke is wider than 3 px.
+- Illustration outline: 1.5 px hairline (`vector-effect: non-scaling-stroke`, so it stays 1.5 px at every scale), one line color per piece (berry by default, navy for the ferry, green for the tree). Minimum 1 px on mobile.
+- Fill: one pale tint per part. Berry parts use land pink-200 mixed 55 percent with white, other parts use the base mixed 32 percent with white. Skin and hair stay full strength.
+- Shading: none. Optional short 1 px hatch lines (generator `hatch=True`).
+- One solid accent per piece (funnel and pennant on the ferry, roof, door and flag on the estate).
+- Sticker silhouette dropped. The `sticker-edge` utility is kept only for the retired comparison on the style tile.
+- Land and islands: pale wash (pink-100) with a 1.5 px berry coastline and 1 px contour rings. Water: blue-50 wash. Parks: green-100 with a 1 px green hairline.
+- Roads: 3 px white over a 5 px pink-200 casing. Routes: dashed 2.5 px, pattern 1 and 9. Waves: 1.5 px water-deep. Leader lines unchanged.
+- Buttons: primary is a paper fill with a 1.5 px berry border, berry text, a flat 3 px pink-200 offset, a 1 px lift and berry fill on hover, a 2 px drop on press. Secondary has a border only. Ghost is text with an underline on hover. Disabled uses a dashed water-deep border.
+- Labels: pills are paper with a 1.5 px berry border and ink text. Solid berry flags with white text are the accent label.
+- Pins: 24 px visible, 44 px hit area (shown dashed on the tile). White pin ring 2 px.
+- Scrubber: 44 px touch target, 4 px water-deep track, 28 px paper thumb with a 2 px berry border.
+
+### 21.4 New tokens
+Primitives: `--color-blue-50` #DFF2F8, `--color-blue-100` #D1DBF4, `--color-green-100` #CFEDDE. Semantic: `--color-land-wash` (pink-100), `--color-water-wash` (blue-50), `--color-water-deep-wash` (blue-100), `--color-park-wash` (green-100). Utilities: `border-hair` (1.5 px), `.line-art` group class. Press shadow: 3 px and 1 px pink-200. `--color-land` (pink-200), `--color-water` and `--color-park` remain for small fills.
+
+### 21.5 Scene keyframes (lighter)
+| Keyframe | t | sky | water | land | park | glow |
+|---|---|---|---|---|---|---|
+| morning | 0 | #FFF1F5 | #DDF0F6 | #FFE3EC | #CDEBDC | 0 |
+| midday | 0.33 | #F8FCFF | #D3ECF5 | #FFE3EC | #BFE6D2 | 0 |
+| golden | 0.66 | #FFF0DD | #CBD8EE | #FFD6E1 | #BCDCC6 | 0.3 |
+| dusk | 1 | #E6E0F7 | #C9D2F0 | #FBD0E1 | #A9D6BE | 1 |
+
+### 21.6 Contrast (computed from the token hex values, 2026-10-22)
+| Pair | Ratio | Use |
+|---|---|---|
+| ink on land-wash | 10.40:1 | any text |
+| ink on water-wash | 10.85:1 | any text |
+| ink on park-wash | 10.03:1 | any text |
+| ink on water-deep-wash | 9.03:1 | any text |
+| accent on land-wash | 5.01:1 | small text OK |
+| accent on water-wash | 5.23:1 | small text OK |
+| accent on paper | 6.03:1 | button text and borders |
+| water-deep on paper | 3.17:1 | UI lines only (track, dashed borders) |
+| water-deep on water-wash | 2.75:1 | decoration only (waves) |
+
+Rows from 5.1 for ink on land (8.72:1) and ink on water still apply to the small-fill tokens. The live table on the style tile reads the same tokens, so it should agree.
+
+### 21.7 Generator
+`python tools/illustrations/gen.py` writes the light style into `src/assets/illustrations`. `--style v1 --out public/illustration-v1` writes the original. `python tools/illustrations/build_sheet.py` rebuilds `public/illustration-sheet.html` (light pieces inline with the time slider, v1 as images underneath). v1 output is byte-identical to the files committed before this pass. Light SVGs are about 1 to 3.7 KB each, half the size of v1.
+
+### 21.8 Anti-pattern edits
+Added: solid pink masses over about a third of the viewport, strokes above 2 px on illustrations, white borders wider than 3 px, white sticker outlines by default, offset shadows above 3 px, dusk colors darker than the lavender in 21.5.
+
+### 21.9 Case study capture
+Keep the v1 and v2 test sheet and style tile side by side (`public/illustration-v1` and git history). The feedback, the four references and these rules are the "early versus final" material.
+
+---
+
+### Status: 2026-10-22
+Stage: 6 Illustration spec and 7 Tokens, light style built, awaiting approval
+Done this session: Wrote section 21. Added a light style to `gen.py` (v1 kept as an option), regenerated the five SVGs, rebuilt the test sheet with a v1 comparison. Applied the light style to the tokens, hero map, line system, shapes and controls, scene strip and scene keyframes. Applied the queued changes from section 19 (selection color, text size adjust, 16 px inputs, tap highlight on buttons, tabular numerals on the clock, 44 px scrubber target, 44 px pin hit area demo, decorative waves not interactive). Build and lint pass.
+Decided this session: The lightness pass covers everything.
+Proposed, awaiting confirmation: All of section 21.
+Open questions: Couple names and venue, pop-up brand and category, animation library, passcode gate, domains. Whether hairlines read well on a real phone.
+Files created or changed: `tools/illustrations/gen.py`, `tools/illustrations/build_sheet.py`, five SVGs in `src/assets/illustrations`, `public/illustration-sheet.html`, `public/illustration-v1/*`, `src/index.css`, `src/lib/scene.ts`, `src/StyleTile.tsx`, `src/tile/*` (Hero, LineSystem, ShapesControls, SceneStrip, Palette, Contrast, Typography, tokens), `docs/bubblegum-atlas-project-a.md`
+Parked issues: Not yet seen in a real browser. Render checks so far are from a Python SVG rasterizer and a clean build.
+Next step: Owner checks the style tile and `/illustration-sheet.html` on desktop and a real phone, then approves or redirects. Then the remaining wedding landmarks (step 3 prep) in the light style.
