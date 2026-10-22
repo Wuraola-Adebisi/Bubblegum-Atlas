@@ -18,8 +18,8 @@ function House({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 120 120" className={`h-32 w-32 ${className}`} role="img" aria-label="A small house">
       <g className="line-art">
-        <rect x={20} y={56} width={80} height={50} rx={6} fill="var(--color-water-deep-wash)" />
-        <path d="M12 58 L60 20 L108 58 Z" fill="var(--color-land-strong)" />
+        <rect x={20} y={56} width={80} height={50} rx={6} fill="var(--color-water-deep)" />
+        <path d="M12 58 L60 20 L108 58 Z" fill="var(--color-accent)" />
         <rect x={52} y={76} width={16} height={30} rx={3} fill="var(--color-paper)" />
       </g>
     </svg>
@@ -36,7 +36,7 @@ export default function ShapesControls() {
             <svg viewBox="0 0 160 110" className="h-28 w-40" role="img" aria-label="Organic blob shape">
               <path
                 d="M20 60 C10 25 55 8 90 14 C130 20 152 45 138 78 C124 106 70 104 40 92 C28 86 22 74 20 60 Z"
-                fill="var(--color-land-wash)"
+                fill="var(--color-land)"
                 stroke="var(--color-accent)"
                 strokeWidth={1.5}
                 vectorEffect="non-scaling-stroke"
@@ -44,10 +44,10 @@ export default function ShapesControls() {
             </svg>
           </Cell>
           <Cell label="28px, for panels">
-            <div className="h-28 w-40 rounded-panel border-hair border-accent bg-land-wash" />
+            <div className="h-28 w-40 rounded-panel border-hair border-accent bg-land" />
           </Cell>
           <Cell label="999px, for pills and tags">
-            <div className="h-12 w-40 rounded-pill border-hair border-accent bg-land-wash" />
+            <div className="h-12 w-40 rounded-pill border-hair border-accent bg-land" />
           </Cell>
           <Cell label="cut ends, for banners and flags">
             <div className="h-12 w-40 bg-flag" style={{ clipPath: flagClip }} />
@@ -55,10 +55,10 @@ export default function ShapesControls() {
         </div>
       </div>
 
-      <div className="rounded-panel bg-land-wash p-6 sm:p-10">
+      <div className="rounded-panel bg-land p-6 sm:p-10">
         <h3 className="mb-8 font-display text-h3 font-extrabold">Outline</h3>
         <div className="flex flex-wrap items-end gap-12">
-          <Cell label="1.5px berry hairline and a pale tint (current)">
+          <Cell label="1.5px berry hairline, no white edge (current)">
             <House />
           </Cell>
           <Cell label="version 1, 4px white edge (retired)">

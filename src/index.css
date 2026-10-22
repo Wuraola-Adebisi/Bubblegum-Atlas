@@ -55,7 +55,7 @@
   --color-success: var(--color-green-800);
   --color-warning: var(--color-orange-800);
   --color-error: var(--color-red-700);
-  --color-contour: color-mix(in oklab, var(--color-pink-200) 55%, var(--color-pink-100));
+  --color-contour: color-mix(in oklab, var(--color-land) 78%, var(--color-paper));
 
   /* type */
   --font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
@@ -98,10 +98,10 @@
   --dur-standard: 280ms;
 
   /* scene variables, set by the time-of-day system on the map root */
-  --scene-sky: #fff1f5;
-  --scene-water: #ddf0f6;
-  --scene-land: #ffe3ec;
-  --scene-park: #cdebdc;
+  --scene-sky: #ffe9ef;
+  --scene-water: #cbe8f2;
+  --scene-land: #ffc9db;
+  --scene-park: #b6e4cd;
   --scene-glow: 0;
 }
 

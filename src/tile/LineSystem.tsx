@@ -27,16 +27,13 @@ export default function LineSystem() {
   const [run, setRun] = useState(0)
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      <Card title="Roads" note="White, 2.5 to 3px at hero scale, with a thin pink casing so they read on pale land. Round joins and caps.">
-        <svg viewBox="0 0 320 200" role="img" aria-label="White roads crossing a pink landmass" className="h-auto w-full rounded-panel" style={{ background: 'var(--color-water-wash)' }}>
+      <Card title="Roads" note="White, 3px at hero scale, round joins and caps. White is a fill here, never a heavy border.">
+        <svg viewBox="0 0 320 200" role="img" aria-label="White roads crossing a pink landmass" className="h-auto w-full rounded-panel" style={{ background: 'var(--color-water)' }}>
           <clipPath id="roads-clip">
             <path d={blob} />
           </clipPath>
-          <path d={blob} fill="var(--color-land-wash)" stroke="var(--color-accent)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+          <path d={blob} fill="var(--color-land)" stroke="var(--color-accent)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
           <g clipPath="url(#roads-clip)" fill="none" strokeLinecap="round" strokeLinejoin="round">
-            {roads.map((d) => (
-              <path key={`c-${d}`} d={d} stroke="var(--color-land)" strokeWidth={5} />
-            ))}
             {roads.map((d) => (
               <path key={`w-${d}`} d={d} stroke="var(--color-paper)" strokeWidth={3} />
             ))}
@@ -45,7 +42,7 @@ export default function LineSystem() {
       </Card>
 
       <Card title="Leader lines" note="1.5px ink ending in a 6px filled dot. Handwriting sits at the free end.">
-        <svg viewBox="0 0 320 200" role="img" aria-label="A handwritten label tied to a place by a thin line with a dot" className="h-auto w-full rounded-panel" style={{ background: 'var(--color-land-wash)' }}>
+        <svg viewBox="0 0 320 200" role="img" aria-label="A handwritten label tied to a place by a thin line with a dot" className="h-auto w-full rounded-panel" style={{ background: 'var(--color-land)' }}>
           <circle cx={230} cy={130} r={26} fill="var(--color-paper)" stroke="var(--color-accent)" strokeWidth={1.5} />
           <path d="M230 130 L120 70" fill="none" stroke="var(--color-ink)" strokeWidth={1.5} />
           <circle cx={230} cy={130} r={3} fill="var(--color-ink)" />
@@ -69,20 +66,20 @@ export default function LineSystem() {
         </button>
         }
       >
-        <svg viewBox="0 0 320 200" role="img" aria-label="A dashed route drawing across the map" className="h-auto w-full rounded-panel" style={{ background: 'var(--color-water-wash)' }}>
+        <svg viewBox="0 0 320 200" role="img" aria-label="A dashed route drawing across the map" className="h-auto w-full rounded-panel" style={{ background: 'var(--color-water)' }}>
           <mask id="route-demo-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="200">
             <path key={run} d={route} pathLength={1} fill="none" stroke="#fff" strokeWidth={12} strokeLinecap="round" className="route-mask" />
           </mask>
-          <path d={blob} fill="var(--color-land-wash)" stroke="var(--color-accent)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+          <path d={blob} fill="var(--color-land)" stroke="var(--color-accent)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
           <path d={route} fill="none" stroke="var(--color-accent)" strokeWidth={2.5} strokeLinecap="round" strokeDasharray="1 9" mask="url(#route-demo-reveal)" />
           <circle cx={20} cy={170} r={7} fill="var(--color-paper)" stroke="var(--color-accent)" strokeWidth={1.5} />
           <circle cx={290} cy={100} r={8} fill="var(--color-accent)" stroke="var(--color-paper)" strokeWidth={2} />
         </svg>
       </Card>
 
-      <Card title="Contour lines" note="1px, a shade darker than the land wash. Texture only, never carries meaning.">
-        <svg viewBox="0 0 320 200" role="img" aria-label="Faint contour rings inside a pink landmass" className="h-auto w-full rounded-panel" style={{ background: 'var(--color-water-wash)' }}>
-          <path d={blob} fill="var(--color-land-wash)" stroke="var(--color-accent)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+      <Card title="Contour lines" note="1px, land color mixed 22 percent toward white. Texture only, never carries meaning.">
+        <svg viewBox="0 0 320 200" role="img" aria-label="Faint contour rings inside a pink landmass" className="h-auto w-full rounded-panel" style={{ background: 'var(--color-water)' }}>
+          <path d={blob} fill="var(--color-land)" stroke="var(--color-accent)" strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
           {[0.84, 0.68, 0.52, 0.36].map((s) => (
             <path
               key={s}

@@ -17,9 +17,10 @@ const roads = [
 function Tree({ x, y }: { x: number; y: number }) {
   const line = { stroke: 'var(--color-park-deep)', strokeWidth: 1.5, vectorEffect: 'non-scaling-stroke' } as const
   return (
-    <g fill="var(--color-park-wash)" strokeLinejoin="round">
-      <rect x={x - 2.5} y={y + 4} width={5} height={13} rx={2.5} {...line} />
-      <circle cx={x} cy={y - 2} r={13} {...line} />
+    <g strokeLinejoin="round">
+      <rect x={x - 2.5} y={y + 4} width={5} height={13} rx={2.5} fill="var(--color-ink)" {...line} />
+      <circle cx={x} cy={y - 2} r={13} fill="var(--color-park-deep)" {...line} />
+      <circle cx={x - 4} cy={y - 6} r={4} fill="var(--color-park)" />
     </g>
   )
 }
@@ -36,7 +37,7 @@ export default function Hero() {
           Bubblegum Atlas
         </h1>
         <p className="mt-8 max-w-measure text-body">
-          An airy, hand-drawn cartographic style. A pale bubblegum-pink landmass floats on pastel blue, traced in hairline
+          An airy, hand-drawn cartographic style. A bubblegum-pink landmass floats on pastel blue, traced in thin white
           roads, with oversized illustrated landmarks and handwritten wayfinding labels.
         </p>
         <ul className="mt-8 flex flex-wrap gap-3" aria-label="Style keywords">
@@ -54,10 +55,10 @@ export default function Hero() {
           role="img"
           aria-labelledby="hero-map-title"
           className="h-auto w-full rounded-panel"
-          style={{ background: 'var(--color-water-wash)' }}
+          style={{ background: 'var(--color-water)' }}
         >
           <title id="hero-map-title">
-            A pale pink island with thin white roads, a dashed ferry route that arrives from the left, a lighthouse, an estate
+            A pink island with thin white roads, a dashed ferry route that arrives from the left, a lighthouse, an estate
             house and a marquee tent.
           </title>
           <defs>
@@ -80,7 +81,7 @@ export default function Hero() {
           {/* landmass: pale wash with a berry hairline, contour rings, hairline roads and parks */}
           <path
             d={landD}
-            fill="var(--color-land-wash)"
+            fill="var(--color-land)"
             stroke="var(--color-accent)"
             strokeWidth={1.5}
             strokeLinejoin="round"
@@ -100,13 +101,10 @@ export default function Hero() {
             ))}
             <g fill="none" strokeLinecap="round" strokeLinejoin="round">
               {roads.map((d) => (
-                <path key={`c-${d}`} d={d} stroke="var(--color-land)" strokeWidth={5} />
-              ))}
-              {roads.map((d) => (
                 <path key={`w-${d}`} d={d} stroke="var(--color-paper)" strokeWidth={3} />
               ))}
             </g>
-            <g fill="var(--color-park-wash)" stroke="var(--color-park-deep)" strokeWidth={1} strokeLinejoin="round">
+            <g fill="var(--color-park)" stroke="var(--color-park-deep)" strokeWidth={1} strokeLinejoin="round">
               <path
                 d="M300 330 C300 300 350 290 380 310 C410 330 400 380 360 390 C320 400 295 370 300 330 Z"
                 vectorEffect="non-scaling-stroke"
@@ -150,13 +148,13 @@ export default function Hero() {
           {/* landmarks, drawn larger than the map around them. Line art, one solid accent each. */}
           <g className="line-art">
             <path d="M452 154 L460 84 L484 84 L492 154 Z" fill="var(--color-paper)" />
-            <path d="M457 112 L487 112 L489 126 L455 126 Z" fill="var(--color-land)" />
+            <path d="M457 112 L487 112 L489 126 L455 126 Z" fill="var(--color-accent)" />
             <rect x={458} y={66} width={28} height={20} rx={4} fill="var(--color-glow)" />
-            <path d="M454 66 L472 44 L490 66 Z" fill="var(--color-land-strong)" />
+            <path d="M454 66 L472 44 L490 66 Z" fill="var(--color-accent)" />
           </g>
           <g className="line-art">
-            <rect x={172} y={286} width={84} height={46} rx={6} fill="var(--color-water-deep-wash)" />
-            <path d="M164 288 L214 252 L264 288 Z" fill="var(--color-land-strong)" />
+            <rect x={172} y={286} width={84} height={46} rx={6} fill="var(--color-water-deep)" />
+            <path d="M164 288 L214 252 L264 288 Z" fill="var(--color-accent)" />
             <rect x={206} y={304} width={16} height={28} rx={3} fill="var(--color-paper)" />
             <rect x={184} y={298} width={14} height={14} rx={3} fill="var(--color-glow)" />
             <rect x={230} y={298} width={14} height={14} rx={3} fill="var(--color-glow)" />

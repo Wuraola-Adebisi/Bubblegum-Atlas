@@ -2,14 +2,16 @@
 
 Each piece is described as shapes plus a part-to-color map, and can be drawn in two styles:
 
-  light (default)  Thin berry or ink line art, one pale tint per part, one solid accent, no white
-                   sticker outline. This is the current look (brief section 21).
-  v1               The original look: three-tone shading and a white sticker silhouette.
+  deep-line (default)  The v1 deep palette and three-tone shading, a 1.5 px hairline over each shape,
+                       and no white sticker silhouette. This is the current look (brief section 22).
+  deep                 The same without the hairline.
+  light                Pale tints, one solid accent, hairline only (brief section 21, not chosen).
+  v1                   The original look: three-tone shading and a white sticker silhouette.
 
 All fills use CSS variables with hex fallbacks, so inlined SVGs follow the design tokens and
 standalone SVGs still render. Run from the repo root:
 
-  python tools/illustrations/gen.py                      light style into src/assets/illustrations
+  python tools/illustrations/gen.py                      deep-line style into src/assets/illustrations
   python tools/illustrations/gen.py --style v1 --out public/illustration-v1
 """
 import argparse, os, re
@@ -177,10 +179,52 @@ class LightPiece(Piece):
             f'<defs>{"".join(self.defs)}</defs>'
             f'<g transform="translate({px} {py})">{"".join(self.art)}</g></svg>')
 
-STYLE = 'light'
+
+# ---------------- deep style: v1 colors and shading, no white sticker, optional hairline ----------------
+class DeepPiece(Piece):
+    """Version 1 deep palette and three-tone shading without the white sticker silhouette.
+    With outline=True, a 1.5 px hairline in the piece line color is drawn over each shape."""
+
+    def __init__(self, name, title, vb, parts, pad=(8, 8), line='accent', full=(), outline=False):
+        super().__init__(name, title, vb, parts, pad)
+        self.line, self.outline = line, outline
+
+    def _o(self, el):
+        if self.outline:
+            self.art.append(el(f'fill="none" stroke="{cv(self.line)}" stroke-width="1.5px" stroke-linejoin="round" vector-effect="non-scaling-stroke"'))
+
+    def solid(self, el, bbox, part, sil=True, shade=True, sw=0.26, hatch=False):
+        super().solid(el, bbox, part, sil=False, shade=shade, sw=sw)
+        self._o(el)
+
+    def flat(self, el, part, sil=False):
+        super().flat(el, part, sil=False)
+        self._o(el)
+
+    def ball(self, cx, cy, r, part, sil=True):
+        super().ball(cx, cy, r, part, sil=False)
+        self._o(lambda a: f'<circle cx="{cx}" cy="{cy}" r="{r}" {a}/>')
+
+    def stroke_path(self, d, w=5):
+        self.art.append(f'<path d="{d}" fill="none" stroke="{cv("water-deep")}" stroke-width="1.5px" stroke-linecap="round" vector-effect="non-scaling-stroke"/>')
+
+    def svg(self):
+        px, py = self.pad
+        return (
+            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{self.vb}" role="img" aria-labelledby="{self.name}-title">'
+            f'<title id="{self.name}-title">{self.title}</title>'
+            f'<style>{self.css()}</style>'
+            f'<defs>{"".join(self.defs)}</defs>'
+            f'<g transform="translate({px} {py})">{"".join(self.art)}</g></svg>')
+
+STYLE = 'deep-line'
 
 def make(*a, **k):
-    return (LightPiece if STYLE == 'light' else Piece)(*a, **k)
+    if STYLE == 'light':
+        return LightPiece(*a, **k)
+    if STYLE in ('deep', 'deep-line'):
+        return DeepPiece(*a, outline=(STYLE == 'deep-line'), **k)
+    return Piece(*a, **k)
 
 
 def R(x, y, w, h, rx=0):
@@ -292,7 +336,7 @@ def guest2():
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description='Generate the Bubblegum Atlas illustrations.')
-    ap.add_argument('--style', choices=['light', 'v1'], default='light')
+    ap.add_argument('--style', choices=['deep-line', 'deep', 'light', 'v1'], default='deep-line')
     ap.add_argument('--out', default='src/assets/illustrations', help='output folder, relative to the repo root')
     args = ap.parse_args()
     STYLE = args.style

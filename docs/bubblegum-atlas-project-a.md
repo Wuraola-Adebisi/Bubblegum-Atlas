@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-22. Stage: 6 (light style v2 of the test sheet and style tile built, awaiting approval). Tokens built and verified on a style tile.
+Last updated: 2026-10-22. Stage: 6 (deep line style built on the test sheet and style tile, awaiting approval). Tokens built and verified on a style tile.
 
 ---
 
@@ -684,3 +684,31 @@ Open questions: Couple names and venue, pop-up brand and category, animation lib
 Files created or changed: `tools/illustrations/gen.py`, `tools/illustrations/build_sheet.py`, five SVGs in `src/assets/illustrations`, `public/illustration-sheet.html`, `public/illustration-v1/*`, `src/index.css`, `src/lib/scene.ts`, `src/StyleTile.tsx`, `src/tile/*` (Hero, LineSystem, ShapesControls, SceneStrip, Palette, Contrast, Typography, tokens), `docs/bubblegum-atlas-project-a.md`
 Parked issues: Not yet seen in a real browser. Render checks so far are from a Python SVG rasterizer and a clean build.
 Next step: Owner checks the style tile and `/illustration-sheet.html` on desktop and a real phone, then approves or redirects. Then the remaining wedding landmarks (step 3 prep) in the light style.
+
+---
+
+## 22. Deep line style (2026-10-22, supersedes the palette parts of section 21)
+
+### 22.1 Decision
+Decided: the owner loves the line-art illustration pass and wants its shapes, characters and style kept for all visuals. The palette and shading are the deep v1 ones (berry, periwinkle, flat pink land, pastel blue water, deep green), not the pale tints of section 21. The thick white borders stay removed. A thin outline over each shape is wanted (Option B of the comparison).
+
+### 22.2 What this means
+- Illustrations: v1 fills and three-tone shading, no white sticker silhouette, a 1.5 px hairline over every shape in one line color per piece (berry by default, navy for the ferry, green for the tree). Waves are 1.5 px water-deep lines. Generator default is `deep-line`. `--style deep` drops the hairline, `--style light` is the pale version, `--style v1` is the original.
+- Map and tile: land is pink-200 and water is blue-200 again, with a 1.5 px berry coastline instead of a white ring. Roads are 3 px white with no casing. Parks are green-300 with a 1 px green hairline. Contour rings are 1 px.
+- Scene keyframes are the original deep set from section 5.2 (dusk water #6F8FDB).
+- The wash tokens from 21.4 stay in the system for soft fills only: pale pills, hover states, soft backgrounds. They are not the hero colors.
+- Section 21.3 rules that still hold: white is a fill and never a border wider than 3 px, hairline buttons and labels, 44 px hit areas, the scrubber, one accent per piece in spirit (the deep palette has more saturated color, so keep each piece to its existing 5 to 7 colors).
+- Contrast rows from section 5.1 apply again for land, water and park. The wash rows from 21.6 apply to the wash tokens.
+
+### 22.3 Sizes
+Gzipped, each piece is 0.6 to 1.6 KB, well under the 8 KB budget.
+
+### Status: 2026-10-22 (second block)
+Stage: 6 and 7, deep line style built, awaiting approval
+Done this session: Compared v1, deep without outline and deep with a hairline. Owner chose the hairline version. Added the `deep` and `deep-line` styles to `gen.py` (deep-line is the default), regenerated the five SVGs and the test sheet, restored the deep land, water, park and scene values on the tile, and kept the thin lines, hairline buttons and other fixes from section 21. Build and lint pass.
+Decided this session: Deep v1 palette and shading with a thin outline and no thick white borders.
+Proposed, awaiting confirmation: Hairline buttons and label pills stay as built in section 21. Wash tokens kept for soft fills.
+Open questions: Same as before. Whether hairlines read on a real phone.
+Files created or changed: as in section 21, plus a changed `tools/illustrations/gen.py` default, `src/lib/scene.ts` and `src/index.css` back to the deep values.
+Parked issues: Not yet seen in a real browser.
+Next step: Owner reviews the tile and sheet, then the remaining wedding landmarks in this style (ceremony arch, marquee, boathouse, jetty, cafe, hotel, shuttle, cake, bridal party).

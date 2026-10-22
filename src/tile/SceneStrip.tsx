@@ -44,8 +44,8 @@ export default function SceneStrip() {
           />
           <g className="line-art">
             <path d="M300 210 L350 150 L400 210 Z" fill="var(--color-flag)" />
-            <rect x={284} y={170} width={4} height={46} rx={2} fill="var(--color-paper)" />
-            <rect x={412} y={170} width={4} height={46} rx={2} fill="var(--color-paper)" />
+            <rect x={284} y={170} width={4} height={46} rx={2} fill="var(--color-ink)" />
+            <rect x={412} y={170} width={4} height={46} rx={2} fill="var(--color-ink)" />
           </g>
           <g fill="var(--color-glow)" style={{ opacity: 'var(--scene-glow)' }}>
             {bulbs.map((b) => (
