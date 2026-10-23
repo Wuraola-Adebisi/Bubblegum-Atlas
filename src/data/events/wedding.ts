@@ -1,0 +1,275 @@
+import { sceneKeyframes } from '../../lib/scene.ts'
+import type { EventConfig, ScheduleItem } from './types.ts'
+
+// Placeholder couple, venue and dates (Open in the brief). Everything below is mock content for the engine.
+
+const fri = '2027-09-10'
+const sat = '2027-09-11'
+const sun = '2027-09-12'
+const at = (date: string, hhmm: string) => `${date}T${hhmm}:00-04:00`
+
+const item = (
+  id: string,
+  title: string,
+  date: string,
+  start: string,
+  end: string,
+  pinId: string,
+  type: string,
+  description: string,
+): ScheduleItem => ({ id, title, start: at(date, start), end: at(date, end), pinId, type, description })
+
+export const wedding: EventConfig = {
+  id: 'maya-and-theo',
+  kind: 'wedding',
+  title: 'Maya and Theo at Larkmere',
+  tagline: 'Three days on the lake, September 10 to 12, 2027',
+  timezone: 'America/New_York',
+  dates: { start: `${fri}T00:00:00-04:00`, end: `${sun}T23:59:00-04:00` },
+  locale: { currency: 'USD', hour12: true, language: 'en-US' },
+  clock: { startMin: 8 * 60, endMin: 23 * 60 + 30 },
+  scene: sceneKeyframes,
+
+  map: {
+    viewBox: [0, 0, 1600, 1000],
+    landPath:
+      'M55 560 C75 500 195 470 290 500 C360 522 395 600 380 700 C365 790 275 850 180 840 C90 830 45 760 52 680 C55 630 48 590 55 560 Z ' +
+      'M650 320 C690 220 840 170 1000 185 C1180 200 1380 240 1450 380 C1510 500 1470 680 1370 770 C1250 870 1050 860 890 830 C750 800 660 740 635 640 C618 570 630 400 650 320 Z',
+    waterPaths: ['M1060 580 C1090 548 1160 556 1168 604 C1175 650 1118 676 1068 658 C1038 645 1040 604 1060 580 Z'],
+    parkPaths: [
+      'M870 300 C890 245 1030 235 1110 265 C1170 292 1160 385 1095 420 C1025 452 915 430 885 378 C868 350 866 322 870 300 Z',
+      'M1225 430 C1255 395 1345 405 1368 460 C1385 515 1335 565 1282 563 C1228 558 1205 480 1225 430 Z',
+    ],
+    roadPaths: [
+      'M760 790 L790 710 C840 690 920 700 970 720',
+      'M970 720 C980 620 990 520 1010 410',
+      'M1010 410 C1100 460 1200 500 1300 520',
+      'M1300 520 C1310 600 1290 650 1280 700',
+      'M1120 790 C1080 770 1030 750 970 720',
+      'M190 650 C220 700 280 750 330 790',
+    ],
+    waves: [
+      [470, 300],
+      [520, 420],
+      [200, 320],
+      [500, 880],
+      [820, 950],
+      [1300, 930],
+      [1500, 860],
+      [410, 590],
+    ],
+    placements: [
+      { illustrationId: 'landmark-hotel', x: 190, y: 650, scale: 0.52, zoneId: 'harbor-quay' },
+      { illustrationId: 'landmark-jetty', x: 330, y: 790, scale: 0.67, zoneId: 'harbor-quay' },
+      { illustrationId: 'landmark-ferry', x: 545, y: 770, scale: 0.67 },
+      { illustrationId: 'landmark-jetty', x: 760, y: 800, scale: 0.67, zoneId: 'lakeshore' },
+      { illustrationId: 'landmark-boathouse', x: 790, y: 705, scale: 0.65, zoneId: 'lakeshore' },
+      { illustrationId: 'landmark-cafe', x: 970, y: 720, scale: 0.6, zoneId: 'lakeshore' },
+      { illustrationId: 'prop-shuttle', x: 1120, y: 790, scale: 0.4, zoneId: 'lakeshore' },
+      { illustrationId: 'landmark-estate', x: 1010, y: 400, scale: 0.77, zoneId: 'larkmere-estate' },
+      { illustrationId: 'landmark-arch', x: 1300, y: 520, scale: 0.7, zoneId: 'larkmere-estate' },
+      { illustrationId: 'landmark-marquee', x: 1280, y: 700, scale: 0.7, zoneId: 'larkmere-estate' },
+      { illustrationId: 'prop-tree-round', x: 700, y: 470, scale: 0.45 },
+      { illustrationId: 'prop-tree-round', x: 690, y: 550, scale: 0.45 },
+      { illustrationId: 'prop-tree-round', x: 905, y: 575, scale: 0.45 },
+      { illustrationId: 'prop-tree-round', x: 1090, y: 515, scale: 0.45 },
+      { illustrationId: 'prop-tree-round', x: 1415, y: 600, scale: 0.45 },
+      { illustrationId: 'prop-tree-round', x: 300, y: 590, scale: 0.45 },
+      { illustrationId: 'prop-tree-round', x: 120, y: 770, scale: 0.45 },
+    ],
+  },
+
+  zones: [
+    { id: 'harbor-quay', name: 'Harbor Quay', center: [190, 700], blurb: 'Where the ferry leaves, with the hotel block next door.' },
+    { id: 'lakeshore', name: 'Lakeshore', center: [900, 760], blurb: 'The jetty, the boathouse, the cafe and the shuttle stop.' },
+    { id: 'larkmere-estate', name: 'Larkmere Estate', center: [1150, 480], blurb: 'The house, the lawn, the ceremony arch and the marquee.' },
+  ],
+
+  layers: [
+    { id: 'stay', label: 'Stay', pinKinds: ['Hotel'] },
+    { id: 'eat', label: 'Eat and drink', pinKinds: ['Drinks', 'Cafe', 'Reception'] },
+    { id: 'explore', label: 'Explore', pinKinds: ['Venue', 'Ceremony'] },
+    { id: 'getting-around', label: 'Getting around', pinKinds: ['Ferry', 'Shuttle'] },
+  ],
+
+  pins: [
+    {
+      id: 'quay-hotel',
+      zoneId: 'harbor-quay',
+      x: 190,
+      y: 666,
+      title: 'Harbor Quay Hotel',
+      kind: 'Hotel',
+      layerIds: ['stay'],
+      summary: 'The guest hotel, a five-minute walk from the ferry jetty.',
+      details: 'Ask for the Larkmere room block when you book. Parking is behind the building.',
+      labelSide: 'below',
+    },
+    {
+      id: 'quay-jetty',
+      zoneId: 'harbor-quay',
+      x: 330,
+      y: 806,
+      title: 'Harbor Quay jetty',
+      kind: 'Ferry',
+      layerIds: ['getting-around'],
+      summary: 'Ferries to Larkmere leave from here. Please arrive 15 minutes before departure.',
+      details: 'Saturday departures are 12:30, 1:00 and 1:30 pm. The crossing takes about 12 minutes.',
+      labelSide: 'below',
+    },
+    {
+      id: 'larkmere-jetty',
+      zoneId: 'lakeshore',
+      x: 760,
+      y: 816,
+      title: 'Larkmere jetty',
+      kind: 'Ferry',
+      layerIds: ['getting-around'],
+      summary: 'Where the ferry lands. Return ferries leave from here too.',
+      details: 'Saturday returns are at 11:30 pm and 12:15 am. The last ferry on Sunday is at 12:30 pm.',
+      labelSide: 'below',
+    },
+    {
+      id: 'boathouse',
+      zoneId: 'lakeshore',
+      x: 790,
+      y: 722,
+      title: 'Boathouse terrace',
+      kind: 'Drinks',
+      layerIds: ['eat'],
+      summary: 'Welcome drinks on Friday at 6:00 pm, on the terrace by the water.',
+      labelSide: 'left',
+    },
+    {
+      id: 'cafe',
+      zoneId: 'lakeshore',
+      x: 970,
+      y: 736,
+      title: 'Lakeside cafe',
+      kind: 'Cafe',
+      layerIds: ['eat'],
+      summary: 'Coffee and pastries by the lake. The farewell brunch is here on Sunday.',
+      labelSide: 'below',
+    },
+    {
+      id: 'shuttle',
+      zoneId: 'lakeshore',
+      x: 1120,
+      y: 804,
+      title: 'Shuttle stop',
+      kind: 'Shuttle',
+      layerIds: ['getting-around'],
+      summary: 'A step-free shuttle links the jetty, the cafe, the marquee and the arch all weekend.',
+      labelSide: 'below',
+    },
+    {
+      id: 'estate',
+      zoneId: 'larkmere-estate',
+      x: 1010,
+      y: 416,
+      title: 'Larkmere Estate house',
+      kind: 'Venue',
+      layerIds: ['explore'],
+      summary: 'Cocktail hour is on the front lawn at 4:30 pm on Saturday.',
+      details: 'The house itself is closed to guests.',
+      labelSide: 'left',
+    },
+    {
+      id: 'arch',
+      zoneId: 'larkmere-estate',
+      x: 1300,
+      y: 536,
+      title: 'Ceremony arch',
+      kind: 'Ceremony',
+      layerIds: ['explore'],
+      summary: 'The ceremony starts at 3:30 pm on Saturday. Please be seated by 3:15.',
+      details: 'Seating is open and on grass. Flat shoes are a good idea.',
+      labelSide: 'right',
+    },
+    {
+      id: 'marquee',
+      zoneId: 'larkmere-estate',
+      x: 1280,
+      y: 716,
+      title: 'Reception marquee',
+      kind: 'Reception',
+      layerIds: ['eat'],
+      summary: 'Dinner at 6:30 pm, then the party until midnight. The marquee is also the rain plan.',
+      labelSide: 'right',
+    },
+  ],
+
+  routes: [
+    {
+      id: 'ferry-crossing',
+      name: 'Ferry crossing',
+      mode: 'ferry',
+      pathD: 'M430 752 C500 790 600 790 660 760',
+      stops: ['quay-jetty', 'larkmere-jetty'],
+      durationMin: 12,
+      accessible: true,
+      note: 'Boarding is step-free. Bring a layer, it is breezy on the water.',
+    },
+    {
+      id: 'walk-to-ceremony',
+      name: 'Walk to the ceremony',
+      mode: 'walk',
+      pathD: 'M760 790 L790 712 C840 696 920 706 970 726 C985 620 995 520 1010 416 C1100 464 1200 504 1300 532',
+      stops: ['larkmere-jetty', 'boathouse', 'cafe', 'estate', 'arch'],
+      durationMin: 18,
+      accessible: false,
+      note: 'Gravel path with two short flights of steps near the house. The shuttle is the step-free option.',
+    },
+    {
+      id: 'shuttle-loop',
+      name: 'Shuttle loop',
+      mode: 'shuttle',
+      pathD: 'M760 790 C860 780 1000 770 1120 792 C1200 780 1260 760 1280 716 C1300 640 1300 580 1300 536',
+      stops: ['larkmere-jetty', 'shuttle', 'marquee', 'arch'],
+      durationMin: 8,
+      accessible: true,
+      note: 'Runs every 10 minutes from the first ferry until the last return.',
+    },
+  ],
+
+  schedule: [
+    item('welcome', 'Welcome drinks', fri, '18:00', '20:30', 'boathouse', 'social', 'Drinks and small plates on the terrace.'),
+    item('ferry-1230', 'Ferry to Larkmere', sat, '12:30', '12:42', 'quay-jetty', 'travel', 'First crossing of the day.'),
+    item('ferry-1300', 'Ferry to Larkmere', sat, '13:00', '13:12', 'quay-jetty', 'travel', 'Please arrive by 12:45.'),
+    item('ferry-1330', 'Ferry to Larkmere', sat, '13:30', '13:42', 'quay-jetty', 'travel', 'Last crossing before the ceremony.'),
+    item('ceremony', 'Ceremony', sat, '15:30', '16:15', 'arch', 'ceremony', 'Please be seated by 3:15 pm.'),
+    item('cocktails', 'Cocktail hour', sat, '16:30', '17:30', 'estate', 'social', 'Drinks on the front lawn.'),
+    item('dinner', 'Dinner', sat, '18:30', '20:15', 'marquee', 'meal', 'Seated dinner. Tell us about dietary needs in the RSVP.'),
+    item('first-dance', 'First dance', sat, '20:30', '20:45', 'marquee', 'ceremony', 'Around dusk, when the lights come on.'),
+    item('party', 'Party', sat, '20:45', '23:59', 'marquee', 'social', 'Dancing until midnight.'),
+    item('return-2330', 'Return ferry', sat, '23:30', '23:42', 'larkmere-jetty', 'travel', 'First return crossing.'),
+    item('brunch', 'Farewell brunch', sun, '10:00', '12:00', 'cafe', 'meal', 'Come as you are.'),
+    item('last-ferry', 'Last ferry', sun, '12:30', '12:42', 'larkmere-jetty', 'travel', 'The last crossing back to Harbor Quay.'),
+  ],
+
+  passport: {
+    stamps: [],
+    completionReward: { title: 'Story complete', body: 'Filled in at build step 6, when the story trail is built.' },
+  },
+
+  pass: {
+    fields: [
+      { id: 'name', label: 'Full name', type: 'text', required: true },
+      { id: 'party', label: 'Number of guests in your party', type: 'number', required: true },
+      { id: 'meal', label: 'Dinner choice', type: 'select', options: ['Chicken', 'Salmon', 'Vegetarian'], required: true },
+      { id: 'dietary', label: 'Dietary needs', type: 'textarea' },
+      { id: 'song', label: 'Song request', type: 'text' },
+    ],
+  },
+
+  faq: [
+    { q: 'How do we get to the estate?', a: 'By ferry from Harbor Quay. Saturday ferries leave at 12:30, 1:00 and 1:30 pm.' },
+    { q: 'Is there a step-free route?', a: 'Yes. The ferry and the shuttle are step-free. The walking path has two short flights of steps.' },
+    { q: 'What if it rains?', a: 'The ceremony and reception move into the marquee.' },
+  ],
+
+  copy: {
+    mapTitle: 'The weekend map',
+    mapIntro: 'Harbor Quay to Larkmere Estate. Turn layers on, pick a route, or switch to the list.',
+  },
+}

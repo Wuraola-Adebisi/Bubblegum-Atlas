@@ -357,6 +357,132 @@ def guest2():
     p.flat(P('M22.5 33 L25.5 33 L26.5 44 L24 48 L21.5 44 Z'), 'tie')
     return p
 
+# ---------------- map landmarks (build step 3) ----------------
+def _waves(p, y, x0, n):
+    p.stroke_path(f'M{x0} {y} q12 -9 24 0' + ' t24 0' * (n - 1))
+
+def _quad(p0, c, p1, t):
+    u = 1 - t
+    return (u * u * p0[0] + 2 * u * t * c[0] + t * t * p1[0], u * u * p0[1] + 2 * u * t * c[1] + t * t * p1[1])
+
+def _swag(p, p0, c, p1, n, part='bulb'):
+    """A string of lights: a hairline curve with lit bulbs that follow the glow channel."""
+    p.stroke_path(f'M{p0[0]} {p0[1]} Q{c[0]} {c[1]} {p1[0]} {p1[1]}')
+    for i in range(1, n + 1):
+        x, y = _quad(p0, c, p1, i / (n + 1))
+        p.circle_glow(round(x, 1), round(y + 3, 1), 3.5, part)
+
+def jetty():
+    p = make('jetty', 'A wooden jetty with glowing lamp posts', '0 0 300 128',
+             {'deck': cv('land'), 'post': cv('accent'), 'bulb': cv('paper')}, line='accent')
+    for x in (24, 84, 144, 204, 256):
+        p.flat(R(x, 52, 8, 46, 3), 'post')
+    p.solid(R(8, 40, 268, 18, 6), (8, 40, 268, 18), 'deck')
+    for x in (34, 134, 234):
+        p.flat(R(x, 8, 4, 36, 2), 'post')
+        p.circle_glow(x + 2, 8, 6, 'bulb')
+    _waves(p, 104, 8, 11)
+    _waves(p, 114, 32, 9)
+    return p
+
+def boathouse():
+    p = make('boathouse', 'A lakeside boathouse with a berry roof and a lit terrace', '0 0 232 200',
+             {'wall': cv('water-deep'), 'roof': cv('accent'), 'door': cv('flag'), 'deck': cv('paper'), 'win': cv('water')},
+             line='accent')
+    p.solid(R(20, 76, 176, 74, 6), (20, 76, 176, 74), 'wall')
+    p.solid(P('M8 80 L108 22 L208 80 Z'), (8, 22, 200, 58), 'roof')
+    p.circle_glow(108, 58, 10, 'win')
+    p.glow_rect(124, 100, 22, 28, 8)
+    p.glow_rect(158, 100, 22, 28, 8)
+    p.solid(P('M44 150 L44 124 Q44 96 72 96 Q100 96 100 124 L100 150 Z'), (44, 96, 56, 54), 'door', sil=False)
+    for x in (24, 80, 136, 192):
+        p.flat(R(x, 158, 8, 16, 3), 'roof')
+    p.solid(R(8, 148, 216, 14, 5), (8, 148, 216, 14), 'deck')
+    _waves(p, 174, 12, 8)
+    _waves(p, 184, 36, 6)
+    return p
+
+def arch():
+    p = make('arch', 'A ceremony arch covered in pink and orange flowers', '0 0 156 204',
+             {'post': cv('paper'), 'bloom': cv('land-strong'), 'bloom2': cv('flag'), 'bloom3': cv('glow'),
+              'leaf': cv('park-deep'), 'runner': cv('accent'), 'bulb': cv('paper')}, line='accent')
+    p.flat(P('M52 180 L108 180 L122 188 L38 188 Z'), 'runner')
+    p.solid(R(22, 64, 12, 116, 5), (22, 64, 12, 116), 'post')
+    p.solid(R(126, 64, 12, 116, 5), (126, 64, 12, 116), 'post')
+    p.solid(P('M22 70 Q80 -14 138 70 L126 72 Q80 10 34 72 Z'), (22, 20, 116, 52), 'post')
+    for y in (96, 124, 152):
+        p.circle_glow(28, y, 3.5, 'bulb')
+        p.circle_glow(132, y, 3.5, 'bulb')
+    for t, part, r in ((0.1, 'bloom', 9), (0.28, 'bloom2', 7), (0.5, 'bloom', 10), (0.72, 'bloom3', 7), (0.9, 'bloom', 9)):
+        x, y = _quad((28, 71), (80, -4), (132, 71), t)
+        p.ball(round(x, 1), round(y, 1), r, part)
+    p.ball(28, 176, 9, 'leaf')
+    p.ball(132, 176, 9, 'leaf')
+    return p
+
+def marquee():
+    p = make('marquee', 'A reception marquee strung with glowing lights', '0 0 296 192',
+             {'wall': cv('paper'), 'roof': cv('accent'), 'stripe': cv('paper'), 'door': cv('flag'), 'mast': cv('ink'),
+              'pennant': cv('glow'), 'win': cv('water'), 'bulb': cv('paper')}, line='accent', full=('pennant',))
+    p.flat(R(142, 4, 3, 20, 1.5), 'mast', sil=True)
+    p.flat(P('M145 6 L168 12 L145 18 Z'), 'pennant', sil=True)
+    p.solid(R(22, 94, 244, 74, 6), (22, 94, 244, 74), 'wall')
+    p.solid(P('M8 98 L144 22 L280 98 Z'), (8, 22, 272, 76), 'roof')
+    for a, b in ((46, 84), (122, 144), (144, 166), (204, 242)):
+        p.flat(P(f'M144 22 L{a} 98 L{b} 98 Z'), 'stripe')
+    p.glow_rect(40, 114, 36, 38, 12)
+    p.glow_rect(212, 114, 36, 38, 12)
+    p.solid(P('M118 168 L118 144 Q118 118 144 118 Q170 118 170 144 L170 168 Z'), (118, 118, 52, 50), 'door', sil=False)
+    _swag(p, (16, 104), (80, 148), (144, 104), 4)
+    _swag(p, (144, 104), (208, 148), (272, 104), 4)
+    return p
+
+def cafe():
+    p = make('cafe', 'A lakeside cafe with a striped awning and an outdoor table', '0 0 248 184',
+             {'wall': cv('land-strong'), 'roof': cv('accent'), 'awn': cv('accent'), 'stripe': cv('paper'), 'door': cv('flag'),
+              'win': cv('water'), 'pole': cv('ink'), 'table': cv('paper'), 'bulb': cv('paper')}, line='accent')
+    p.solid(R(8, 62, 168, 98, 8), (8, 62, 168, 98), 'wall')
+    p.solid(R(2, 48, 180, 20, 8), (2, 48, 180, 20), 'roof')
+    p.solid(R(8, 74, 168, 24, 6), (8, 74, 168, 24), 'awn')
+    for x in (20, 62, 104, 146):
+        p.flat(R(x, 74, 14, 24, 0), 'stripe')
+    p.glow_rect(22, 108, 70, 44, 10)
+    p.solid(R(112, 106, 44, 54, 22), (112, 106, 44, 54), 'door', sil=False)
+    for x in (26, 62, 98, 134, 160):
+        p.circle_glow(x, 104, 3, 'bulb')
+    p.flat(R(206, 112, 4, 48, 2), 'pole')
+    p.flat(P('M184 114 Q208 80 232 114 Z'), 'awn', sil=True)
+    p.flat(lambda a: f'<ellipse cx="208" cy="158" rx="20" ry="6" {a}/>', 'table', sil=True)
+    return p
+
+def hotel():
+    p = make('hotel', 'A four-storey guest hotel with a lit sign', '0 0 192 248',
+             {'wall': cv('park'), 'roof': cv('accent'), 'door': cv('flag'), 'awn': cv('accent'), 'win': cv('water'), 'sign': cv('paper')},
+             line='accent')
+    p.solid(R(24, 52, 136, 180, 8), (24, 52, 136, 180), 'wall')
+    p.solid(R(14, 38, 156, 20, 7), (14, 38, 156, 20), 'roof')
+    p.glow_rect(60, 12, 64, 20, 10, 'sign')
+    for y in (68, 106, 144):
+        for x in (42, 80, 118):
+            p.glow_rect(x, y, 24, 28, 8)
+    p.solid(R(76, 186, 32, 46, 16), (76, 186, 32, 46), 'door', sil=False)
+    p.solid(R(60, 176, 64, 14, 6), (60, 176, 64, 14), 'awn')
+    return p
+
+def shuttle():
+    p = make('shuttle', 'A wedding shuttle bus with lit windows', '0 0 232 114',
+             {'body': cv('flag'), 'stripe': cv('paper'), 'win': cv('water'), 'wheel': cv('ink'), 'hub': cv('paper'), 'lamp': cv('paper')},
+             line='accent')
+    p.solid(R(8, 22, 208, 60, 16), (8, 22, 208, 60), 'body')
+    p.flat(R(8, 54, 208, 8, 0), 'stripe')
+    for i in range(5):
+        p.glow_rect(26 + 37 * i, 32, 29, 18, 6)
+    p.circle_glow(204, 70, 5, 'lamp')
+    for x in (56, 168):
+        p.ball(x, 84, 14, 'wheel')
+        p.flat(lambda a, x=x: f'<circle cx="{x}" cy="84" r="5" {a}/>', 'hub')
+    return p
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description='Generate the Bubblegum Atlas illustrations.')
     ap.add_argument('--style', choices=['deep-line', 'deep', 'light', 'v1'], default='deep-line')
@@ -369,6 +495,13 @@ if __name__ == '__main__':
         'shared/prop-tree-round': tree(),
         'shared/person-guest-01': guest1(),
         'shared/person-guest-02': guest2(),
+        'wedding/landmark-jetty': jetty(),
+        'wedding/landmark-boathouse': boathouse(),
+        'wedding/landmark-arch': arch(),
+        'wedding/landmark-marquee': marquee(),
+        'wedding/landmark-cafe': cafe(),
+        'wedding/landmark-hotel': hotel(),
+        'wedding/prop-shuttle': shuttle(),
     }
     for fname, piece in pieces.items():
         path = f'{args.out}/{fname}.svg'

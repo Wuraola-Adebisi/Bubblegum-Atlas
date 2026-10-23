@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-23. Stage: 6 and 7 (deep line style and the Day, Dusk and Night switch built, awaiting a real-browser check). Tokens built and verified on a style tile. Build step 3 (map engine) is next.
+Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build step 3 (map engine with a mock wedding config) is built and checked in headless Chromium, awaiting a real-browser check. Build step 4 (journey hero) is next.
 
 ---
 
@@ -34,6 +34,9 @@ Last updated: 2026-10-23. Stage: 6 and 7 (deep line style and the Day, Dusk and 
 - Pop-up working brand and category in section 12.
 - Case study switcher showing both builds on one engine.
 - Performance and accessibility targets in section 17.
+- Step 3 additions to the `EventConfig` types (all optional except `clock`): `EventConfig.clock`, `MapConfig.waves`, `Pin.labelSide`, `Route.note`. Placement `scale` multiplies the illustration's own viewBox width. Section 10 gets updated once these are confirmed.
+- Map keyboard model: arrow keys move focus to the nearest place in that direction, Enter opens details, Shift with arrows pans, plus and minus zoom, 0 resets, Escape closes details.
+- Hash routing (`#/map`) until React Router arrives with step 6.
 
 ### Open
 - Final couple names, venue name and dates (placeholders for now).
@@ -597,7 +600,7 @@ Changes from the earlier draft: the press shadow is a 3px pink-200 offset (it wa
 | 0 | Scaffold repo (Vite, React, TS, Tailwind), tokens, fonts | Tokens page renders and fonts load |
 | 1 | Style tile page: palette, type, lines, radius, outline, contours | Built and verified in a headless browser (build, lint, console, mobile width). Owner approved the look (2026-10-23) |
 | 2 | Illustration test sheet: ferry, estate house, tree, two people | Approved (2026-10-23) in the deep line style, with day, dusk and night renders |
-| 3 | Map engine with mock wedding config: zones, pins, layers, routes, list view | Pins, layers and keyboard work |
+| 3 | Map engine with mock wedding config: zones, pins, layers, routes, list view | Pins, layers and keyboard work. Built 2026-10-23, headless Chromium checks pass, real-browser check pending |
 | 4 | Journey hero: ferry scroll with route draw-on | Recording is shareable, reduced-motion mode works |
 | 5 | Scene system, Day, Dusk and Night switch, scrubber and NowPanel | All five keyframes look right, contrast holds, lit windows read at night |
 | 6 | Remaining wedding pages: story trail, plan, party, RSVP, share card, info | Every flow works end to end |
@@ -669,3 +672,13 @@ Open questions: Couple names, venue and dates. Pop-up brand and category. Animat
 Files created or changed: `tools/illustrations/gen.py`, `tools/illustrations/build_sheet.py`, the five SVGs in `src/assets/illustrations`, `public/illustration-sheet.html`, `public/illustration-v1/*`, `src/index.css`, `src/lib/scene.ts`, `src/StyleTile.tsx`, `src/tile/*`, `.gitignore`, this brief.
 Parked issues: Not yet seen in a real browser (render checks are from a Python SVG rasterizer and a clean build). A second chat found the committed repo without the night keyframe and with the pale scene values in `scene.ts`, so the latest zip had not been applied. Check `src/lib/scene.ts` for a Night keyframe before building.
 Next step: Apply and push the latest zip, then step 3: typed `EventConfig`, a mock wedding config, MapCanvas, Pin, LayerToggle and a list view with the keyboard model, with the remaining wedding landmarks drawn in the same style as the map needs them.
+
+### Status: 2026-10-23 (build step 3)
+Stage: 8 Components and 9 Pages and flows (map engine)
+Done this session: Typed `EventConfig` and a mock wedding config (3 zones, 9 pins, 4 layers, 3 routes, a 12-item schedule). Map engine: `MapCanvas`, `Pin`, `LabelTag`, `LeaderLine`, `LegendCard` (layers and routes), `PinList`, `PinDetails`, `RouteSteps`, `ModeSwitch`, `TimeScrubber`, a `MapExplorer` container and a `/#/map` page. Seven landmarks added to `gen.py`: jetty, boathouse, ceremony arch, marquee, cafe, hotel, shuttle. Added `--scene-night` token. Build, lint and headless Chromium checks pass (keyboard, zoom, layers, list view, night, 390 px width, no console errors).
+Decided this session: None new.
+Proposed, awaiting confirmation: The type additions and keyboard model listed in section 1. Labels show only when the map is about 672 px wide or more, otherwise only the selected pin shows its label and the list view carries the rest.
+Open questions: Same as before, plus whether the map should crop or zoom by default on phones.
+Files created or changed: see the zip file list in the chat. New: `src/data/events/*`, `src/features/map/*`, `src/features/scene/*`, `src/components/LabelTag.tsx`, `LeaderLine.tsx`, `src/routes/MapPage.tsx`, `src/lib/time.ts`, seven SVGs. Changed: `tools/illustrations/gen.py`, `src/App.tsx`, `src/index.css`, this brief.
+Parked issues: Not seen in a real browser. On a 390 px screen the map is small, pins are close together and the zoom buttons cover part of it. Not done yet: cake and bridal party illustrations (no page needs them until step 6), `build_sheet.py` still shows only the first five pieces, `BottomSheet` for mobile pin details (details sit under the map for now), `NowPanel` (step 5).
+Next step: Step 4, the journey hero: ferry scroll with route draw-on, after you confirm the animation library (Framer Motion or GSAP).

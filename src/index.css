@@ -102,6 +102,7 @@
   --scene-water: #cbe8f2;
   --scene-land: #ffc9db;
   --scene-park: #b6e4cd;
+  --scene-night: #1e2457;
   --scene-halo: 0;
   --scene-glow: 0;
 }
@@ -208,6 +209,13 @@
   transform-box: fill-box;
   transform-origin: center;
   animation: pin-pop 420ms var(--ease-pop) both;
+}
+
+/* Inlined illustrations fill the width of their wrapper */
+.illo > svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 /* Time scrubber: a 44px touch target around a 4px track and a hairline thumb */
