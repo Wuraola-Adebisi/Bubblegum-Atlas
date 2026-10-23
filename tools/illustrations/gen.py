@@ -208,6 +208,29 @@ class DeepPiece(Piece):
     def stroke_path(self, d, w=5):
         self.art.append(f'<path d="{d}" fill="none" stroke="{cv("water-deep")}" stroke-width="1.5px" stroke-linecap="round" vector-effect="non-scaling-stroke"/>')
 
+    def css(self):
+        # Night dimming: every fill is pulled toward a deep navy by --scene-halo, so lit windows stand out.
+        # Halo: a larger soft yellow shape behind each lit window. It only shows at night.
+        def dim(c):
+            return f'color-mix(in oklab, var(--scene-night, #1E2457) calc(var(--scene-halo, 0) * 38%), {c})'
+        out = []
+        for part, base in self.parts.items():
+            shade = f'color-mix(in oklab, {base} 86%, {cv("ink")})'
+            hi = f'color-mix(in oklab, {base} 60%, #fff)'
+            out.append(f'.{self.cls(part)}{{fill:{dim(base)}}}.{self.cls(part, "-s")}{{fill:{dim(shade)}}}.{self.cls(part, "-h")}{{fill:{dim(hi)}}}')
+        out.append(f'.{self.name}-glow{{fill:{cv("glow")};opacity:var(--scene-glow,0)}}')
+        out.append(f'.{self.name}-halo{{fill:{cv("glow")};opacity:calc(var(--scene-halo,0) * .45);stroke:none}}')
+        return ''.join(out)
+
+    def glow_rect(self, x, y, w, h, rx, part='win'):
+        pad = 7
+        self.art.append(f'<rect class="{self.name}-halo" x="{x - pad}" y="{y - pad}" width="{w + 2 * pad}" height="{h + 2 * pad}" rx="{rx + pad}"/>')
+        super().glow_rect(x, y, w, h, rx, part)
+
+    def circle_glow(self, cx, cy, r, part='win'):
+        self.art.append(f'<circle class="{self.name}-halo" cx="{cx}" cy="{cy}" r="{r + 7}"/>')
+        super().circle_glow(cx, cy, r, part)
+
     def svg(self):
         px, py = self.pad
         return (
@@ -237,8 +260,8 @@ def P(d):
 def ferry():
     p = make('ferry', 'A pink and berry passenger ferry with a glowing cabin', '0 0 270 190',
               {'hull': cv('accent'), 'stripe': cv('paper'), 'cabin': cv('land'), 'bridge': cv('water'),
-               'funnel': cv('flag'), 'band': cv('accent'), 'win': cv('water-deep'), 'mast': cv('ink'), 'pennant': cv('glow')},
-              line='ink', full=('funnel', 'band', 'pennant'))
+               'funnel': cv('flag'), 'band': cv('accent'), 'win': cv('water-deep'), 'mast': cv('water-deep'), 'pennant': cv('glow')},
+              line='accent', full=('funnel', 'band', 'pennant'))
     p.flat(R(58, 26, 4, 42, 2), 'mast', sil=True)
     p.flat(P('M62 28 L92 37 L62 46 Z'), 'pennant', sil=True)
     p.solid(R(128, 8, 26, 32, 5), (128, 8, 26, 32), 'funnel')

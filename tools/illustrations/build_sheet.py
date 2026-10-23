@@ -21,7 +21,7 @@ for k, v in build('v1').items():
         f.write(v.svg())
 
 def fig(name, width, bg='transparent'):
-    return (f'<figure><div class="card" style="background:{bg}"><div style="width:{width}px">{light[name]}</div></div>'
+    return (f'<figure><div class="card stage"><div style="width:{width}px">{light[name]}</div></div>'
             f'<figcaption>{name}</figcaption></figure>')
 
 def old(name, width):
@@ -40,7 +40,7 @@ html = f"""<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bubblegum Atlas: illustration test sheet</title>
 <style>
-  :root {{ --scene-glow: 0; --color-ink: #1F2F6B; }}
+  :root {{ --scene-glow: 0; --scene-halo: 0; --scene-sky: #FFF6F8; --scene-water: #BFE4F0; --scene-land: #FFC9DB; --color-ink: #1F2F6B; }}
   body {{ margin: 0; padding: 40px 24px 80px; background: #FFF6F8; color: #1F2F6B; font: 17px/1.6 "DM Sans Variable", "DM Sans", system-ui, sans-serif; }}
   main {{ max-width: 1280px; margin: 0 auto; }}
   h1 {{ font: 800 clamp(2rem, 5vw, 3.25rem)/1 "Bricolage Grotesque Variable", system-ui, sans-serif; margin: 0 0 12px; }}
@@ -49,15 +49,23 @@ html = f"""<!doctype html>
   .row {{ display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-end; }}
   figure {{ margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }}
   figcaption {{ font-size: 14px; font-weight: 500; }}
-  .card {{ padding: 12px; display: flex; align-items: flex-end; justify-content: center; }}
+  .card {{ padding: 12px; display: flex; align-items: flex-end; justify-content: center; border-radius: 20px; }}
+  .stage {{ background: var(--scene-sky, #FFF6F8); }}
   svg {{ display: block; width: 100%; height: auto; }}
   img {{ display: block; height: auto; max-width: 100%; }}
   .panel {{ background: #fff; border: 1.5px dashed #6F8FDB; border-radius: 28px; padding: 24px; max-width: 520px; }}
   label {{ display: flex; justify-content: space-between; font-weight: 500; margin-bottom: 12px; }}
   input[type=range] {{ width: 100%; accent-color: #B0306B; }}
-  .scale {{ position: relative; width: 1000px; max-width: 100%; height: 300px; border-radius: 28px; overflow: hidden; background: #BFE4F0; }}
-  .scale .land {{ position: absolute; left: 6%; right: 6%; top: 18%; bottom: 8%; background: #FFC9DB; border-radius: 46% 54% 50% 50% / 55% 45% 55% 45%; border: 1.5px solid #B0306B; }}
+  .scale {{ position: relative; width: 1000px; max-width: 100%; height: 300px; border-radius: 28px; overflow: hidden; background: var(--scene-water); }}
+  .scale .land {{ position: absolute; left: 6%; right: 6%; top: 18%; bottom: 8%; background: var(--scene-land); border-radius: 46% 54% 50% 50% / 55% 45% 55% 45%; border: 1.5px solid #B0306B; }}
   .scale > div[style] {{ position: absolute; }}
+  .modes {{ border: 0; padding: 0; margin: 0 0 20px; display: flex; gap: 12px; flex-wrap: wrap; }}
+  .modes legend {{ font: 800 1.1rem/1.2 'Bricolage Grotesque Variable', system-ui, sans-serif; padding: 0; margin-bottom: 12px; }}
+  .modes label {{ display: block; margin: 0; }}
+  .modes input {{ position: absolute; opacity: 0; width: 1px; height: 1px; }}
+  .modes span {{ display: inline-block; padding: 12px 24px; border: 1.5px solid #B0306B; border-radius: 999px; color: #B0306B; font-weight: 500; cursor: pointer; }}
+  .modes input:checked + span {{ background: #B0306B; color: #fff; }}
+  .modes input:focus-visible + span {{ outline: 3px solid #1F2F6B; outline-offset: 2px; }}
   .phone {{ width: 360px; max-width: 100%; }}
 </style>
 </head>
@@ -67,8 +75,14 @@ html = f"""<!doctype html>
   <p>The same five pieces with the deep v1 colors and shading, a 1.5 px hairline in one color per piece, and no white sticker outline. Windows light up with the time slider. Version 1 is shown underneath for comparison.</p>
 
   <div class="panel">
-    <label for="glow"><span>Time of day</span><span id="glow-out">Daytime</span></label>
-    <input id="glow" type="range" min="0" max="100" value="0" aria-valuetext="Daytime">
+    <fieldset class="modes">
+      <legend>Scene mode</legend>
+      <label><input type="radio" name="mode" value="33" checked><span>Day</span></label>
+      <label><input type="radio" name="mode" value="78"><span>Dusk</span></label>
+      <label><input type="radio" name="mode" value="100"><span>Night</span></label>
+    </fieldset>
+    <label for="glow"><span>Time of day</span><span id="glow-out">Midday</span></label>
+    <input id="glow" type="range" min="0" max="100" value="33" aria-valuetext="Midday">
   </div>
 
   <h2>Deep line style, large</h2>
@@ -100,15 +114,43 @@ html = f"""<!doctype html>
   </div>
 </main>
 <script>
+  var frames = [
+    {{ t: 0, name: 'Morning', sky: '#FFE9EF', water: '#CBE8F2', land: '#FFC9DB', glow: 0, halo: 0 }},
+    {{ t: 0.3, name: 'Midday', sky: '#F4FBFF', water: '#BFE4F0', land: '#FFC9DB', glow: 0, halo: 0 }},
+    {{ t: 0.55, name: 'Golden hour', sky: '#FFE8CC', water: '#B8C9E6', land: '#FFB9C9', glow: 0.3, halo: 0 }},
+    {{ t: 0.78, name: 'Dusk', sky: '#D9D3F3', water: '#6F8FDB', land: '#F7A8C8', glow: 1, halo: 0.3 }},
+    {{ t: 1, name: 'Night', sky: '#1E2457', water: '#2B3A7E', land: '#D982AE', glow: 1, halo: 1 }}
+  ];
+  function hex(c) {{ return [1, 3, 5].map(function (i) {{ return parseInt(c.slice(i, i + 2), 16); }}); }}
+  function mixHex(a, b, p) {{
+    var x = hex(a), y = hex(b);
+    return '#' + x.map(function (v, i) {{ return Math.round(v + (y[i] - v) * p).toString(16).padStart(2, '0'); }}).join('');
+  }}
   var slider = document.getElementById('glow');
   var out = document.getElementById('glow-out');
-  slider.addEventListener('input', function () {{
-    var v = Number(slider.value) / 100;
-    document.getElementById('sheet').style.setProperty('--scene-glow', String(v));
-    var label = v < 0.25 ? 'Daytime' : v < 0.75 ? 'Golden hour' : 'Dusk';
-    out.textContent = label;
-    slider.setAttribute('aria-valuetext', label);
+  var sheet = document.getElementById('sheet');
+  var radios = document.querySelectorAll('input[name="mode"]');
+  function apply(v) {{
+    var t = v / 100, i = 0;
+    while (i < frames.length - 2 && t > frames[i + 1].t) i += 1;
+    var a = frames[i], b = frames[i + 1];
+    var p = Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t)));
+    var near = Math.abs(t - a.t) <= Math.abs(t - b.t) ? a : b;
+    sheet.style.setProperty('--scene-sky', mixHex(a.sky, b.sky, p));
+    sheet.style.setProperty('--scene-water', mixHex(a.water, b.water, p));
+    sheet.style.setProperty('--scene-land', mixHex(a.land, b.land, p));
+    sheet.style.setProperty('--scene-glow', String(a.glow + (b.glow - a.glow) * p));
+    sheet.style.setProperty('--scene-halo', String(a.halo + (b.halo - a.halo) * p));
+    out.textContent = near.name;
+    slider.setAttribute('aria-valuetext', near.name);
+    var mode = t < 0.55 ? '33' : t < 0.9 ? '78' : '100';
+    radios.forEach(function (r) {{ r.checked = r.value === mode; }});
+  }}
+  slider.addEventListener('input', function () {{ apply(Number(slider.value)); }});
+  radios.forEach(function (r) {{
+    r.addEventListener('change', function () {{ slider.value = r.value; apply(Number(r.value)); }});
   }});
+  apply(33);
 </script>
 </body>
 </html>

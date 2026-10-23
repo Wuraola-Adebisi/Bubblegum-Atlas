@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-22. Stage: 6 (deep line style built on the test sheet and style tile, awaiting approval). Tokens built and verified on a style tile.
+Last updated: 2026-10-23. Stage: 6 and 7 (deep line style and the Day, Dusk and Night switch built, awaiting a real-browser check). Tokens built and verified on a style tile. Build step 3 (map engine) is next.
 
 ---
 
@@ -18,11 +18,17 @@ Last updated: 2026-10-22. Stage: 6 (deep line style built on the test sheet and 
 - Nothing static. The owner loves the ferry-crossing opening, the time-of-day scrubber, and all the proposed dynamic features.
 - The owner cannot illustrate. Claude writes the illustrations as SVG from a spec.
 - Work is shared on social media to win clients. A short recording of the signature interaction is a deliverable.
+- The style tile and the illustration test sheet are approved (2026-10-23).
+- Illustration and map look: the deep v1 palette and three-tone shading, a thin 1.5 px outline over every shape, and no thick white borders. White is a fill and never a border wider than 3 px. The pale-tint version was tried and not chosen. The owner loves the characters and the line-art shapes and wants them kept for all visuals.
+- A Day, Dusk and Night mode switch, so the yellow in windows and string lights comes out bright at night.
+- The owner works on Windows with VS Code, PowerShell and Node 24 in her own repo (https://github.com/Wuraola-Adebisi/Bubblegum-Atlas, public) and runs every command herself. Claude gives complete files or a zip with exact steps. `npm create` fails on her machine. No co-author credit for Claude on commits.
 
 ### Proposed (awaiting confirmation)
-- All hex values in section 5 (estimated from the images, to verify at the style tile stage).
+- All hex values in section 5 (estimated from the images, contrast verified on the style tile; confirm the look with a sampler).
 - Type pairing: Bricolage Grotesque, Caveat, DM Sans.
-- Flair: cartographic furniture as UI (legend as menu, scale bar as progress, compass rose as logo and back-to-top), contour-line texture on land, berry label pills with white outline.
+- Flair: cartographic furniture as UI (legend as menu, scale bar as progress, compass rose as logo and back-to-top), contour-line texture on land, label pills with a hairline berry border.
+- Hairline buttons and label pills (paper fill, 1.5 px berry border). The pale wash tokens stay in the system for soft fills only.
+- Night keyframe values and the night dimming amount in sections 5.2 and 7.
 - Stack choices in section 10 (animation library, share card library).
 - Wedding setting, placeholder names and dates in section 11.
 - Pop-up working brand and category in section 12.
@@ -36,6 +42,8 @@ Last updated: 2026-10-22. Stage: 6 (deep line style built on the test sheet and 
 - Whether to include a passcode gate on the wedding site.
 - Whether to include optional ambient sound (default: no).
 - Repo names and domains.
+- Whether the hairlines read well on a real phone (not yet checked in a real browser).
+- Where the Day, Dusk and Night switch sits in the page layouts, and whether it replaces or sits beside the continuous scrubber on the wedding site.
 
 ---
 
@@ -71,12 +79,12 @@ Replicability claim (keep it honest in the case study): a new event is a new dat
 1. A pink landmass as the hero shape, with white linework as its structure.
 2. Landmarks and objects drawn far bigger than the map around them.
 3. Handwritten labels tied to places by thin leader lines ending in dots.
-4. A white sticker outline around illustrations.
+4. A thin berry hairline over every illustration shape, and no thick white borders anywhere.
 5. A dashed route that links content into a path.
 
 **The one memorable thing:** the hero map shape and its journey. Everything else stays quiet.
 
-**Anti-patterns:** black outlines and hard black shadows, gradients and glassmorphism, neon or cold greys, stock icon sets, white text on bright pink, tiny low-contrast handwriting, centered symmetrical card grids, one radius on everything, realistic photography.
+**Anti-patterns:** black outlines and hard black shadows, white borders thicker than 3 px, white sticker outlines, solid pink masses over about a third of the viewport, gradients and glassmorphism, neon or cold greys, stock icon sets, white text on bright pink, tiny low-contrast handwriting, centered symmetrical card grids, one radius on everything, realistic photography.
 
 ---
 
@@ -87,7 +95,7 @@ Twelve illustrated maps (neighborhood posters, city maps, food maps, a school an
 **What recurs:**
 - Pink is the ground, never just an accent. It runs from blush to bubblegum to hot magenta, always as land, always against a contrasting field (white, cream, sky blue, periwinkle).
 - Supporting cast: pastel blue water, mint or emerald parks, butter yellow and tangerine and coral accents, navy as the text color.
-- White does the structural work: roads, label cards, sticker outlines, generous margins. This is where the airy feel comes from.
+- White does the structural work as a fill: roads, label cards, panels and generous margins. This is where the airy feel comes from. It is never used as a thick border.
 - Big scale contrast between a heavy title and tiny handwritten annotations.
 - Three label modes: colored flags or tags with white text, dark pills, plain handwriting with leader lines.
 - Illustration ranges from flat vector to gouache to isometric. One palette per image, no black outlines.
@@ -111,8 +119,11 @@ Primitives:
 | pink-200 | #FFC9DB |
 | pink-400 | #FF8FB8 |
 | pink-700 | #B0306B |
+| blue-50 | #DFF2F8 |
+| blue-100 | #D1DBF4 |
 | blue-200 | #BFE4F0 |
 | blue-500 | #6F8FDB |
+| green-100 | #CFEDDE |
 | green-300 | #A8DEC3 |
 | green-600 | #17935F |
 | green-800 | #0F6B45 |
@@ -128,13 +139,17 @@ Semantic roles:
 | Token | Source | Role |
 |---|---|---|
 | --color-ground | pink-50 | page background |
-| --color-paper | white | label cards, road lines, sticker outlines, panels |
+| --color-paper | white | label cards, road lines, panels (a fill, never a thick border) |
 | --color-land | pink-200 | the hero landmass and large fills |
+| --color-land-wash | pink-100 | soft fills, hover states, pale pills |
 | --color-land-strong | pink-400 | illustration pink, feature fills |
 | --color-accent | pink-700 | buttons, banners, small text in the pink world |
 | --color-water | blue-200 | water and secondary ground |
-| --color-water-deep | blue-500 | strong blue ground, tags |
+| --color-water-wash | blue-50 | soft backgrounds |
+| --color-water-deep | blue-500 | strong blue ground, tags, track lines, dashed borders, waves |
+| --color-water-deep-wash | blue-100 | soft blue tints |
 | --color-park | green-300 | parks and positive fills |
+| --color-park-wash | green-100 | soft park tints |
 | --color-park-deep | green-600 | large display type only |
 | --color-glow | yellow-300 | lights, highlights |
 | --color-flag | orange-400 | flags and accents |
@@ -164,21 +179,31 @@ Contrast (verified on 2026-10-21, measured from the live token values on the sty
 | error on paper | 6.54:1 | status text |
 | white on land-strong | 2.13:1 | forbidden |
 | white on water-deep | 3.17:1 | forbidden for small text |
+| ink on land-wash | 10.40:1 | any text |
+| ink on water-wash | 10.85:1 | any text |
+| ink on park-wash | 10.03:1 | any text |
+| ink on water-deep-wash | 9.03:1 | any text |
+| accent on land-wash | 5.01:1 | small text OK |
+| accent on water-wash | 5.23:1 | small text OK |
+| accent on paper | 6.03:1 | button text and borders |
+| water-deep on paper | 3.17:1 | UI lines only (scrubber track, dashed borders) |
+| water-deep on water-wash | 2.75:1 | decoration only (waves) |
 
 Rule: text never sits directly on bright pink or on strong blue. Labels sit on paper or accent pills.
 
-### 5.2 Scene keyframes (time-of-day)
+### 5.2 Scene keyframes (time-of-day, five stops)
 
-Only the map canvas shifts. UI chrome stays constant so contrast is guaranteed. Starter values:
+Only the map canvas shifts. UI chrome stays constant so contrast is guaranteed. Values are in `src/lib/scene.ts`.
 
-| Keyframe | t | sky | water | land | park | glow |
-|---|---|---|---|---|---|---|
-| morning | 0 | #FFE9EF | #CBE8F2 | #FFC9DB | #B6E4CD | 0 |
-| midday | 0.33 | #F4FBFF | #BFE4F0 | #FFC9DB | #A8DEC3 | 0 |
-| golden | 0.66 | #FFE8CC | #B8C9E6 | #FFB9C9 | #A5D4B4 | 0.3 |
-| dusk | 1 | #D9D3F3 | #6F8FDB | #F7A8C8 | #7FBF9F | 1 |
+| Keyframe | t | sky | water | land | park | glow | halo |
+|---|---|---|---|---|---|---|---|
+| morning | 0 | #FFE9EF | #CBE8F2 | #FFC9DB | #B6E4CD | 0 | 0 |
+| midday | 0.30 | #F4FBFF | #BFE4F0 | #FFC9DB | #A8DEC3 | 0 | 0 |
+| golden | 0.55 | #FFE8CC | #B8C9E6 | #FFB9C9 | #A5D4B4 | 0.3 | 0 |
+| dusk | 0.78 | #D9D3F3 | #6F8FDB | #F7A8C8 | #7FBF9F | 1 | 0.3 |
+| night | 1 | #1E2457 | #2B3A7E | #D982AE | #3F8F6E | 1 | 1 |
 
-Glow drives lantern, window and string-light opacity.
+Glow (`--scene-glow`) drives the lit yellow of windows, lanterns and string lights. Halo (`--scene-halo`) drives the night look: every illustration fill is pulled up to 38 percent toward deep navy, lit windows get a soft yellow bloom made of a larger translucent shape (no blur filter), and stars and a moon appear on the scene. The 0.78 stop is the first dance, about 8:30 pm on the wedding clock.
 
 ### 5.3 Typography (Proposed)
 
@@ -207,17 +232,19 @@ Rules: sentence case, no all-caps labels. Big titles sit in a white banner or a 
 - Section padding: `clamp(4rem, 10vw, 9rem)`.
 - 12-column grid, 1280px max width, wide gutters. Illustrations may break the grid and overlap edges. Compositions are asymmetric with space around each piece.
 - Radius scale: blob (SVG shapes) for hero forms, 28px for panels, 999px for pills and tags, small cut-angle ends for banners and flags.
-- Borders: 4px white sticker outline on illustrations. 2px dashed water-blue border on legend cards.
-- Shadows: none by default. One exception: a flat 6px offset in bubblegum pink (pink-400) under buttons, dropping to 2px when pressed.
-- Texture: contour lines on land (Proposed), at low contrast. No SVG turbulence filters over large areas.
+- Borders: 1.5px berry hairlines on illustrations, buttons and label pills. No white border is wider than 3px. 2px dashed water-deep border on legend cards.
+- Shadows: none by default. One exception: a flat 3px offset in pink-200 under primary buttons, dropping to 1px when pressed.
+- Texture: contour lines on land (Proposed), 1px at low contrast. No SVG turbulence filters over large areas.
 
 ### 5.5 Line system
 
-- Roads: white, 6 to 10px at hero scale, round joins and caps.
+- Roads: white, 3px at hero scale, round joins and caps.
 - Leader lines: 1.5px navy ending in a 6px filled dot.
-- Routes: dashed 3px with round caps, dash pattern about 2 and 10, accent or deep-blue color, arrowheads at turns.
-- Map outline: 3px white or darker-pink stroke.
+- Routes: dashed 2.5px with round caps, dash pattern 1 and 9, accent or deep-blue color, arrowheads at turns.
+- Map outline: 1.5px berry (pink-700) hairline coastline.
 - Contour lines (texture): 1px, land color mixed 15 percent toward white.
+- Waves: 1.5px water-deep lines.
+- Illustration outline: 1.5px hairline that stays 1.5px at every scale (`vector-effect: non-scaling-stroke`), one line color per piece. Minimum 1px on mobile.
 
 ---
 
@@ -227,7 +254,7 @@ Cartography tools become interface:
 - **Legend card as menu.** The legend lists the pages and layers. Tapping an item scrolls or toggles.
 - **Scale bar as progress.** A scale bar fills as the visitor scrolls or completes the passport.
 - **Compass rose** as the logo mark (hand-built SVG), the loader, and the back-to-top control.
-- **Berry label pills** with a white outline for map labels. These fix the white-on-pink contrast problem and become a recognizable label of our own.
+- **Label pills** are paper with a 1.5px berry border and ink text, which fixes the white-on-pink contrast problem and becomes a recognizable label of our own. Solid berry flags with white text are the accent label.
 
 ---
 
@@ -237,13 +264,13 @@ Illustrations are written as SVG by Claude. Flat vector, limited shading, consis
 
 **Shape language.** Rounded corners, chunky simplified forms, slightly exaggerated proportions, no fine detail below 2 units at design scale.
 
-**Outline.** Every illustration has a white sticker silhouette behind it: a union path in white with a 6-unit stroke and round joins. No black outlines anywhere.
+**Outline.** Every shape carries a 1.5 px hairline in one line color per piece (berry by default, green for the tree). There is no white sticker silhouette and no black outline. The ferry uses berry too, so nothing disappears into night water.
 
-**Shading.** Three tones per fill: base, shade (base mixed 14 percent with navy), highlight (base mixed 40 percent with white). Light comes from the top left, so shade sits on the right and bottom. No gradients.
+**Shading.** Three tones per fill: base, shade (base mixed 14 percent with navy), highlight (base mixed 40 percent with white). Light comes from the top left, so shade sits on the right and bottom. No gradients. At night every tone is pulled toward navy by `--scene-halo` (up to 38 percent).
 
 **Color use.** Each piece uses 5 to 7 colors from the palette. Fills use CSS variables so the scene system can theme them.
 
-**Glow elements.** Windows, lanterns and string lights use `--scene-glow` to fade in toward dusk.
+**Glow elements.** Windows, lanterns and string lights use `--scene-glow` to fade the lit yellow in toward dusk, and `--scene-halo` to add a soft bloom behind them at night.
 
 **Scale ladder (map viewBox 1600 by 1000):**
 - Hero landmarks: 140 to 260 units wide
@@ -262,13 +289,13 @@ Illustrations are written as SVG by Claude. Flat vector, limited shading, consis
 
 **Process.** Draw the test sheet first (ferry, estate house, tree, two people), render to PNG, review, then continue. The owner can refine any SVG in Figma.
 
-**Test sheet v1 (drawn 2026-10-21).** Five pieces: `landmark-ferry`, `landmark-estate`, `prop-tree-round`, `person-guest-01`, `person-guest-02`. Files live in `src/assets/illustrations/wedding` and `shared`. Each is 0.6 to 1.4 KB gzipped, far under the 8 KB budget. View them at `/illustration-sheet.html` in the dev server, which has a time slider that lights the windows and a map-scale check.
-- Generated from `tools/illustrations/gen.py`. Pieces are shape lists plus a part-to-color map, so edits are a change to the script and a re-run (`python tools/illustrations/gen.py` from the repo root).
-- Every fill is a CSS variable with a hex fallback, so inlined SVGs follow the tokens and standalone files still render. Shade is the base mixed 14 percent with ink, highlight is the base mixed 40 percent with white.
-- The white sticker outline is a stroked silhouette group behind the art, built automatically from the same shapes.
-- Windows have a base fill plus a glow layer whose opacity is `--scene-glow`.
+**Test sheet (approved 2026-10-23).** Five pieces: `landmark-ferry`, `landmark-estate`, `prop-tree-round`, `person-guest-01`, `person-guest-02`, in `src/assets/illustrations/wedding` and `shared`. Each is 0.6 to 1.6 KB gzipped, far under the 8 KB budget. View them at `/illustration-sheet.html` in the dev server (Day, Dusk and Night switch, time slider, map-scale and phone-width views, and version 1 underneath for comparison).
+- Generated from `tools/illustrations/gen.py`. Pieces are shape lists plus a part-to-color map, so edits are a change to the script and a re-run (`python tools/illustrations/gen.py` from the repo root). Styles: `deep-line` (default, the current look), `deep` (no outline), `light` (pale tints, tried and not chosen), `v1` (the original, byte-identical to the first commit). `python tools/illustrations/build_sheet.py` rebuilds the sheet and `public/illustration-v1`.
+- Every fill is a CSS variable with a hex fallback, so inlined SVGs follow the tokens and standalone files still render.
+- Windows have a base fill, a halo shape and a glow layer, driven by `--scene-halo` and `--scene-glow`.
 - People take `--skin` and `--hair` as inline CSS variables, so any tone from the palette can be set per instance.
-- SVGs must be inlined (as React components or raw imports) for the CSS variables to reach them. An `<img>` tag will show the hex fallbacks.
+- SVGs must be inlined (as React components or raw imports) for the CSS variables to reach them. An `<img>` tag will show the hex fallbacks, so it cannot show night.
+
 
 **Asset list, Build 1 (wedding):** ferry, jetty, estate house, ceremony arch with flowers, reception marquee with string lights, boathouse, lakeside cafe, guest hotel, shuttle bus, wedding cake, plus a bridal-party group of simple figures.
 
@@ -287,6 +314,7 @@ Illustrations are written as SVG by Claude. Flat vector, limited shading, consis
 - Pins pop in sequence (pop easing).
 - Stamps land with a quick scale and settle.
 - Scene shift follows the scrubber directly with no easing delay.
+- The Day, Dusk and Night switch moves the slider to a preset with no easing, so it works unchanged in reduced motion.
 
 **Ambient (one only):** gently drifting water on a 12 second loop.
 
@@ -307,16 +335,17 @@ Each component gets a full spec (playbook section 9 template) when built.
 | Component | Purpose | Variants and states | Notes |
 |---|---|---|---|
 | MapCanvas | SVG map scaled by viewBox | static, interactive, zoomed | Keyboard pan and zoom, list-view toggle. Labels are HTML overlays positioned by percent, never SVG text, so they stay at 20px or larger at every width. On narrow screens secondary labels move to a list |
-| Pin | Marker for a place | numbered, unnumbered, active, visited, disabled | Numbered only when the content is a sequence |
-| LabelTag | Place label | flag, pill, handwritten | Pills use ink on paper or white on accent |
+| Pin | Marker for a place | numbered, unnumbered, active, visited, disabled | 24px visible, 44px hit area. Numbered only when the content is a sequence |
+| LabelTag | Place label | flag, pill, handwritten | Pills are paper with a 1.5px berry border and ink text. Flags are solid accent with white text |
 | LeaderLine | Connects label and place | default | 1.5px navy, dot end |
 | LegendCard | Menu and key | collapsed, expanded | Dashed water border, doubles as navigation |
 | ScaleBar | Progress indicator | scroll, passport | Labelled with miles or steps in context |
 | CompassRose | Logo, loader, back-to-top | static, spinning (loader) | Hand-built SVG |
 | StickerCard | Illustration with outline | tilt -2 to 2 degrees, hover, focus | Content cards use this shape |
-| Button | Actions | primary, secondary, ghost, disabled, loading | Pill, accent fill, flat 6px offset, drops 4px on press |
+| Button | Actions | primary, secondary, ghost, disabled, loading | Pill, paper fill, 1.5px berry border, berry text, flat 3px pink-200 offset. Hover fills berry, press drops 2px, disabled is dashed |
 | NavPill | Site navigation | default, scrolled, mobile sheet | Floating white pill |
-| TimeScrubber | Controls scene time | default, focus, playing | Native range input styled, `aria-valuetext` with time and event |
+| TimeScrubber | Controls scene time | default, focus, playing | Native range input, 44px target, 4px water-deep track, 28px paper thumb with a berry border, `aria-valuetext` with time and event |
+| ModeSwitch | Jump to day, dusk or night | day, dusk, night | Radio group that moves the scrubber to a preset and follows it when dragged. Visible focus ring |
 | NowPanel | Live region for what is happening | default | Announces updates politely |
 | RouteBuilder | Pick stops, draw route | empty, building, saved | Shows walking or transport times |
 | PassportStamp | Collectable stamp | locked, landed, collected | Pop animation |
@@ -333,7 +362,7 @@ Each component gets a full spec (playbook section 9 template) when built.
 
 ## 10. Engine architecture (Proposed)
 
-**Stack.** React, TypeScript (strict), Vite, Tailwind CSS v4 (CSS-first `@theme`), React Router, deployed on Vercel. Fonts are self-hosted through Fontsource packages (`@fontsource-variable/bricolage-grotesque`, `@fontsource-variable/dm-sans`, `@fontsource-variable/caveat`). Tested versions: Node 22, Vite 8, React 19, Tailwind 4.3, TypeScript 6. Animation: Framer Motion (`motion/react`) is the leading option for scroll progress and path drawing. GSAP ScrollTrigger is the alternative. Decide when scaffolding. Share card export: `html-to-image` (verify font embedding), with the Web Share API where supported and a download fallback.
+**Stack.** React, TypeScript (strict), Vite, Tailwind CSS v4 (CSS-first `@theme`), React Router, deployed on Vercel. Fonts are self-hosted through Fontsource packages (`@fontsource-variable/bricolage-grotesque`, `@fontsource-variable/dm-sans`, `@fontsource-variable/caveat`). Tested versions: Node 22 in the sandbox and Node 24 on the owner machine, Vite 8, React 19, Tailwind 4.3, TypeScript 6. Animation: Framer Motion (`motion/react`) is the leading option for scroll progress and path drawing. GSAP ScrollTrigger is the alternative. Decide when scaffolding. Share card export: `html-to-image` (verify font embedding), with the Web Share API where supported and a download fallback. Illustration tooling lives in `tools/illustrations` (`gen.py`, `build_sheet.py`).
 
 **Folders.**
 ```
@@ -397,7 +426,8 @@ export interface MapConfig {
 export interface SceneKeyframe {
   t: number; // 0 to 1
   sky: string; water: string; land: string; park: string;
-  glow: number; // 0 to 1
+  glow: number; // 0 to 1, lit yellow
+  halo: number; // 0 to 1, night dimming, bloom, stars
 }
 
 export interface Zone {
@@ -438,7 +468,7 @@ export interface PassConfig {
 }
 ```
 
-**Time-of-day system.** One `t` value from 0 to 1 maps to the event's visible clock range (wedding: 8:00 am to 11:30 pm, pop-up: 10:00 am to 10:00 pm). A function `sceneAt(t)` finds the two surrounding keyframes and interpolates colors (a small JS lerp, set on the map root as CSS variables, throttled to animation frames). Glow opacity is a number variable. The UI chrome never reads scene variables. The scrubber is a native range input with `aria-valuetext` such as "4:30 pm, cocktail hour". A live region (NowPanel) announces what is happening at the chosen time.
+**Time-of-day system.** One `t` value from 0 to 1 maps to the event's visible clock range (wedding: 8:00 am to 11:30 pm, pop-up: 10:00 am to 10:00 pm). A function `sceneAt(t)` finds the two surrounding keyframes (five of them, morning to night) and interpolates colors, glow and halo (a small JS lerp, set on the map root as CSS variables, throttled to animation frames). The UI chrome never reads scene variables. The scrubber is a native range input with `aria-valuetext` such as "4:30 pm, golden hour". The ModeSwitch (Day, Dusk, Night) is a radio group that sets `t` to 0.33, 0.78 or 1 and reflects the scrubber when it moves. A live region (NowPanel) announces what is happening at the chosen time.
 
 **Route drawing.** Each visible route is a dashed path. A solid stroke mask animates `stroke-dashoffset` from 1 to 0 with `pathLength=1`, revealing the dashes without distorting them. The vehicle position comes from `getPointAtLength` mapped to scroll progress, with rotation from the tangent.
 
@@ -522,8 +552,8 @@ export interface PassConfig {
 **Capture list (Project A specific).**
 - Inspo board and extraction notes
 - Style tile and token page
-- Illustration test sheet and final sets
-- Scrubber recording across all four scene keyframes
+- Illustration test sheet and final sets, with the v1, pale-tint and deep-line versions side by side
+- Scrubber and mode switch recording across all five scene keyframes, ending on the lit night view
 - Route draw-on recording
 - Passport stamp landing recording
 - Share card examples
@@ -540,7 +570,7 @@ Follow playbook section 14. Sentence case, plain verbs, specific over clever. Fi
 
 ## 15. Anti-patterns (restated)
 
-Black outlines. Hard black shadows. Gradients. Glassmorphism. Neon or cold greys. Stock icons. White text on bright pink. Small low-contrast handwriting. Centered symmetric card grids. One radius everywhere. Realistic photography. Constant ambient motion. Fade-and-slide-up on every section.
+Black outlines. Hard black shadows. White borders thicker than 3 px. White sticker outlines. Solid pink masses over about a third of the viewport. Offset shadows above 3 px. Strokes above 2 px on illustrations. Gradients. Glassmorphism. Neon or cold greys. Stock icons. White text on bright pink. Small low-contrast handwriting. Centered symmetric card grids. One radius everywhere. Realistic photography. Constant ambient motion. Fade-and-slide-up on every section.
 
 ---
 
@@ -550,13 +580,13 @@ The source of truth is `src/index.css` in the repo. It uses Tailwind v4's CSS-fi
 
 Naming in code:
 - Primitives carry the color prefix so Tailwind generates utilities: `--color-pink-50`, `--color-pink-200`, `--color-navy-800`, and so on. Components do not use them.
-- Semantic roles are what components use: `--color-ground`, `--color-paper`, `--color-land`, `--color-land-strong`, `--color-accent`, `--color-water`, `--color-water-deep`, `--color-park`, `--color-park-deep`, `--color-glow`, `--color-flag`, `--color-ink`, `--color-success`, `--color-warning`, `--color-error`, plus `--color-contour` for texture.
+- Semantic roles are what components use: `--color-ground`, `--color-paper`, `--color-land`, `--color-land-wash`, `--color-land-strong`, `--color-accent`, `--color-water`, `--color-water-wash`, `--color-water-deep`, `--color-water-deep-wash`, `--color-park`, `--color-park-wash`, `--color-park-deep`, `--color-glow`, `--color-flag`, `--color-ink`, `--color-success`, `--color-warning`, `--color-error`, plus `--color-contour` for texture.
 - Utilities that exist: `bg-ground`, `bg-paper`, `bg-land`, `text-ink`, `text-accent`, `rounded-panel`, `rounded-pill`, `shadow-press`, `shadow-press-down`, `font-display`, `font-hand`, `font-body`, `text-display`, `text-h1`, `text-h2`, `text-h3`, `text-body`, `text-small`, `text-label`, `ease-standard`, `ease-pop`, `max-w-measure`.
-- Custom utilities: `duration-micro`, `duration-standard`, `sticker-edge` (white outline that follows a silhouette), `force-focus` (documentation only).
-- Scene variables live on `:root` as `--scene-sky`, `--scene-water`, `--scene-land`, `--scene-park` and `--scene-glow`, and are set by the time-of-day system on the map root. Scene keyframes live in `src/lib/scene.ts` for now and move into each event config later.
+- Custom utilities: `duration-micro`, `duration-standard`, `border-hair` (1.5px), the `.line-art` group class (1.5px berry hairline on every shape inside), `sticker-edge` (version 1 white outline, kept only for the retired comparison on the style tile), `force-focus` (documentation only). The `.scrubber` class styles the range input.
+- Scene variables live on `:root` as `--scene-sky`, `--scene-water`, `--scene-land`, `--scene-park`, `--scene-glow` and `--scene-halo`, and are set by the time-of-day system on the map root. Scene keyframes live in `src/lib/scene.ts` for now and move into each event config later.
 - Focus ring is global: 3px ink outline, 2px offset, with a 2px white gap.
 
-Changes from the earlier draft: the press shadow is pink-400 instead of pink-200, and the Tailwind v3 config snippet is retired.
+Changes from the earlier draft: the press shadow is a 3px pink-200 offset (it was 6px pink-200, then pink-400), and the Tailwind v3 config snippet is retired. Labels and buttons use 1.5px hairlines.
 
 ---
 
@@ -565,11 +595,11 @@ Changes from the earlier draft: the press shadow is pink-400 instead of pink-200
 | Step | Work | Done when |
 |---|---|---|
 | 0 | Scaffold repo (Vite, React, TS, Tailwind), tokens, fonts | Tokens page renders and fonts load |
-| 1 | Style tile page: palette, type, lines, radius, outline, contours | Built and verified in a headless browser (build, lint, console, mobile width). Owner approves the look in a real browser |
-| 2 | Illustration test sheet: ferry, estate house, tree, two people | Drawn and rendered in daytime and dusk. Owner approves shape language and scale |
+| 1 | Style tile page: palette, type, lines, radius, outline, contours | Built and verified in a headless browser (build, lint, console, mobile width). Owner approved the look (2026-10-23) |
+| 2 | Illustration test sheet: ferry, estate house, tree, two people | Approved (2026-10-23) in the deep line style, with day, dusk and night renders |
 | 3 | Map engine with mock wedding config: zones, pins, layers, routes, list view | Pins, layers and keyboard work |
 | 4 | Journey hero: ferry scroll with route draw-on | Recording is shareable, reduced-motion mode works |
-| 5 | Scene system and scrubber with NowPanel | All four keyframes look right, contrast holds |
+| 5 | Scene system, Day, Dusk and Night switch, scrubber and NowPanel | All five keyframes look right, contrast holds, lit windows read at night |
 | 6 | Remaining wedding pages: story trail, plan, party, RSVP, share card, info | Every flow works end to end |
 | 7 | Polish, motion pass, responsive pass, accessibility and performance QA | Playbook section 16 checklist passes |
 | 8 | Deploy to Vercel, confirm live, capture assets | Live URL confirmed, recordings exported |
@@ -614,101 +644,28 @@ Next step: Owner reviews the test sheet and approves or redirects the shape lang
 
 ---
 
-## 21. Lightness pass (2026-10-22)
+---
 
-Applies to the whole system: style tile, tokens, illustration kit, scene keyframes and controls. Where this section disagrees with section 3 (signature move 4), 5.1 to 5.5, 7 (outline and shading), 16 or 19, this section wins.
+## 19. Design history (what changed and why)
 
-### 21.1 Why
-Feedback: the style tile look and the illustration direction are approved, but blobs, islands, the ground and buttons feel thick. The cause is the heavy white border (about 10 px around the land, 6 to 10 px roads, 4 px sticker edge) plus solid pink masses and a 6 px offset shadow. Target: light, airy, cotton-candy, with light line art where possible. Four storefront references were added (monoline cafe line art, Kismet cafe, Val Mont Lac pop-up poster, Kiss coffee shop). Principles taken: thin even lines, pale tint fills, one solid accent, one line color per piece, empty space. Kiss contributes warmth only.
+Kept for the case study "early versus final" material. Earlier sections above already reflect the current decisions, so this log is only a record.
 
-### 21.2 Decisions
-Decided: the pass covers the whole style tile and the illustration kit. Everything below is Proposed until the owner approves the v2 renders.
+1. **Version 1 (2026-10-21).** Deep palette, three-tone shading, a white sticker outline around every illustration, a roughly 10 px white ring around the land, 6 to 10 px white roads and a 6 px offset button shadow.
+2. **Feedback (2026-10-22).** The look was approved but felt thick. The owner diagnosed the heavy white border as the cause and added four storefront references (monoline cafe line art, Kismet cafe, Val Mont Lac pop-up poster, Kiss coffee shop). Principles taken: thin even lines, one line color per piece, empty space, a few solid accents. Kiss gave warmth only.
+3. **Pale-tint version (not chosen).** Hairline art with pale tint fills, wash colors for land and water, lighter buttons and a lighter dusk. The owner loved the line art, the characters and the style, and wanted the deep v1 palette and shading instead. It stays available as `--style light`.
+4. **Deep line (chosen).** Option B of a comparison: v1 colors and shading, a 1.5 px outline, no white sticker, no thick white border. The tile land and water went back to the deep values, with thin roads and lighter buttons and labels. The wash tokens stay for soft fills.
+5. **Day, Dusk and Night (2026-10-23).** Added a fifth keyframe, a halo channel, night dimming of illustration fills, a bloom behind lit windows, stars and a moon, and a radio-group mode switch next to the scrubber.
 
-### 21.3 Rules
-- White is a fill, never a border. No white stroke is wider than 3 px.
-- Illustration outline: 1.5 px hairline (`vector-effect: non-scaling-stroke`, so it stays 1.5 px at every scale), one line color per piece (berry by default, navy for the ferry, green for the tree). Minimum 1 px on mobile.
-- Fill: one pale tint per part. Berry parts use land pink-200 mixed 55 percent with white, other parts use the base mixed 32 percent with white. Skin and hair stay full strength.
-- Shading: none. Optional short 1 px hatch lines (generator `hatch=True`).
-- One solid accent per piece (funnel and pennant on the ferry, roof, door and flag on the estate).
-- Sticker silhouette dropped. The `sticker-edge` utility is kept only for the retired comparison on the style tile.
-- Land and islands: pale wash (pink-100) with a 1.5 px berry coastline and 1 px contour rings. Water: blue-50 wash. Parks: green-100 with a 1 px green hairline.
-- Roads: 3 px white over a 5 px pink-200 casing. Routes: dashed 2.5 px, pattern 1 and 9. Waves: 1.5 px water-deep. Leader lines unchanged.
-- Buttons: primary is a paper fill with a 1.5 px berry border, berry text, a flat 3 px pink-200 offset, a 1 px lift and berry fill on hover, a 2 px drop on press. Secondary has a border only. Ghost is text with an underline on hover. Disabled uses a dashed water-deep border.
-- Labels: pills are paper with a 1.5 px berry border and ink text. Solid berry flags with white text are the accent label.
-- Pins: 24 px visible, 44 px hit area (shown dashed on the tile). White pin ring 2 px.
-- Scrubber: 44 px touch target, 4 px water-deep track, 28 px paper thumb with a 2 px berry border.
-
-### 21.4 New tokens
-Primitives: `--color-blue-50` #DFF2F8, `--color-blue-100` #D1DBF4, `--color-green-100` #CFEDDE. Semantic: `--color-land-wash` (pink-100), `--color-water-wash` (blue-50), `--color-water-deep-wash` (blue-100), `--color-park-wash` (green-100). Utilities: `border-hair` (1.5 px), `.line-art` group class. Press shadow: 3 px and 1 px pink-200. `--color-land` (pink-200), `--color-water` and `--color-park` remain for small fills.
-
-### 21.5 Scene keyframes (lighter)
-| Keyframe | t | sky | water | land | park | glow |
-|---|---|---|---|---|---|---|
-| morning | 0 | #FFF1F5 | #DDF0F6 | #FFE3EC | #CDEBDC | 0 |
-| midday | 0.33 | #F8FCFF | #D3ECF5 | #FFE3EC | #BFE6D2 | 0 |
-| golden | 0.66 | #FFF0DD | #CBD8EE | #FFD6E1 | #BCDCC6 | 0.3 |
-| dusk | 1 | #E6E0F7 | #C9D2F0 | #FBD0E1 | #A9D6BE | 1 |
-
-### 21.6 Contrast (computed from the token hex values, 2026-10-22)
-| Pair | Ratio | Use |
-|---|---|---|
-| ink on land-wash | 10.40:1 | any text |
-| ink on water-wash | 10.85:1 | any text |
-| ink on park-wash | 10.03:1 | any text |
-| ink on water-deep-wash | 9.03:1 | any text |
-| accent on land-wash | 5.01:1 | small text OK |
-| accent on water-wash | 5.23:1 | small text OK |
-| accent on paper | 6.03:1 | button text and borders |
-| water-deep on paper | 3.17:1 | UI lines only (track, dashed borders) |
-| water-deep on water-wash | 2.75:1 | decoration only (waves) |
-
-Rows from 5.1 for ink on land (8.72:1) and ink on water still apply to the small-fill tokens. The live table on the style tile reads the same tokens, so it should agree.
-
-### 21.7 Generator
-`python tools/illustrations/gen.py` writes the light style into `src/assets/illustrations`. `--style v1 --out public/illustration-v1` writes the original. `python tools/illustrations/build_sheet.py` rebuilds `public/illustration-sheet.html` (light pieces inline with the time slider, v1 as images underneath). v1 output is byte-identical to the files committed before this pass. Light SVGs are about 1 to 3.7 KB each, half the size of v1.
-
-### 21.8 Anti-pattern edits
-Added: solid pink masses over about a third of the viewport, strokes above 2 px on illustrations, white borders wider than 3 px, white sticker outlines by default, offset shadows above 3 px, dusk colors darker than the lavender in 21.5.
-
-### 21.9 Case study capture
-Keep the v1 and v2 test sheet and style tile side by side (`public/illustration-v1` and git history). The feedback, the four references and these rules are the "early versus final" material.
+Files to keep side by side for the case study: `public/illustration-v1/`, the git history of the first style tile commit, and the comparison renders.
 
 ---
 
-### Status: 2026-10-22
-Stage: 6 Illustration spec and 7 Tokens, light style built, awaiting approval
-Done this session: Wrote section 21. Added a light style to `gen.py` (v1 kept as an option), regenerated the five SVGs, rebuilt the test sheet with a v1 comparison. Applied the light style to the tokens, hero map, line system, shapes and controls, scene strip and scene keyframes. Applied the queued changes from section 19 (selection color, text size adjust, 16 px inputs, tap highlight on buttons, tabular numerals on the clock, 44 px scrubber target, 44 px pin hit area demo, decorative waves not interactive). Build and lint pass.
-Decided this session: The lightness pass covers everything.
-Proposed, awaiting confirmation: All of section 21.
-Open questions: Couple names and venue, pop-up brand and category, animation library, passcode gate, domains. Whether hairlines read well on a real phone.
-Files created or changed: `tools/illustrations/gen.py`, `tools/illustrations/build_sheet.py`, five SVGs in `src/assets/illustrations`, `public/illustration-sheet.html`, `public/illustration-v1/*`, `src/index.css`, `src/lib/scene.ts`, `src/StyleTile.tsx`, `src/tile/*` (Hero, LineSystem, ShapesControls, SceneStrip, Palette, Contrast, Typography, tokens), `docs/bubblegum-atlas-project-a.md`
-Parked issues: Not yet seen in a real browser. Render checks so far are from a Python SVG rasterizer and a clean build.
-Next step: Owner checks the style tile and `/illustration-sheet.html` on desktop and a real phone, then approves or redirects. Then the remaining wedding landmarks (step 3 prep) in the light style.
-
----
-
-## 22. Deep line style (2026-10-22, supersedes the palette parts of section 21)
-
-### 22.1 Decision
-Decided: the owner loves the line-art illustration pass and wants its shapes, characters and style kept for all visuals. The palette and shading are the deep v1 ones (berry, periwinkle, flat pink land, pastel blue water, deep green), not the pale tints of section 21. The thick white borders stay removed. A thin outline over each shape is wanted (Option B of the comparison).
-
-### 22.2 What this means
-- Illustrations: v1 fills and three-tone shading, no white sticker silhouette, a 1.5 px hairline over every shape in one line color per piece (berry by default, navy for the ferry, green for the tree). Waves are 1.5 px water-deep lines. Generator default is `deep-line`. `--style deep` drops the hairline, `--style light` is the pale version, `--style v1` is the original.
-- Map and tile: land is pink-200 and water is blue-200 again, with a 1.5 px berry coastline instead of a white ring. Roads are 3 px white with no casing. Parks are green-300 with a 1 px green hairline. Contour rings are 1 px.
-- Scene keyframes are the original deep set from section 5.2 (dusk water #6F8FDB).
-- The wash tokens from 21.4 stay in the system for soft fills only: pale pills, hover states, soft backgrounds. They are not the hero colors.
-- Section 21.3 rules that still hold: white is a fill and never a border wider than 3 px, hairline buttons and labels, 44 px hit areas, the scrubber, one accent per piece in spirit (the deep palette has more saturated color, so keep each piece to its existing 5 to 7 colors).
-- Contrast rows from section 5.1 apply again for land, water and park. The wash rows from 21.6 apply to the wash tokens.
-
-### 22.3 Sizes
-Gzipped, each piece is 0.6 to 1.6 KB, well under the 8 KB budget.
-
-### Status: 2026-10-22 (second block)
-Stage: 6 and 7, deep line style built, awaiting approval
-Done this session: Compared v1, deep without outline and deep with a hairline. Owner chose the hairline version. Added the `deep` and `deep-line` styles to `gen.py` (deep-line is the default), regenerated the five SVGs and the test sheet, restored the deep land, water, park and scene values on the tile, and kept the thin lines, hairline buttons and other fixes from section 21. Build and lint pass.
-Decided this session: Deep v1 palette and shading with a thin outline and no thick white borders.
-Proposed, awaiting confirmation: Hairline buttons and label pills stay as built in section 21. Wash tokens kept for soft fills.
-Open questions: Same as before. Whether hairlines read on a real phone.
-Files created or changed: as in section 21, plus a changed `tools/illustrations/gen.py` default, `src/lib/scene.ts` and `src/index.css` back to the deep values.
-Parked issues: Not yet seen in a real browser.
-Next step: Owner reviews the tile and sheet, then the remaining wedding landmarks in this style (ceremony arch, marquee, boathouse, jetty, cafe, hotel, shuttle, cake, bridal party).
+### Status: 2026-10-23
+Stage: 6 Illustration spec and 7 Tokens, deep line style and night mode built, awaiting a real-browser check
+Done this session: Compared v1, a pale-tint version and the deep line version, and settled on deep line with a hairline. Rebuilt `gen.py` with `deep-line`, `deep`, `light` and `v1` styles, rebuilt the test sheet with a mode switch, and restyled the tile (hero map, line system, shapes and controls, scene strip with night). Consolidated this brief so sections 3 to 17 match the current decisions.
+Decided this session: See section 1.
+Proposed, awaiting confirmation: Night keyframe values and the 38 percent dimming. Hairline buttons and label pills. Wash tokens for soft fills only.
+Open questions: Couple names, venue and dates. Pop-up brand and category. Animation library. Passcode gate. Ambient sound. Domains. Hairlines on a real phone. Where the mode switch sits in the site layouts.
+Files created or changed: `tools/illustrations/gen.py`, `tools/illustrations/build_sheet.py`, the five SVGs in `src/assets/illustrations`, `public/illustration-sheet.html`, `public/illustration-v1/*`, `src/index.css`, `src/lib/scene.ts`, `src/StyleTile.tsx`, `src/tile/*`, `.gitignore`, this brief.
+Parked issues: Not yet seen in a real browser (render checks are from a Python SVG rasterizer and a clean build). A second chat found the committed repo without the night keyframe and with the pale scene values in `scene.ts`, so the latest zip had not been applied. Check `src/lib/scene.ts` for a Night keyframe before building.
+Next step: Apply and push the latest zip, then step 3: typed `EventConfig`, a mock wedding config, MapCanvas, Pin, LayerToggle and a list view with the keyboard model, with the remaining wedding landmarks drawn in the same style as the map needs them.

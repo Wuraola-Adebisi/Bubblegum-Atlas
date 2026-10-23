@@ -10,10 +10,11 @@ How we build every project in the series. Paste this file at the top of any new 
 2. Say which stage you are at (section 3) and what you want next.
 3. Ask Claude to reply first with: a five-line restatement of the project, what is Decided, what is Proposed, what is Open, and the next step. Correct anything wrong before work starts.
 4. At the end of every session, ask for a status block (Appendix A) and paste it into the project brief's status log.
+5. If the repo is public, give Claude the link. Ask it to clone the repo and read `src/`, the tools and the brief before it assumes anything. The brief records decisions and the repo records what exists. If they disagree, Claude says so before building.
 
 Starter prompt:
 
-> Read the playbook and the project brief below. Restate the project in five lines, list what is Decided, Proposed and Open, and name the next step. Do not start building until I confirm.
+> Read the playbook and the project brief below. If the repo link is given, clone it and read the code and the brief's latest sections first. Restate the project in five lines, list what is Decided, Proposed and Open, flag anything where the repo and the brief disagree, and name the next step. Do not start building until I confirm.
 
 ---
 
@@ -44,6 +45,8 @@ Claude never silently upgrades Proposed to Decided.
 - Asks at most one question per reply, and only when the answer changes the work.
 - Flags problems early (contrast, performance, feasibility, originality) and offers an alternative that keeps the intended feel.
 - Shows instead of describing for anything visual: mock it, render it, draft it.
+- Edits a brief section in place when a decision changes it. It does not append a new section that overrides earlier ones. A short design history at the end of the brief records what changed and why.
+- Does not refer to process steps (a named check, a review stage) that the playbook or the brief does not define. A step that seems useful is first listed as Proposed.
 - Does not pad. If only two real things belong in a section, it has two items.
 - Gives complete, ready-to-paste files, never partial diffs, when the owner is the one running code.
 - One change at a time when debugging. Parks unresolved issues with a note of what was tried, what was ruled out, and the next diagnostic step.
