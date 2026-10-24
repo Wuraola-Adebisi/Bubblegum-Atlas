@@ -24,7 +24,7 @@ export function windowFor(cam: JourneyCamera, vb: ViewBox, aspect: number): Win 
   const [x, y, W, H] = vb
   const base = vb[2] / vb[3]
   const narrow = Math.min(1, aspect / base) ** 0.5
-  const floor = aspect > base ? (aspect * H) / W : 0.6
+  const floor = aspect > base ? (aspect * H) / W : 0.45
   const zoom = Math.max(cam.zoom * narrow, floor)
   const h = H / zoom
   const w = h * aspect

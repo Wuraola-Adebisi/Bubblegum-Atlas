@@ -39,7 +39,7 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (
 - Step 3 additions to the `EventConfig` types (all optional except `clock`): `EventConfig.clock`, `MapConfig.waves`, `Pin.labelSide`, `Route.note`. Placement `scale` multiplies the illustration's own viewBox width. Section 10 gets updated once these are confirmed.
 - Map keyboard model: arrow keys move focus to the nearest place in that direction, Enter opens details, Shift with arrows pans, plus and minus zoom, 0 resets, Escape closes details.
 - Hash routing until React Router arrives with step 6: `#/` journey, `#/map` map, `#/tile` style tile.
-- Journey (step 4, paced version): a full-screen sticky stage over 900vh of scroll. It opens on the whole map with two labelled places and a faint route preview, then the camera holds still between moves (quay, crossing, landing, walk, estate) at a wider zoom than the first version. Text beats show over the map with crossfades. Phones zoom out so they see more than a thin slice. The earlier split scroll story and plain hero were tried and dropped. A floating `NavPill` links Journey, Map and RSVP, `#/rsvp` is a stub, and a skip link jumps to the final card. With reduced motion the map shows its finished state and the story is plain text.
+- Journey (step 4, paced version): a full-screen sticky stage over 650vh of scroll (900vh was too slow). It opens on the whole map with two labelled places and a faint route preview, then the camera holds still between moves (quay, crossing, landing, walk, estate) at a wider zoom than the first version. Text beats show over the map with crossfades. Phones zoom out so they see more than a thin slice. The earlier split scroll story and plain hero were tried and dropped. A floating `NavPill` links Journey, Map and RSVP, `#/rsvp` is a stub, and a skip link jumps to the final card. With reduced motion the map shows its finished state and the story is plain text.
 
 ### Open
 - Final couple names, venue name and dates (placeholders for now).
@@ -714,3 +714,13 @@ Open questions: Does 900vh feel right, or should it be slower or faster?
 Files created or changed: `src/features/journey/Journey.tsx`, `camera.ts`, `src/features/map/MapBase.tsx`, `PinLabel.tsx`, `src/routes/JourneyPage.tsx`, `src/data/events/types.ts`, `wedding.ts`, `src/index.css`, this brief. Deleted: `src/features/journey/JourneyHero.tsx`.
 Parked issues: Not seen in a real browser or on a real phone. Scroll smoothness unmeasured. On a phone the text card partly covers the jetty during the crossing.
 Next step: You scroll it and tell me if the pace is right. Then record it and build the social assets.
+
+### Status: 2026-10-24 (speed fix and social assets)
+Stage: 13 Social assets
+Done this session: Scroll length cut from 900vh to 650vh because 900vh felt slow. Tall and phone-shaped screens now zoom out further (camera floor 0.45) and the opening view sits slightly left so the quay shows. Recorded the scroll as a 1080x1920 phone-layout video and a 1920x1080 desktop video. Built an 8-slide 1080x1350 carousel: a cover in the series style, then seven slides cut from one tall page so each continues from the last (opening view, palette, type, components, keyboard keys, before and after pacing, what is built, repo link and inspiration credit).
+Decided this session: None new.
+Proposed, awaiting confirmation: 650vh pace. The carousel order and copy. The live link is not in the carousel yet because the site is not deployed.
+Open questions: Deploy to Vercel so the live link can go in the caption.
+Files created or changed: `src/data/events/wedding.ts`, `src/features/journey/camera.ts`, this brief. Social files are outside the repo.
+Parked issues: Not seen in a real browser or on a real phone. Lighthouse not run. The phone video is a 720 px layout scaled up 1.5 times, so text is slightly soft.
+Next step: Deploy to Vercel and confirm the live URL, then step 5 (wedding day page with the time scrubber and now panel).

@@ -31,7 +31,7 @@ export const wedding: EventConfig = {
   scene: sceneKeyframes,
 
   journey: {
-    scrollVh: 900,
+    scrollVh: 650,
     hide: ['landmark-ferry'],
     legs: [
       { id: 'ferry', pathD: 'M430 752 C500 790 600 790 660 760', vehicle: 'landmark-ferry', scale: 0.67, from: 0.3, to: 0.58 },
@@ -46,8 +46,8 @@ export const wedding: EventConfig = {
     ],
     // Wide opening, then slow moves and holds so each beat can be read before the camera travels again.
     camera: [
-      { p: 0, cx: 800, cy: 660, zoom: 0.85 },
-      { p: 0.12, cx: 800, cy: 660, zoom: 0.85 },
+      { p: 0, cx: 760, cy: 660, zoom: 0.85 },
+      { p: 0.12, cx: 760, cy: 660, zoom: 0.85 },
       { p: 0.22, cx: 330, cy: 740, zoom: 1.55 },
       { p: 0.3, cx: 400, cy: 740, zoom: 1.55 },
       { p: 0.58, cx: 640, cy: 740, zoom: 1.5 },
