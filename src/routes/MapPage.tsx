@@ -3,7 +3,7 @@ import MapExplorer from '../features/map/MapExplorer.tsx'
 
 export default function MapPage() {
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-8 sm:py-12">
+    <main className="mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-8">
       <header className="mb-8 max-w-measure">
         <p className="text-small">
           <a href="#/" className="text-accent underline underline-offset-4">

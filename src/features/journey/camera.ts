@@ -17,15 +17,21 @@ export function cameraAt(keys: JourneyCamera[], p: number): JourneyCamera {
 
 /**
  * The visible window for a stage of the given aspect ratio (width over height).
- * The window always has the stage's aspect, so a tall phone gets a narrow slice instead of letterboxing.
+ * The window always has the stage's aspect. Tall phone stages zoom out so they see more than a thin slice;
+ * the water behind the map extends past its edges, so a window taller than the map still looks right.
  */
 export function windowFor(cam: JourneyCamera, vb: ViewBox, aspect: number): Win {
   const [x, y, W, H] = vb
-  const zoom = Math.max(cam.zoom, 1, (aspect * H) / W)
+  const base = vb[2] / vb[3]
+  const narrow = Math.min(1, aspect / base) ** 0.5
+  const floor = aspect > base ? (aspect * H) / W : 0.6
+  const zoom = Math.max(cam.zoom * narrow, floor)
   const h = H / zoom
   const w = h * aspect
-  const cx = Math.min(x + W - w / 2, Math.max(x + w / 2, cam.cx))
-  const cy = Math.min(y + H - h / 2, Math.max(y + h / 2, cam.cy))
+  // Keep the whole window over the map when it is smaller, and the whole map inside the window when it is larger.
+  const clamp = (v: number, a: number, b: number) => Math.min(Math.max(a, b), Math.max(Math.min(a, b), v))
+  const cx = clamp(cam.cx, x + w / 2, x + W - w / 2)
+  const cy = clamp(cam.cy, y + h / 2, y + H - h / 2)
   return { x: cx - w / 2, y: cy - h / 2, w, h }
 }
 

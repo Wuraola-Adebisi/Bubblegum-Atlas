@@ -4,7 +4,7 @@ import type { EventConfig, JourneyConfig } from '../../data/events/types.ts'
 import LabelTag from '../../components/LabelTag.tsx'
 import ScaleBar from '../../components/ScaleBar.tsx'
 import { clockAt, sceneAt, sceneStyle } from '../../lib/scene.ts'
-import { project, placeStyle } from '../map/geometry.ts'
+import { placeStyle, project } from '../map/geometry.ts'
 import { illustrations } from '../map/illustrations.ts'
 import MapBase from '../map/MapBase.tsx'
 import PinLabel from '../map/PinLabel.tsx'
@@ -38,7 +38,8 @@ interface JourneyProps {
 
 /**
  * The home journey. Native scrolling drives one progress value from 0 to 1. The camera, the ferry, the walker,
- * the dashed route and the pins all read that value. With reduced motion the stage shows the finished scene.
+ * the dashed route and the pins all read that value. The opening is a wide view of the whole map, and the camera
+ * holds still between moves so every beat can be read. With reduced motion the stage shows the finished scene.
  */
 export default function Journey({ event, journey }: JourneyProps) {
   const reduced = useReducedMotion()
@@ -51,21 +52,33 @@ export default function Journey({ event, journey }: JourneyProps) {
 
   const vb = event.map.viewBox
   const win = windowFor(cameraAt(journey.camera, p), vb, size.w / size.h)
-  const scene = sceneAt(0.04 + p * 0.5, event.scene)
-  const clock = clockAt(0.04 + p * 0.5, event.clock.startMin, event.clock.endMin)
+  const t = 0.04 + p * 0.5
+  const scene = sceneAt(t, event.scene)
+  const clock = clockAt(t, event.clock.startMin, event.clock.endMin)
   const pinsById = new Map(event.pins.map((pin) => [pin.id, pin]))
   const active = journey.chapters.find((c) => p >= c.from && p < c.to) ?? journey.chapters[journey.chapters.length - 1]
 
   const legs = journey.legs.map((leg) => {
     const m = measurePath(leg.pathD)
-    const t = ease(progressIn(p, leg.from, leg.to))
-    return { leg, m, t, pos: m.at(t) }
+    const lt = ease(progressIn(p, leg.from, leg.to))
+    return { leg, m, lt, pos: m.at(lt) }
   })
 
   const svgExtra = (
     <>
-      {legs.map(({ leg, m, t }) => (
+      {legs.map(({ leg, m, lt }) => (
         <g key={leg.id}>
+          {/* A faint preview of the whole route, so the opening shows where the trip goes. */}
+          <path
+            d={leg.pathD}
+            fill="none"
+            stroke="var(--color-accent)"
+            strokeWidth={2.5}
+            strokeLinecap="round"
+            strokeDasharray="1 9"
+            vectorEffect="non-scaling-stroke"
+            opacity={0.35}
+          />
           <mask id={`reveal-${leg.id}`} maskUnits="userSpaceOnUse" x={vb[0]} y={vb[1]} width={vb[2]} height={vb[3]}>
             <path
               d={leg.pathD}
@@ -74,7 +87,7 @@ export default function Journey({ event, journey }: JourneyProps) {
               strokeWidth={16}
               strokeLinecap="round"
               strokeDasharray={m.length}
-              strokeDashoffset={m.length * (1 - Math.min(1, t + 0.1))}
+              strokeDashoffset={m.length * (1 - lt)}
             />
           </mask>
           <path
@@ -102,8 +115,7 @@ export default function Journey({ event, journey }: JourneyProps) {
       >
         <a
           href="#journey-end"
-          className="absolute top-2 left-2 z-50 -translate-y-24 rounded-pill bg-paper px-5 py-2 font-medium text-accent focus:translate-y-0"
-          style={{ position: 'fixed' }}
+          className="fixed top-2 left-2 z-50 -translate-y-24 rounded-pill bg-paper px-5 py-2 font-medium text-accent focus:translate-y-0"
         >
           {event.copy.journeySkip}
         </a>
@@ -120,19 +132,22 @@ export default function Journey({ event, journey }: JourneyProps) {
           style={{ ...sceneStyle(scene), background: 'var(--scene-sky)' }}
         >
           <MapBase map={event.map} win={win} hide={journey.hide} svgExtra={svgExtra}>
-            {legs.map(({ leg, pos, t }) => {
+            {legs.map(({ leg, pos }) => {
               const art = illustrations[leg.vehicle]
               if (!art) return null
               const w = art.width * leg.scale
               const h = art.height * leg.scale
-              const bob = reduced || leg.vehicle !== 'landmark-ferry' ? 0 : Math.sin(p * 90) * 1.5
-              const hidden = p < leg.from && leg.vehicle !== 'landmark-ferry'
+              const isFerry = leg.vehicle === 'landmark-ferry'
+              const bob = reduced || !isFerry ? 0 : Math.sin(p * 90) * 1.5
               return (
                 <div
                   key={`v-${leg.id}`}
                   className="illo absolute"
-                  style={{ ...placeStyle(win, pos.x, pos.y, w, h), opacity: hidden ? 0 : 1, transform: `translateY(${bob}px)` }}
-                  data-t={t}
+                  style={{
+                    ...placeStyle(win, pos.x, pos.y, w, h),
+                    opacity: !isFerry && p < leg.from ? 0 : 1,
+                    transform: `translateY(${bob}px)`,
+                  }}
                   dangerouslySetInnerHTML={{ __html: art.svg }}
                 />
               )
@@ -145,17 +160,17 @@ export default function Journey({ event, journey }: JourneyProps) {
                 <div key={s.pinId} className="absolute" style={{ left: `${pos.left}%`, top: `${pos.top}%` }}>
                   <div className="pin-pop absolute top-0 left-0 size-6 -translate-x-1/2 -translate-y-1/2 rounded-pill border-hair border-accent bg-paper" />
                   <div className="pin-pop">
-                    <PinLabel pin={pin} />
+                    <PinLabel pin={pin} side={s.side} />
                   </div>
                 </div>
               )
             })}
           </MapBase>
 
-          <div className="pointer-events-none absolute top-4 left-4 sm:top-8 sm:left-8">
-            <h1 className="inline-block -rotate-2 rounded-panel bg-paper px-6 py-3 font-display text-h1 font-extrabold">
+          <div className="pointer-events-none absolute top-20 left-4 sm:top-6 sm:left-8">
+            <p className="inline-block -rotate-2 rounded-panel border-hair border-accent bg-paper px-5 py-2 font-display text-h2 font-extrabold">
               {event.copy.journeyTitle}
-            </h1>
+            </p>
           </div>
 
           <div className="absolute inset-x-4 bottom-4 sm:inset-x-8 sm:bottom-8">
@@ -175,16 +190,12 @@ export default function Journey({ event, journey }: JourneyProps) {
                       <p className="mt-2">{c.body}</p>
                       {c.final && (
                         <div className="mt-4 flex flex-wrap gap-3">
-                          <a href="#/map" className={linkBtn}>
-                            See the weekend map
+                          <a href="#/rsvp" className={linkBtn}>
+                            {event.copy.ctaRsvp}
                           </a>
-                          <button
-                            type="button"
-                            disabled
-                            className="min-h-11 cursor-not-allowed rounded-pill border-hair border-dashed border-accent px-6 py-2 font-medium text-accent opacity-70"
-                          >
-                            Send RSVP
-                          </button>
+                          <a href="#/map" className={linkBtn}>
+                            {event.copy.ctaMap}
+                          </a>
                         </div>
                       )}
                     </div>
@@ -192,7 +203,7 @@ export default function Journey({ event, journey }: JourneyProps) {
                 })}
               </div>
               <div className="space-y-2">
-                {!reduced && p < 0.05 && <LabelTag variant="flag">Scroll to board the ferry</LabelTag>}
+                {!reduced && p < 0.05 && <LabelTag variant="flag">Scroll slowly to follow the ferry</LabelTag>}
                 <p className="font-hand text-label font-semibold" aria-hidden="true">
                   <span className="rounded-pill bg-paper px-3">{clock}</span>
                 </p>

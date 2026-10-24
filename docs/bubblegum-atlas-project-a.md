@@ -39,7 +39,7 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (
 - Step 3 additions to the `EventConfig` types (all optional except `clock`): `EventConfig.clock`, `MapConfig.waves`, `Pin.labelSide`, `Route.note`. Placement `scale` multiplies the illustration's own viewBox width. Section 10 gets updated once these are confirmed.
 - Map keyboard model: arrow keys move focus to the nearest place in that direction, Enter opens details, Shift with arrows pans, plus and minus zoom, 0 resets, Escape closes details.
 - Hash routing until React Router arrives with step 6: `#/` journey, `#/map` map, `#/tile` style tile.
-- Journey (step 4) additions: `EventConfig.journey` with legs, camera keyframes, stops and chapters. Scroll height is 520vh. The time of day runs from morning to about 4 pm as you scroll. With reduced motion the finished scene shows with the story as plain text. A skip link jumps to the end card. The RSVP button is disabled until the RSVP page exists.
+- Journey (step 4, paced version): a full-screen sticky stage over 900vh of scroll. It opens on the whole map with two labelled places and a faint route preview, then the camera holds still between moves (quay, crossing, landing, walk, estate) at a wider zoom than the first version. Text beats show over the map with crossfades. Phones zoom out so they see more than a thin slice. The earlier split scroll story and plain hero were tried and dropped. A floating `NavPill` links Journey, Map and RSVP, `#/rsvp` is a stub, and a skip link jumps to the final card. With reduced motion the map shows its finished state and the story is plain text.
 
 ### Open
 - Final couple names, venue name and dates (placeholders for now).
@@ -686,7 +686,7 @@ Parked issues: Not seen in a real browser. On a 390 px screen the map is small, 
 Next step: Step 4, the journey hero: ferry scroll with route draw-on, after you confirm the animation library (Framer Motion or GSAP).
 
 ### Status: 2026-10-23 (build step 4)
-Stage: 10 Motion pass (journey hero)
+Stage: 10 Motion pass (journey hero, reworked)
 Done this session: Journey on `#/`: one scroll progress value drives the camera, the ferry, a walking guest, the dashed route draw-on (mask reveal), pins that pop in once passed, a scale bar as progress and the time of day. Pulled `MapBase` and `PinLabel` out of `MapCanvas` so the map and the journey share the painted map. Installed `motion`. Checked in headless Chromium: five scroll positions, no console errors, no horizontal overflow at 390 px, reduced motion shows the finished scene, the skip link lands on the end card.
 Decided this session: Animation library is Framer Motion.
 Proposed, awaiting confirmation: Journey additions listed in section 1. Chapter copy and the "we met on this crossing" line are placeholders for the real story.
@@ -694,3 +694,23 @@ Open questions: Whether the RSVP button should stay disabled or link to a stub p
 Files created or changed: `package.json`, `package-lock.json`, `src/App.tsx`, `src/components/ScaleBar.tsx`, `src/data/events/types.ts`, `src/data/events/wedding.ts`, `src/features/journey/*`, `src/features/map/MapBase.tsx`, `MapCanvas.tsx`, `PinLabel.tsx`, `geometry.ts`, `src/routes/JourneyPage.tsx`, `MapPage.tsx`, this brief.
 Parked issues: Not seen in a real browser or on a real phone. Not measured: Lighthouse, and scroll smoothness on a mid-range phone (the journey re-renders the map on every scroll frame and moves pieces with left and top, so this is the first thing to measure). No screen recording yet. On a phone the camera shows a narrow slice, so the jetty and island are not in the same frame during the crossing.
 Next step: Record the journey on your machine for the social asset, then step 5: scene system polish, scrubber and NowPanel on the wedding day page.
+
+### Status: 2026-10-24 (journey rework)
+Stage: 10 Motion pass
+Done this session: First-look feedback said the full-screen scroll hero was confusing. Replaced it with a plain hero and a scroll story beside readable text. Added `NavPill`, an RSVP stub page at `#/rsvp`, and a `side` override on `PinLabel`. Removed the skip link and the hidden duplicate text, since the story text is now normal content. Checked in headless Chromium: desktop and 390 px, no console errors, no horizontal overflow, reduced motion loads.
+Decided this session: RSVP button links to a stub page.
+Proposed, awaiting confirmation: The scroll story layout. A vertical (portrait) map with the ferry travelling downward is possible but needs a second map layout, so it is parked.
+Open questions: Whether the hero map should stay landscape or the portrait layout is worth building later.
+Files created or changed: `src/features/journey/Journey.tsx`, `JourneyHero.tsx`, `src/components/NavPill.tsx`, `src/routes/RsvpPage.tsx`, `JourneyPage.tsx`, `MapPage.tsx`, `src/App.tsx`, `src/features/map/PinLabel.tsx`, `src/data/events/types.ts`, `wedding.ts`, `src/index.css`, this brief.
+Parked issues: Not seen in a real browser. On phones the nav pill floats over the previous chapter card as it scrolls under the sticky map. Scroll smoothness on a mid-range phone is still unmeasured.
+Next step: Record the scroll story for the social asset, then step 5 (scene system polish, scrubber and NowPanel on the wedding day page).
+
+### Status: 2026-10-24 (journey pacing)
+Stage: 10 Motion pass
+Done this session: The first full-screen journey was the preferred direction but was too fast, too close and too tight. Restored it and paced it out: 900vh of scroll (was 520vh), an opening wide view with the whole map, camera holds between moves, zoom 1.5 instead of 2.4, a faint preview of the full route, and phones zoom out instead of showing a thin slice. Removed the plain hero and split scroll story. Kept the nav pill and the RSVP stub. Checked in headless Chromium: seven scroll positions, 390 px, reduced motion, skip link, no console errors.
+Decided this session: None new.
+Proposed, awaiting confirmation: The pacing numbers (900vh, zoom 1.5, holds at 0.12, 0.3 and 0.7). These are easy to change in `wedding.ts`. A portrait map for a vertical ferry stays parked.
+Open questions: Does 900vh feel right, or should it be slower or faster?
+Files created or changed: `src/features/journey/Journey.tsx`, `camera.ts`, `src/features/map/MapBase.tsx`, `PinLabel.tsx`, `src/routes/JourneyPage.tsx`, `src/data/events/types.ts`, `wedding.ts`, `src/index.css`, this brief. Deleted: `src/features/journey/JourneyHero.tsx`.
+Parked issues: Not seen in a real browser or on a real phone. Scroll smoothness unmeasured. On a phone the text card partly covers the jetty during the crossing.
+Next step: You scroll it and tell me if the pace is right. Then record it and build the social assets.

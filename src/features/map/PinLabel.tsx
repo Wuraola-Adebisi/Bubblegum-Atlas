@@ -10,8 +10,8 @@ const labelOffset = {
 } as const
 
 /** A leader line and a label tag, placed at the origin of a positioned parent. Decorative: the pin button names the place. */
-export default function PinLabel({ pin, flag = false }: { pin: Pin; flag?: boolean }) {
-  const side = labelOffset[pin.labelSide ?? 'right']
+export default function PinLabel({ pin, flag = false, side: sideOverride }: { pin: Pin; flag?: boolean; side?: Pin['labelSide'] }) {
+  const side = labelOffset[sideOverride ?? pin.labelSide ?? 'right']
   return (
     <>
       <LeaderLine dx={side.dx} dy={side.dy} />

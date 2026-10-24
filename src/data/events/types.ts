@@ -125,7 +125,7 @@ export interface JourneyCamera {
 }
 
 export interface JourneyConfig {
-  /** Total scroll height of the journey, in viewport heights. */
+  /** Total scroll height of the journey, in viewport heights. More is slower. */
   scrollVh: number
   /** Illustration ids drawn by the journey itself, so the static map leaves them out. */
   hide: string[]
@@ -133,7 +133,8 @@ export interface JourneyConfig {
   legs: { id: string; pathD: string; vehicle: string; scale: number; from: number; to: number }[]
   camera: JourneyCamera[]
   /** Pins that pop in once the journey has passed them. */
-  stops: { pinId: string; at: number }[]
+  stops: { pinId: string; at: number; side?: Pin['labelSide'] }[]
+  /** Text beats. Each shows between its two scroll positions. The last one carries the links. */
   chapters: { from: number; to: number; title: string; body: string; final?: boolean }[]
   /** Labels for the scale bar that doubles as scroll progress. */
   scale: { start: string; end: string }
