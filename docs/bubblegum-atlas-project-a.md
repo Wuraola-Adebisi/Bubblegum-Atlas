@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build step 3 (map engine with a mock wedding config) is built and checked in headless Chromium, awaiting a real-browser check. Build step 4 (journey hero) is next.
+Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (map engine) and 4 (journey hero) are built and checked in headless Chromium, awaiting a real-browser check. Build step 5 (scene system, scrubber and NowPanel) is next.
 
 ---
 
@@ -23,6 +23,8 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build step 3 (m
 - A Day, Dusk and Night mode switch, so the yellow in windows and string lights comes out bright at night.
 - The owner works on Windows with VS Code, PowerShell and Node 24 in her own repo (https://github.com/Wuraola-Adebisi/Bubblegum-Atlas, public) and runs every command herself. Claude gives complete files or a zip with exact steps. `npm create` fails on her machine. No co-author credit for Claude on commits.
 
+- Animation library: Framer Motion (`motion/react`), chosen 2026-10-23.
+
 ### Proposed (awaiting confirmation)
 - All hex values in section 5 (estimated from the images, contrast verified on the style tile; confirm the look with a sampler).
 - Type pairing: Bricolage Grotesque, Caveat, DM Sans.
@@ -36,12 +38,12 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build step 3 (m
 - Performance and accessibility targets in section 17.
 - Step 3 additions to the `EventConfig` types (all optional except `clock`): `EventConfig.clock`, `MapConfig.waves`, `Pin.labelSide`, `Route.note`. Placement `scale` multiplies the illustration's own viewBox width. Section 10 gets updated once these are confirmed.
 - Map keyboard model: arrow keys move focus to the nearest place in that direction, Enter opens details, Shift with arrows pans, plus and minus zoom, 0 resets, Escape closes details.
-- Hash routing (`#/map`) until React Router arrives with step 6.
+- Hash routing until React Router arrives with step 6: `#/` journey, `#/map` map, `#/tile` style tile.
+- Journey (step 4) additions: `EventConfig.journey` with legs, camera keyframes, stops and chapters. Scroll height is 520vh. The time of day runs from morning to about 4 pm as you scroll. With reduced motion the finished scene shows with the story as plain text. A skip link jumps to the end card. The RSVP button is disabled until the RSVP page exists.
 
 ### Open
 - Final couple names, venue name and dates (placeholders for now).
 - Pop-up brand name and product category.
-- Animation library: Framer Motion or GSAP ScrollTrigger (decide when scaffolding).
 - Whether to include a passcode gate on the wedding site.
 - Whether to include optional ambient sound (default: no).
 - Repo names and domains.
@@ -601,7 +603,7 @@ Changes from the earlier draft: the press shadow is a 3px pink-200 offset (it wa
 | 1 | Style tile page: palette, type, lines, radius, outline, contours | Built and verified in a headless browser (build, lint, console, mobile width). Owner approved the look (2026-10-23) |
 | 2 | Illustration test sheet: ferry, estate house, tree, two people | Approved (2026-10-23) in the deep line style, with day, dusk and night renders |
 | 3 | Map engine with mock wedding config: zones, pins, layers, routes, list view | Pins, layers and keyboard work. Built 2026-10-23, headless Chromium checks pass, real-browser check pending |
-| 4 | Journey hero: ferry scroll with route draw-on | Recording is shareable, reduced-motion mode works |
+| 4 | Journey hero: ferry scroll with route draw-on | Recording is shareable, reduced-motion mode works. Built 2026-10-23, headless checks pass, recording and real-browser check pending |
 | 5 | Scene system, Day, Dusk and Night switch, scrubber and NowPanel | All five keyframes look right, contrast holds, lit windows read at night |
 | 6 | Remaining wedding pages: story trail, plan, party, RSVP, share card, info | Every flow works end to end |
 | 7 | Polish, motion pass, responsive pass, accessibility and performance QA | Playbook section 16 checklist passes |
@@ -682,3 +684,13 @@ Open questions: Same as before, plus whether the map should crop or zoom by defa
 Files created or changed: see the zip file list in the chat. New: `src/data/events/*`, `src/features/map/*`, `src/features/scene/*`, `src/components/LabelTag.tsx`, `LeaderLine.tsx`, `src/routes/MapPage.tsx`, `src/lib/time.ts`, seven SVGs. Changed: `tools/illustrations/gen.py`, `src/App.tsx`, `src/index.css`, this brief.
 Parked issues: Not seen in a real browser. On a 390 px screen the map is small, pins are close together and the zoom buttons cover part of it. Not done yet: cake and bridal party illustrations (no page needs them until step 6), `build_sheet.py` still shows only the first five pieces, `BottomSheet` for mobile pin details (details sit under the map for now), `NowPanel` (step 5).
 Next step: Step 4, the journey hero: ferry scroll with route draw-on, after you confirm the animation library (Framer Motion or GSAP).
+
+### Status: 2026-10-23 (build step 4)
+Stage: 10 Motion pass (journey hero)
+Done this session: Journey on `#/`: one scroll progress value drives the camera, the ferry, a walking guest, the dashed route draw-on (mask reveal), pins that pop in once passed, a scale bar as progress and the time of day. Pulled `MapBase` and `PinLabel` out of `MapCanvas` so the map and the journey share the painted map. Installed `motion`. Checked in headless Chromium: five scroll positions, no console errors, no horizontal overflow at 390 px, reduced motion shows the finished scene, the skip link lands on the end card.
+Decided this session: Animation library is Framer Motion.
+Proposed, awaiting confirmation: Journey additions listed in section 1. Chapter copy and the "we met on this crossing" line are placeholders for the real story.
+Open questions: Whether the RSVP button should stay disabled or link to a stub page for now.
+Files created or changed: `package.json`, `package-lock.json`, `src/App.tsx`, `src/components/ScaleBar.tsx`, `src/data/events/types.ts`, `src/data/events/wedding.ts`, `src/features/journey/*`, `src/features/map/MapBase.tsx`, `MapCanvas.tsx`, `PinLabel.tsx`, `geometry.ts`, `src/routes/JourneyPage.tsx`, `MapPage.tsx`, this brief.
+Parked issues: Not seen in a real browser or on a real phone. Not measured: Lighthouse, and scroll smoothness on a mid-range phone (the journey re-renders the map on every scroll frame and moves pieces with left and top, so this is the first thing to measure). No screen recording yet. On a phone the camera shows a narrow slice, so the jetty and island are not in the same frame during the crossing.
+Next step: Record the journey on your machine for the social asset, then step 5: scene system polish, scrubber and NowPanel on the wedding day page.

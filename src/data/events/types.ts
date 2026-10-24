@@ -19,6 +19,8 @@ export interface EventConfig {
   /** Step 3 addition: the visible clock range the scrubber maps t onto, in minutes after midnight. */
   clock: { startMin: number; endMin: number }
   map: MapConfig
+  /** Step 4 addition: the scroll journey on the home page. */
+  journey?: JourneyConfig
   scene: SceneKeyframe[]
   zones: Zone[]
   pins: Pin[]
@@ -113,4 +115,26 @@ export interface PassportConfig {
 
 export interface PassConfig {
   fields: { id: string; label: string; type: 'text' | 'number' | 'select' | 'textarea'; options?: string[]; required?: boolean }[]
+}
+
+export interface JourneyCamera {
+  p: number // scroll progress, 0 to 1
+  cx: number
+  cy: number
+  zoom: number
+}
+
+export interface JourneyConfig {
+  /** Total scroll height of the journey, in viewport heights. */
+  scrollVh: number
+  /** Illustration ids drawn by the journey itself, so the static map leaves them out. */
+  hide: string[]
+  /** Each leg is a path with a vehicle that travels it between two scroll positions. */
+  legs: { id: string; pathD: string; vehicle: string; scale: number; from: number; to: number }[]
+  camera: JourneyCamera[]
+  /** Pins that pop in once the journey has passed them. */
+  stops: { pinId: string; at: number }[]
+  chapters: { from: number; to: number; title: string; body: string; final?: boolean }[]
+  /** Labels for the scale bar that doubles as scroll progress. */
+  scale: { start: string; end: string }
 }

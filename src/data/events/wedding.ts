@@ -30,6 +30,43 @@ export const wedding: EventConfig = {
   clock: { startMin: 8 * 60, endMin: 23 * 60 + 30 },
   scene: sceneKeyframes,
 
+  journey: {
+    scrollVh: 520,
+    hide: ['landmark-ferry'],
+    legs: [
+      { id: 'ferry', pathD: 'M430 752 C500 790 600 790 660 760', vehicle: 'landmark-ferry', scale: 0.67, from: 0.12, to: 0.5 },
+      {
+        id: 'walk',
+        pathD: 'M760 790 L790 712 C840 696 920 706 970 726 C985 620 995 520 1010 416',
+        vehicle: 'person-guest-01',
+        scale: 0.32,
+        from: 0.5,
+        to: 0.92,
+      },
+    ],
+    camera: [
+      { p: 0, cx: 330, cy: 740, zoom: 2.6 },
+      { p: 0.12, cx: 430, cy: 740, zoom: 2.4 },
+      { p: 0.5, cx: 700, cy: 740, zoom: 2.2 },
+      { p: 0.75, cx: 900, cy: 620, zoom: 1.7 },
+      { p: 1, cx: 1000, cy: 500, zoom: 1.25 },
+    ],
+    stops: [
+      { pinId: 'quay-jetty', at: 0 },
+      { pinId: 'larkmere-jetty', at: 0.5 },
+      { pinId: 'boathouse', at: 0.62 },
+      { pinId: 'cafe', at: 0.72 },
+      { pinId: 'estate', at: 0.92 },
+    ],
+    chapters: [
+      { from: 0, to: 0.12, title: 'We are getting married', body: 'Join us at Larkmere Estate, September 10 to 12, 2027.' },
+      { from: 0.12, to: 0.5, title: 'Harbor Quay, 1:00 pm', body: 'The ferry leaves at 1:00 pm on Saturday. Please arrive by 12:45. The crossing takes about 12 minutes.' },
+      { from: 0.5, to: 0.92, title: 'We met on this crossing', body: 'It was six years ago, on a grey afternoon. From the jetty, walk up past the boathouse and the cafe.' },
+      { from: 0.92, to: 1.01, title: 'See you at Larkmere', body: 'Saturday, September 11, 2027. The ceremony is at 3:30 pm.', final: true },
+    ],
+    scale: { start: 'Harbor Quay', end: 'Larkmere' },
+  },
+
   map: {
     viewBox: [0, 0, 1600, 1000],
     landPath:
@@ -270,6 +307,8 @@ export const wedding: EventConfig = {
 
   copy: {
     mapTitle: 'The weekend map',
+    journeyTitle: 'Maya and Theo',
+    journeySkip: 'Skip to the date and the weekend map',
     mapIntro: 'Harbor Quay to Larkmere Estate. Turn layers on, pick a route, or switch to the list.',
   },
 }

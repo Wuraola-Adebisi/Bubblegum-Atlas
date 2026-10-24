@@ -7,7 +7,7 @@ export default function MapPage() {
       <header className="mb-8 max-w-measure">
         <p className="text-small">
           <a href="#/" className="text-accent underline underline-offset-4">
-            Back to the style tile
+            Back to the journey
           </a>
         </p>
         <h1 className="mt-3 font-display text-h1 font-extrabold">{wedding.copy.mapTitle}</h1>

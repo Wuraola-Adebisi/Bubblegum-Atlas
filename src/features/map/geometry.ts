@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 export type ViewBox = [number, number, number, number]
 
 /** The visible part of the map: a zoom level and the centre of the window in viewBox units. */
@@ -42,4 +44,13 @@ export function windowOf(v: View, vb: ViewBox): Win {
 /** Map point to percent of the visible window. */
 export function project(px: number, py: number, win: Win) {
   return { left: ((px - win.x) / win.w) * 100, top: ((py - win.y) / win.h) * 100 }
+}
+
+/** Left, top and width as percentages of the visible window, for a piece whose ground point is (x, y). */
+export function placeStyle(win: Win, x: number, y: number, w: number, h: number): CSSProperties {
+  return {
+    left: `${((x - w / 2 - win.x) / win.w) * 100}%`,
+    top: `${((y - h - win.y) / win.h) * 100}%`,
+    width: `${(w / win.w) * 100}%`,
+  }
 }

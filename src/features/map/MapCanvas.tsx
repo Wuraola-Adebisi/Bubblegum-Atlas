@@ -1,12 +1,11 @@
 import { useRef, useState } from 'react'
 import type { CSSProperties, KeyboardEvent, PointerEvent } from 'react'
 import type { MapConfig, Pin as PinData, Route } from '../../data/events/types.ts'
-import LabelTag from '../../components/LabelTag.tsx'
-import LeaderLine from '../../components/LeaderLine.tsx'
 import { MAX_ZOOM, clampView, project, resetView, windowOf } from './geometry.ts'
 import type { View } from './geometry.ts'
-import { illustrations } from './illustrations.ts'
+import MapBase from './MapBase.tsx'
 import Pin from './Pin.tsx'
+import PinLabel from './PinLabel.tsx'
 
 interface MapCanvasProps {
   map: MapConfig
@@ -19,13 +18,6 @@ interface MapCanvasProps {
 }
 
 type Dir = 'left' | 'right' | 'up' | 'down'
-
-const labelOffset = {
-  right: { dx: 44, dy: -26, move: 'translate(0, -50%)' },
-  left: { dx: -44, dy: -26, move: 'translate(-100%, -50%)' },
-  below: { dx: 0, dy: 48, move: 'translate(-50%, 0)' },
-  above: { dx: 0, dy: -48, move: 'translate(-50%, -100%)' },
-} as const
 
 const zoomStep = 1.5
 
@@ -140,8 +132,6 @@ export default function MapCanvas({ map, pins, route, selectedId, onSelect, labe
     else refs.current.delete(id)
   }
 
-  const placements = [...map.placements].sort((a, b) => a.y - b.y)
-
   return (
     <div className="@container" style={sceneStyle}>
       <div
@@ -166,70 +156,7 @@ export default function MapCanvas({ map, pins, route, selectedId, onSelect, labe
             cursor: zoomed ? (dragging ? 'grabbing' : 'grab') : undefined,
           }}
         >
-          <svg
-            viewBox={`${win.x} ${win.y} ${win.w} ${win.h}`}
-            className="absolute inset-0 block h-full w-full"
-            aria-hidden="true"
-          >
-            <rect x={vb[0]} y={vb[1]} width={vb[2]} height={vb[3]} fill="var(--scene-water)" />
-            <g fill="none" stroke="var(--color-water-deep)" strokeWidth={1.5} strokeLinecap="round">
-              {map.waves?.map(([x, y]) => (
-                <path key={`${x}-${y}`} d={`M${x} ${y} q24 -14 48 0 t48 0 t48 0`} vectorEffect="non-scaling-stroke" />
-              ))}
-            </g>
-            <path
-              d={map.landPath}
-              fill="var(--scene-land)"
-              stroke="var(--color-accent)"
-              strokeWidth={1.5}
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-            />
-            {map.parkPaths.map((d) => (
-              <path key={d} d={d} fill="var(--scene-park)" stroke="var(--color-park-deep)" strokeWidth={1} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-            ))}
-            {map.waterPaths.map((d) => (
-              <path key={d} d={d} fill="var(--scene-water)" stroke="var(--color-water-deep)" strokeWidth={1.5} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-            ))}
-            <g fill="none" stroke="var(--color-paper)" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-              {map.roadPaths.map((d) => (
-                <path key={d} d={d} vectorEffect="non-scaling-stroke" />
-              ))}
-            </g>
-            {route && (
-              <path
-                key={route.id}
-                d={route.pathD}
-                fill="none"
-                stroke="var(--color-accent)"
-                strokeWidth={2.5}
-                strokeLinecap="round"
-                strokeDasharray="1 9"
-                vectorEffect="non-scaling-stroke"
-              />
-            )}
-          </svg>
-
-          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-            {placements.map((p, i) => {
-              const art = illustrations[p.illustrationId]
-              if (!art) return null
-              const w = art.width * p.scale
-              const h = art.height * p.scale
-              return (
-                <div
-                  key={`${p.illustrationId}-${i}`}
-                  className="illo absolute"
-                  style={{
-                    left: `${((p.x - w / 2 - win.x) / win.w) * 100}%`,
-                    top: `${((p.y - h - win.y) / win.h) * 100}%`,
-                    width: `${(w / win.w) * 100}%`,
-                  }}
-                  dangerouslySetInnerHTML={{ __html: art.svg }}
-                />
-              )
-            })}
-          </div>
+          <MapBase map={map} win={win} route={route} />
 
           <div className="pointer-events-none absolute top-4 left-4 size-9 rounded-pill bg-paper" style={{ opacity: 'var(--scene-halo)' }} aria-hidden="true" />
 
@@ -237,7 +164,6 @@ export default function MapCanvas({ map, pins, route, selectedId, onSelect, labe
             {pins.map((pin) => {
               const pos = project(pin.x, pin.y, win)
               const selected = pin.id === selectedId
-              const side = labelOffset[pin.labelSide ?? 'right']
               return (
                 <div
                   key={pin.id}
@@ -245,10 +171,7 @@ export default function MapCanvas({ map, pins, route, selectedId, onSelect, labe
                   style={{ left: `${pos.left}%`, top: `${pos.top}%`, zIndex: selected ? 20 : 10 }}
                 >
                   <div className={selected ? '' : '@max-2xl:hidden'} aria-hidden="true">
-                    <LeaderLine dx={side.dx} dy={side.dy} />
-                    <div className="absolute top-0 left-0" style={{ transform: `translate(${side.dx}px, ${side.dy}px) ${side.move}` }}>
-                      <LabelTag variant={selected ? 'flag' : 'pill'}>{pin.title}</LabelTag>
-                    </div>
+                    <PinLabel pin={pin} flag={selected} />
                   </div>
                   <Pin pin={pin} selected={selected} onSelect={onSelect} onFocusPin={reveal} registerRef={registerRef} />
                 </div>
