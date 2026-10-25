@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (map engine) and 4 (journey hero) are built and checked in headless Chromium, awaiting a real-browser check. Build step 5 (scene system, scrubber and NowPanel) is next.
+Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (map engine), 4 (journey hero) and 5 (day page with scrubber and now panel, plus the home page sections) are built and checked in headless Chromium, awaiting a real-browser check. Build step 6 (story trail, plan, party, RSVP, share card, info) is next.
 
 ---
 
@@ -38,7 +38,7 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (
 - Performance and accessibility targets in section 17.
 - Step 3 additions to the `EventConfig` types (all optional except `clock`): `EventConfig.clock`, `MapConfig.waves`, `Pin.labelSide`, `Route.note`. Placement `scale` multiplies the illustration's own viewBox width. Section 10 gets updated once these are confirmed.
 - Map keyboard model: arrow keys move focus to the nearest place in that direction, Enter opens details, Shift with arrows pans, plus and minus zoom, 0 resets, Escape closes details.
-- Hash routing until React Router arrives with step 6: `#/` journey, `#/map` map, `#/tile` style tile.
+- Hash routing until React Router arrives with step 6: `#/` home, `#/day` the day, `#/map` map, `#/rsvp` RSVP stub, `#/tile` style tile.
 - Journey (step 4, paced version): a full-screen sticky stage over 650vh of scroll (900vh was too slow). It opens on the whole map with two labelled places and a faint route preview, then the camera holds still between moves (quay, crossing, landing, walk, estate) at a wider zoom than the first version. Text beats show over the map with crossfades. Phones zoom out so they see more than a thin slice. The earlier split scroll story and plain hero were tried and dropped. A floating `NavPill` links Journey, Map and RSVP, `#/rsvp` is a stub, and a skip link jumps to the final card. With reduced motion the map shows its finished state and the story is plain text.
 
 ### Open
@@ -724,3 +724,13 @@ Open questions: Deploy to Vercel so the live link can go in the caption.
 Files created or changed: `src/data/events/wedding.ts`, `src/features/journey/camera.ts`, this brief. Social files are outside the repo.
 Parked issues: Not seen in a real browser or on a real phone. Lighthouse not run. The phone video is a 720 px layout scaled up 1.5 times, so text is slightly soft.
 Next step: Deploy to Vercel and confirm the live URL, then step 5 (wedding day page with the time scrubber and now panel).
+
+### Status: 2026-10-25 (build step 5 and home sections)
+Stage: 9 Pages and flows, 10 Motion pass
+Done this session: Day page at `#/day`: a map with a time scrubber, the Day, Dusk and Night switch, a now panel (a polite live region that only changes when an event starts or ends, with a button to show the place on the map), lit pins for places with something on, and the day as a list that moves the scrubber. Checked all five scene keyframes (8:00 am, 12:39 pm, 4:32 pm, 8:05 pm, 11:30 pm): windows and string lights light up from dusk, lit pins show, labels and panels keep fixed colors. The home page now has sections after the journey: the weekend at a glance (from the schedule), Saturday hour by hour (the scrubber), getting to Larkmere (ferry times and routes), questions (accordion), an RSVP band and a footer. Added `Accordion`, `SiteFooter`, a nav link for the day, more Saturday schedule items and more FAQ entries.
+Decided this session: Home page gets more sections below the journey.
+Proposed, awaiting confirmation: `EventConfig.mainDay` (step 5 addition). Section order and copy on the home page. The scrubber opens on the ceremony time.
+Open questions: Whether the home page needs a story trail teaser and a wedding party teaser before those pages exist.
+Files created or changed: `src/features/day/*`, `src/features/home/*`, `src/components/Accordion.tsx`, `SiteFooter.tsx`, `NavPill.tsx`, `src/routes/DayPage.tsx`, `JourneyPage.tsx`, `src/App.tsx`, `src/lib/time.ts`, `src/data/events/types.ts`, `wedding.ts`, `src/features/map/Pin.tsx`, `MapCanvas.tsx`, this brief.
+Parked issues: Not seen in a real browser or on a real phone. Lighthouse not run. Contrast of text on the scene is unaffected because text sits on fixed paper panels, but the pale label pills on the night map were checked by eye only. The home page is about 13 screens tall on a phone.
+Next step: Step 6, starting with the RSVP boarding pass (replaces the stub) and the story trail with the passport stamps.

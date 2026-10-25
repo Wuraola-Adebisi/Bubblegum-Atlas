@@ -1,5 +1,6 @@
 const links = [
   { href: '#/', label: 'Journey' },
+  { href: '#/day', label: 'The day' },
   { href: '#/map', label: 'Map' },
   { href: '#/rsvp', label: 'RSVP' },
 ]

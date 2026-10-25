@@ -4,13 +4,15 @@ import { swatchFor } from './layerStyle.ts'
 interface PinProps {
   pin: PinData
   selected: boolean
+  /** Lit: something is happening here at the chosen time. */
+  active?: boolean
   onSelect: (id: string) => void
   onFocusPin: (pin: PinData) => void
   registerRef: (id: string, el: HTMLButtonElement | null) => void
 }
 
 /** A map marker. 24px visible, 44px hit area. Unnumbered, because places are not a sequence. */
-export default function Pin({ pin, selected, onSelect, onFocusPin, registerRef }: PinProps) {
+export default function Pin({ pin, selected, active = false, onSelect, onFocusPin, registerRef }: PinProps) {
   return (
     <button
       type="button"
@@ -25,7 +27,7 @@ export default function Pin({ pin, selected, onSelect, onFocusPin, registerRef }
     >
       <span
         className={`grid size-6 place-items-center rounded-pill border-hair border-accent transition duration-micro ease-standard group-hover:-translate-y-1 ${
-          selected ? 'bg-accent' : 'bg-paper'
+          selected ? 'bg-accent' : active ? 'scale-125 bg-glow' : 'bg-paper'
         }`}
       >
         <span className={`size-2 rounded-pill ${selected ? 'bg-paper' : swatchFor(pin.layerIds[0])}`} />

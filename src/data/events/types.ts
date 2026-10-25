@@ -18,6 +18,8 @@ export interface EventConfig {
   locale: { currency: 'USD' | 'GBP' | 'EUR'; hour12: boolean; language: 'en-US' | 'en-GB' }
   /** Step 3 addition: the visible clock range the scrubber maps t onto, in minutes after midnight. */
   clock: { startMin: number; endMin: number }
+  /** Step 5 addition: the calendar day (YYYY-MM-DD, in the event timezone) the day page and its scrubber cover. */
+  mainDay?: string
   map: MapConfig
   /** Step 4 addition: the scroll journey on the home page. */
   journey?: JourneyConfig

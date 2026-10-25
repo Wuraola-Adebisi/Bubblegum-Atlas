@@ -28,6 +28,7 @@ export const wedding: EventConfig = {
   dates: { start: `${fri}T00:00:00-04:00`, end: `${sun}T23:59:00-04:00` },
   locale: { currency: 'USD', hour12: true, language: 'en-US' },
   clock: { startMin: 8 * 60, endMin: 23 * 60 + 30 },
+  mainDay: sat,
   scene: sceneKeyframes,
 
   journey: {
@@ -299,15 +300,21 @@ export const wedding: EventConfig = {
 
   schedule: [
     item('welcome', 'Welcome drinks', fri, '18:00', '20:30', 'boathouse', 'social', 'Drinks and small plates on the terrace.'),
+    item('breakfast', 'Breakfast at the hotel', sat, '08:00', '10:00', 'quay-hotel', 'meal', 'Served in the hotel dining room.'),
+    item('free-morning', 'Free morning', sat, '10:00', '12:15', 'quay-hotel', 'free', 'Walk around Harbor Quay. The first ferry is at 12:30.'),
     item('ferry-1230', 'Ferry to Larkmere', sat, '12:30', '12:42', 'quay-jetty', 'travel', 'First crossing of the day.'),
     item('ferry-1300', 'Ferry to Larkmere', sat, '13:00', '13:12', 'quay-jetty', 'travel', 'Please arrive by 12:45.'),
     item('ferry-1330', 'Ferry to Larkmere', sat, '13:30', '13:42', 'quay-jetty', 'travel', 'Last crossing before the ceremony.'),
+    item('coffee', 'Coffee at the cafe', sat, '13:45', '15:15', 'cafe', 'social', 'Drinks and pastries while everyone arrives.'),
+    item('lawn-games', 'Lawn games', sat, '14:00', '15:15', 'estate', 'social', 'Croquet and bocce on the front lawn.'),
     item('ceremony', 'Ceremony', sat, '15:30', '16:15', 'arch', 'ceremony', 'Please be seated by 3:15 pm.'),
     item('cocktails', 'Cocktail hour', sat, '16:30', '17:30', 'estate', 'social', 'Drinks on the front lawn.'),
+    item('portraits', 'Photos on the lawn', sat, '17:30', '18:30', 'estate', 'social', 'Portraits with the couple while guests wander the lawn.'),
     item('dinner', 'Dinner', sat, '18:30', '20:15', 'marquee', 'meal', 'Seated dinner. Tell us about dietary needs in the RSVP.'),
     item('first-dance', 'First dance', sat, '20:30', '20:45', 'marquee', 'ceremony', 'Around dusk, when the lights come on.'),
     item('party', 'Party', sat, '20:45', '23:59', 'marquee', 'social', 'Dancing until midnight.'),
     item('return-2330', 'Return ferry', sat, '23:30', '23:42', 'larkmere-jetty', 'travel', 'First return crossing.'),
+    item('return-0015', 'Last return ferry', sun, '00:15', '00:27', 'larkmere-jetty', 'travel', 'The last crossing back to Harbor Quay on Saturday night.'),
     item('brunch', 'Farewell brunch', sun, '10:00', '12:00', 'cafe', 'meal', 'Come as you are.'),
     item('last-ferry', 'Last ferry', sun, '12:30', '12:42', 'larkmere-jetty', 'travel', 'The last crossing back to Harbor Quay.'),
   ],
@@ -328,9 +335,13 @@ export const wedding: EventConfig = {
   },
 
   faq: [
-    { q: 'How do we get to the estate?', a: 'By ferry from Harbor Quay. Saturday ferries leave at 12:30, 1:00 and 1:30 pm.' },
-    { q: 'Is there a step-free route?', a: 'Yes. The ferry and the shuttle are step-free. The walking path has two short flights of steps.' },
-    { q: 'What if it rains?', a: 'The ceremony and reception move into the marquee.' },
+    { q: 'How do we get to the estate?', a: 'By ferry from Harbor Quay. Saturday ferries leave at 12:30, 1:00 and 1:30 pm, and the crossing takes about 12 minutes.' },
+    { q: 'Is there a step-free route?', a: 'Yes. The ferry and the shuttle are step-free. The walking path from the jetty has two short flights of steps.' },
+    { q: 'What if it rains?', a: 'The ceremony and the reception both move into the marquee.' },
+    { q: 'What should I wear?', a: 'Garden formal. The ceremony is on grass, so flat shoes are a good idea.' },
+    { q: 'Are kids welcome?', a: 'Yes, at every event over the weekend.' },
+    { q: 'Where should I stay?', a: 'Harbor Quay Hotel has a room block. Ask for the Larkmere block when you book.' },
+    { q: 'Can I bring a plus-one?', a: 'Your invitation says who is invited. Tell us your party size in the RSVP.' },
   ],
 
   copy: {
@@ -342,6 +353,15 @@ export const wedding: EventConfig = {
     ctaFollow: 'Follow the ferry',
     ctaRsvp: 'Send RSVP',
     ctaMap: 'See the weekend map',
+    dayTitle: 'Saturday, hour by hour',
+    dayIntro: 'Drag the time to see the lake from breakfast to the last ferry. The map shifts from morning to night, and the panel says what is happening and where.',
+    weekendTitle: 'The weekend at a glance',
+    weekendIntro: 'Welcome drinks on Friday, the wedding on Saturday and a farewell brunch on Sunday. All times are Eastern.',
+    hereTitle: 'Getting to Larkmere',
+    hereIntro: 'The estate is on the far side of the lake. The ferry from Harbor Quay is the way in, and it is step-free.',
+    faqTitle: 'Questions',
+    rsvpTitle: 'Tell us you are coming',
+    rsvpIntro: 'The RSVP form asks for your name, party size, dinner choice, dietary needs and a song request.',
     mapIntro: 'Harbor Quay to Larkmere Estate. Turn layers on, pick a route, or switch to the list.',
   },
 }
