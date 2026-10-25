@@ -2,6 +2,7 @@ const links = [
   { href: '#/', label: 'Journey' },
   { href: '#/day', label: 'The day' },
   { href: '#/map', label: 'Map' },
+  { href: '#/story', label: 'Story' },
   { href: '#/rsvp', label: 'RSVP' },
 ]
 
@@ -17,7 +18,7 @@ export default function NavPill({ current }: { current: string }) {
               <a
                 href={l.href}
                 aria-current={on ? 'page' : undefined}
-                className={`inline-flex min-h-11 items-center rounded-pill px-5 font-medium transition duration-micro ease-standard ${
+                className={`inline-flex min-h-11 items-center whitespace-nowrap rounded-pill px-2.5 text-small font-medium sm:px-5 sm:text-body transition duration-micro ease-standard ${
                   on ? 'bg-accent text-paper' : 'text-accent hover:bg-land-wash'
                 }`}
               >

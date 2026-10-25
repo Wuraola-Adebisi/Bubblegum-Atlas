@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { wedding as event } from '../data/events/wedding.ts'
 import BoardingPass from '../features/rsvp/BoardingPass.tsx'
 import RsvpForm from '../features/rsvp/RsvpForm.tsx'
+import ShareCardPanel from '../features/rsvp/ShareCardPanel.tsx'
 import { passCode, statusFor, storageKey, validate } from '../features/rsvp/rsvp.ts'
 import type { RsvpReply } from '../features/rsvp/rsvp.ts'
 import { readJson, removeKey, writeJson } from '../lib/storage.ts'
@@ -96,6 +97,7 @@ export default function RsvpPage() {
               </p>
             </header>
             {reply.status !== 'declined' && <BoardingPass event={event} values={reply.values} state={reply.status} code={reply.code} />}
+            {reply.status === 'confirmed' && <ShareCardPanel event={event} values={reply.values} code={reply.code} />}
             <div className="mt-8 flex flex-wrap gap-3 print:hidden">
               {reply.status !== 'declined' && (
                 <button type="button" className={btn} onClick={() => window.print()}>

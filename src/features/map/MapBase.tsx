@@ -10,6 +10,10 @@ interface MapBaseProps {
   route?: Route | null
   /** Illustration ids to leave out, for pieces a scene draws itself (the moving ferry). */
   hide?: string[]
+  /** The pin whose artwork is lifted, for example under the pointer. */
+  liftedPin?: string | null
+  /** The pin whose artwork was just poked. `n` changes on every poke so the animation can play again. */
+  pokedPin?: { id: string; n: number } | null
   /** Extra SVG drawn above the roads, in map units. */
   svgExtra?: ReactNode
   /** Extra HTML layered above the illustrations. Positions are the caller's job. */
@@ -17,7 +21,7 @@ interface MapBaseProps {
 }
 
 /** The painted map: water, land, parks, roads, an optional route and the inlined illustrations. */
-export default function MapBase({ map, win, route, hide = [], svgExtra, children }: MapBaseProps) {
+export default function MapBase({ map, win, route, hide = [], liftedPin = null, pokedPin = null, svgExtra, children }: MapBaseProps) {
   const vb = map.viewBox
   const placements = [...map.placements].filter((p) => !hide.includes(p.illustrationId)).sort((a, b) => a.y - b.y)
   return (
@@ -53,8 +57,10 @@ export default function MapBase({ map, win, route, hide = [], svgExtra, children
           if (!art) return null
           return (
             <div
-              key={`${p.illustrationId}-${i}`}
-              className="illo absolute"
+              key={`${p.illustrationId}-${i}-${p.pinId && pokedPin?.id === p.pinId ? pokedPin.n : 0}`}
+              className={`illo absolute origin-bottom transition-transform duration-micro ease-standard ${p.pinId && liftedPin === p.pinId ? 'lifted' : ''} ${
+                p.pinId && pokedPin?.id === p.pinId ? 'poke' : ''
+              }`}
               style={placeStyle(win, p.x, p.y, art.width * p.scale, art.height * p.scale)}
               dangerouslySetInnerHTML={{ __html: art.svg }}
             />

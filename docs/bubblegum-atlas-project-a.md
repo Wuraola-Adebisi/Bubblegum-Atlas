@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (map engine), 4 (journey hero), 5 (day page, home sections) and the first part of 6 (RSVP boarding pass) are built and checked in headless Chromium, awaiting a real-browser check. Build step 6 (story trail, plan, party, RSVP, share card, info) is next.
+Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 to 5 and most of step 6 (RSVP boarding pass, share card, story trail, home page as an unwinding map) are built and checked in headless Chromium, awaiting a real-browser check. Build step 6 (story trail, plan, party, RSVP, share card, info) is next.
 
 ---
 
@@ -25,6 +25,9 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (
 
 - Animation library: Framer Motion (`motion/react`), chosen 2026-10-23.
 
+- The home page below the journey is an unwinding map, not plain white sections. Each section is a station: a place on the estate with its own illustrations and text, tied to it by a leader line. A guest avatar (suit or dress, with a skin tone choice) walks a dotted path down the page as you scroll (2026-10-25).
+- The story trail and passport stamps are part of that walk: the guest collects a stamp at five stops, and the story page unlocks a chapter per stamp (2026-10-25).
+
 ### Proposed (awaiting confirmation)
 - All hex values in section 5 (estimated from the images, contrast verified on the style tile; confirm the look with a sampler).
 - Type pairing: Sora (display and body) and Pacifico (script labels). Replaced Bricolage Grotesque, Caveat and DM Sans on 2026-10-25 at the owner's request.
@@ -39,7 +42,7 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (
 - Step 3 additions to the `EventConfig` types (all optional except `clock`): `EventConfig.clock`, `MapConfig.waves`, `Pin.labelSide`, `Route.note`. Placement `scale` multiplies the illustration's own viewBox width. Section 10 gets updated once these are confirmed.
 - Map keyboard model: arrow keys move focus to the nearest place in that direction, Enter opens details, Shift with arrows pans, plus and minus zoom, 0 resets, Escape closes details.
 - Hash routing until React Router arrives with step 6: `#/` home, `#/day` the day, `#/map` map, `#/rsvp` RSVP stub, `#/tile` style tile.
-- Journey (step 4, paced version): a full-screen sticky stage over 650vh of scroll (900vh was too slow). It opens on the whole map with two labelled places and a faint route preview, then the camera holds still between moves (quay, crossing, landing, walk, estate) at a wider zoom than the first version. Text beats show over the map with crossfades. Phones zoom out so they see more than a thin slice. The earlier split scroll story and plain hero were tried and dropped. A floating `NavPill` links Journey, Map and RSVP, `#/rsvp` is a stub, and a skip link jumps to the final card. With reduced motion the map shows its finished state and the story is plain text.
+- Journey (step 4, bird's-eye version): a full-screen sticky stage over 650vh of scroll, seen from above with the whole estate in view (zoom 0.7 to 1.05, water extends past the map so wide short windows are not cropped). A spring smooths the scroll. It opens on the whole map with two labelled places and a faint route preview, holds still between moves, and the camera and chapter text follow. Buildings are interactive: hover lifts them, click or Enter makes them hop, throws a star burst and opens a short note; a star trail follows a mouse. Twinkles sit on the water, the ferry leaves a wake and puffs smoke as the page scrolls, and the walker uses the avatar chosen lower down the page. Reduced motion shows the finished state with no twinkles, bursts or swing. A floating `NavPill` links the pages, `#/rsvp` is the RSVP, and a skip link jumps to the final card.
 
 ### Open
 - Final couple names, venue name and dates (placeholders for now).
@@ -506,6 +509,7 @@ export interface PassConfig {
 
 | Route | Section | Key interaction |
 |---|---|---|
+| `/story` | Story trail | Five stamps, collected by walking the home page or with "Stamp it" here. Each unlocks a chapter, and finishing shows a closing note |
 | `/` | Journey | Ferry crossing scroll ends at the estate with date and RSVP |
 | `/day` | The day, hour by hour | Time scrubber and NowPanel |
 | `/story` | Story trail | Passport: five pins unlock chapters (the ferry deck where they met, first date cafe, the trip that went wrong, the jetty where Theo proposed, the arch where they marry). Completion reveals a note and the registry |
@@ -744,3 +748,23 @@ Open questions: Real capacity and party limit. Where replies should go once ther
 Files created or changed: `src/features/rsvp/*`, `src/components/Field.tsx`, `src/lib/storage.ts`, `src/routes/RsvpPage.tsx`, `src/main.tsx`, `src/index.css`, `src/tile/Typography.tsx`, `src/features/day/DayExplorer.tsx`, `src/data/events/types.ts`, `wedding.ts`, `package.json`, `package-lock.json`, `tools/illustrations/build_sheet.py`, this brief.
 Parked issues: Not seen in a real browser or on a real phone. Replies are stored in the browser only. The print layout was checked with print media emulation, not a real printer or PDF. The social carousel and videos from earlier use the old fonts and will need regenerating if you want them to match.
 Next step: Story trail with passport stamps, then the share card for the boarding pass.
+
+### Status: 2026-10-25 (walk, story trail, share card)
+Stage: 9 Pages and flows, 10 Motion pass
+Done this session: Rebuilt the home page below the journey as an unwinding map of seven stations (Harbor Quay, the boathouse, the lakeside cafe, the shuttle stop with the questions, the house, the ceremony arch, the marquee). Each station has its own artwork and text drawn from the event config, and a leader line to its place. A dotted path winds down the page, the time of day moves from midday to night as you go, and a guest avatar walks the path as you scroll. The guest is a suit or a dress with a choice of five skin tones, saved in the browser; legs and arms swing while the page moves and stop under reduced motion. The guest stamps five story stops on the way (passport saved in the browser, a toast announces each stamp, and a chip links to the story page). Built `#/story` (stamps, chapters, a closing note, "Stamp it" and "Start over"). Built the boarding pass share card: a 1080 by 1350 image made from the RSVP, saved as a PNG or sent through the phone's share sheet. New illustrations: two walking avatars and a wedding cake. Removed the plain weekend, getting here and questions sections, now inside the walk. The nav has a Story link.
+Decided this session: Home page as an unwinding map with a walking avatar. Story trail inside the walk.
+Proposed, awaiting confirmation: Suit and dress as the avatar labels. Story chapters (placeholders written for Maya and Theo, to be replaced with the couple's real story). Seven stations and their order. Registry links on the finished story page (not added yet).
+Open questions: The real story. Registry links.
+Files created or changed: `src/features/walk/*`, `src/features/rsvp/ShareCard.tsx`, `ShareCardPanel.tsx`, `src/routes/StoryPage.tsx`, `JourneyPage.tsx`, `RsvpPage.tsx`, `src/components/PassportStamp.tsx`, `NavPill.tsx`, `SiteFooter.tsx`, `src/App.tsx`, `src/index.css`, `src/data/events/types.ts`, `wedding.ts`, `tools/illustrations/gen.py`, three new SVGs, `package.json`, `package-lock.json`, this brief. Deleted: `src/features/home/WeekendSection.tsx`, `HereSection.tsx`, `FaqSection.tsx`.
+Parked issues: Not seen in a real browser or on a real phone. Scroll smoothness of the walk is unmeasured (it re-renders only the trail on scroll). The share card was rendered in headless Chromium; Safari's image export and font embedding are untested. On phones the guest disappears behind the text cards while walking between stations. The day section and RSVP band after the walk are still on a plain background.
+Next step: Pop-up build (step 9) or a performance and accessibility pass (step 7), your call. The wedding site has its main pages.
+
+### Status: 2026-10-25 (bird's-eye hero and play)
+Stage: 10 Motion pass
+Done this session: Pulled the hero camera back so elements are small and the whole estate shows (feedback: elements were too close and imposing, and the journey felt rushed). The camera no longer forces a zoom on wide, short windows (a 1350 by 630 window was cropping the top of the map). Scroll progress now goes through a spring for a smoother journey. The chapter card moved to the top left on wider screens so it no longer covers the quay. Added play: buildings lift on hover, hop and throw sparkles on click or Enter and open a short note (also announced to screen readers), a star trail follows a mouse, twinkles on the water, a ferry wake and smoke tied to scroll, and the walker now uses the chosen avatar with its walking swing. Placements can name a pin (`pinId`).
+Decided this session: Bird's-eye hero with more play.
+Proposed, awaiting confirmation: Zoom values, the spring settings, the twinkle positions, "Tap a building to say hi" hint.
+Open questions: None new.
+Files created or changed: `src/features/journey/Journey.tsx`, `camera.ts`, `src/features/map/MapBase.tsx`, `src/data/events/types.ts`, `wedding.ts`, `src/index.css`, this brief.
+Parked issues: Not seen in a real browser or on a real phone. Scroll smoothness and the cost of re-rendering on every spring tick are unmeasured. The mouse star trail is only tested by script. Several buttons now sit in the hero tab order (one per building).
+Next step: Performance and accessibility pass, or the pop-up build.

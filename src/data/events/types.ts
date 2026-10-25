@@ -23,6 +23,8 @@ export interface EventConfig {
   map: MapConfig
   /** Step 4 addition: the scroll journey on the home page. */
   journey?: JourneyConfig
+  /** Step 6 addition: the unwinding map on the home page, one station per place. */
+  walk?: WalkConfig
   scene: SceneKeyframe[]
   zones: Zone[]
   pins: Pin[]
@@ -48,7 +50,7 @@ export interface MapConfig {
    * x and y are the ground point (bottom centre) in viewBox units.
    * scale multiplies the illustration's own viewBox width, so 1 draws it at its natural size in map units.
    */
-  placements: { illustrationId: string; x: number; y: number; scale: number; zoneId?: string }[]
+  placements: { illustrationId: string; x: number; y: number; scale: number; zoneId?: string; pinId?: string }[]
 }
 
 export interface Zone {
@@ -111,6 +113,7 @@ export interface Person {
 }
 
 export interface PassportConfig {
+  /** In story order. `unlock` is the chapter text shown once the stamp is collected. */
   stamps: { pinId: string; label: string; unlock?: string }[]
   completionReward: { title: string; body: string }
 }
@@ -144,4 +147,29 @@ export interface JourneyConfig {
   chapters: { from: number; to: number; title: string; body: string; final?: boolean }[]
   /** Labels for the scale bar that doubles as scroll progress. */
   scale: { start: string; end: string }
+}
+
+/** A piece of artwork inside a station. x, y and w are percentages of the station's art box. y is the ground line. */
+export interface WalkArt {
+  id: string
+  x: number
+  y: number
+  w: number
+}
+
+export interface WalkStation {
+  id: string
+  kind: 'here' | 'lakeshore' | 'cafe' | 'questions' | 'estate' | 'ceremony' | 'party'
+  title: string
+  /** Pins this station covers. Its schedule items are the ones at these pins. */
+  pinIds: string[]
+  /** The first piece is the main landmark, and the leader line ends on it. */
+  art: WalkArt[]
+  /** Draw a lawn behind the art. */
+  lawn?: boolean
+}
+
+export interface WalkConfig {
+  intro: { title: string; body: string }
+  stations: WalkStation[]
 }

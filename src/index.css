@@ -295,3 +295,95 @@
     width: 100%;
   }
 }
+
+/* The walking avatar: legs and arms swing while the page scrolls. Reduced motion removes the swing. */
+.avatar-walk .av-leg,
+.avatar-walk .av-arm {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+}
+.avatar-walk.walking .av-leg-a,
+.avatar-walk.walking .av-arm-b {
+  animation: stride 0.42s ease-in-out infinite alternate;
+}
+.avatar-walk.walking .av-leg-b,
+.avatar-walk.walking .av-arm-a {
+  animation: stride 0.42s ease-in-out infinite alternate-reverse;
+}
+@keyframes stride {
+  from {
+    transform: rotate(-22deg);
+  }
+  to {
+    transform: rotate(22deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .avatar-walk.walking .av-leg,
+  .avatar-walk.walking .av-arm {
+    animation: none;
+  }
+}
+
+/* Hero play: hover lift, a squash and hop when poked, twinkles and star bursts */
+.illo.lifted {
+  transform: translateY(-6px) rotate(1.5deg);
+}
+.illo.poke {
+  animation: poke 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes poke {
+  0% {
+    transform: translateY(0) scale(1, 1);
+  }
+  25% {
+    transform: translateY(2px) scale(1.06, 0.9);
+  }
+  55% {
+    transform: translateY(-16px) scale(0.96, 1.08);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+}
+.twinkle {
+  animation: twinkle var(--tw, 3s) ease-in-out var(--delay, 0s) infinite;
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(45deg);
+  }
+}
+.burst {
+  animation: burst 0.85s ease-out forwards;
+}
+@keyframes burst {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) translate(0, 0) scale(1) rotate(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) scale(0.2) rotate(180deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .illo.poke,
+  .twinkle,
+  .burst {
+    animation: none;
+  }
+  .twinkle {
+    opacity: 0.6;
+    transform: translate(-50%, -50%);
+  }
+  .illo.lifted {
+    transform: none;
+  }
+}
