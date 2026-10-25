@@ -327,11 +327,15 @@ export const wedding: EventConfig = {
   pass: {
     fields: [
       { id: 'name', label: 'Full name', type: 'text', required: true },
-      { id: 'party', label: 'Number of guests in your party', type: 'number', required: true },
-      { id: 'meal', label: 'Dinner choice', type: 'select', options: ['Chicken', 'Salmon', 'Vegetarian'], required: true },
-      { id: 'dietary', label: 'Dietary needs', type: 'textarea' },
+      { id: 'email', label: 'Email address', type: 'email', required: true },
+      { id: 'party', label: 'Guests in your party, including you', type: 'number', required: true },
+      { id: 'ferry', label: 'Saturday ferry to Larkmere', type: 'select', options: ['12:30 pm', '1:00 pm', '1:30 pm'], required: true },
+      { id: 'meal', label: 'Your dinner choice', type: 'select', options: ['Chicken', 'Salmon', 'Vegetarian'], required: true },
+      { id: 'dietary', label: 'Dietary needs for your party', type: 'textarea' },
       { id: 'song', label: 'Song request', type: 'text' },
     ],
+    maxPartySize: 8,
+    capacity: { guests: 90, taken: 86 },
   },
 
   faq: [
@@ -362,6 +366,7 @@ export const wedding: EventConfig = {
     faqTitle: 'Questions',
     rsvpTitle: 'Tell us you are coming',
     rsvpIntro: 'The RSVP form asks for your name, party size, dinner choice, dietary needs and a song request.',
+    rsvpPageIntro: 'Fill this in and your boarding pass appears beside the form. Reply once for your whole party.',
     mapIntro: 'Harbor Quay to Larkmere Estate. Turn layers on, pick a route, or switch to the list.',
   },
 }

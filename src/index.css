@@ -58,17 +58,17 @@
   --color-contour: color-mix(in oklab, var(--color-land) 78%, var(--color-paper));
 
   /* type */
-  --font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
-  --font-hand: "Caveat Variable", "Comic Sans MS", cursive;
-  --font-body: "DM Sans Variable", system-ui, sans-serif;
+  --font-display: "Sora Variable", system-ui, sans-serif;
+  --font-hand: "Pacifico", "Comic Sans MS", cursive;
+  --font-body: "Sora Variable", system-ui, sans-serif;
 
-  --text-display: clamp(3.25rem, 9vw, 8rem);
+  --text-display: clamp(2.75rem, 7vw, 6rem);
   --text-display--line-height: 0.92;
   --text-display--letter-spacing: -0.02em;
-  --text-h1: clamp(2.5rem, 6vw, 4.5rem);
+  --text-h1: clamp(2.125rem, 5vw, 3.75rem);
   --text-h1--line-height: 1;
   --text-h1--letter-spacing: -0.015em;
-  --text-h2: clamp(1.75rem, 3.5vw, 2.75rem);
+  --text-h2: clamp(1.5rem, 3vw, 2.375rem);
   --text-h2--line-height: 1.1;
   --text-h3: 1.5rem;
   --text-h3--line-height: 1.2;
@@ -77,7 +77,7 @@
   --text-small: 0.875rem;
   --text-small--line-height: 1.5;
   --text-label: 1.25rem;
-  --text-label--line-height: 1.15;
+  --text-label--line-height: 1.45;
 
   /* shape and depth */
   --radius-panel: 28px;
@@ -211,6 +211,12 @@
   animation: pin-pop 420ms var(--ease-pop) both;
 }
 
+/* Pacifico has one weight. Never fake a bolder one. */
+.font-hand {
+  font-weight: 400;
+  font-synthesis: none;
+}
+
 /* Inlined illustrations fill the width of their wrapper */
 .illo > svg {
   display: block;
@@ -270,5 +276,22 @@
   }
   .pin-pop {
     animation: none;
+  }
+}
+
+/* Print only the boarding pass */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #boarding-pass,
+  #boarding-pass * {
+    visibility: visible;
+  }
+  #boarding-pass {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
   }
 }

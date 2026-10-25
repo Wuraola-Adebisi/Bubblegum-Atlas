@@ -116,7 +116,11 @@ export interface PassportConfig {
 }
 
 export interface PassConfig {
-  fields: { id: string; label: string; type: 'text' | 'number' | 'select' | 'textarea'; options?: string[]; required?: boolean }[]
+  fields: { id: string; label: string; type: 'text' | 'email' | 'number' | 'select' | 'textarea'; options?: string[]; required?: boolean }[]
+  /** Step 6 addition: the largest party one reply can cover. */
+  maxPartySize?: number
+  /** Step 6 addition: mock headcount. A party that does not fit in the remaining places is waitlisted. */
+  capacity?: { guests: number; taken: number }
 }
 
 export interface JourneyCamera {

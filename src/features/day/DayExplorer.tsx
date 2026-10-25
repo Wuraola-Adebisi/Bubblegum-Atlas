@@ -50,7 +50,7 @@ export default function DayExplorer({ event, showTimeline = true }: DayExplorerP
       />
       <div className="grid items-start gap-6 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <NowPanel event={event} clock={clock} moment={scene.moment} active={active} next={next} onShow={setSelectedId} />
+          <NowPanel event={event} clock={clock} moment={scene.name} active={active} next={next} onShow={setSelectedId} />
         </div>
         <div className="space-y-6 rounded-panel border-hair border-dashed border-water-deep bg-paper p-5 sm:p-6 lg:col-span-3">
           <TimeScrubber value={value} onChange={setValue} clock={clock} sceneName={scene.name} />

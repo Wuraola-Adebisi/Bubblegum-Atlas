@@ -41,10 +41,10 @@ html = f"""<!doctype html>
 <title>Bubblegum Atlas: illustration test sheet</title>
 <style>
   :root {{ --scene-glow: 0; --scene-halo: 0; --scene-sky: #FFF6F8; --scene-water: #BFE4F0; --scene-land: #FFC9DB; --color-ink: #1F2F6B; }}
-  body {{ margin: 0; padding: 40px 24px 80px; background: #FFF6F8; color: #1F2F6B; font: 17px/1.6 "DM Sans Variable", "DM Sans", system-ui, sans-serif; }}
+  body {{ margin: 0; padding: 40px 24px 80px; background: #FFF6F8; color: #1F2F6B; font: 17px/1.6 "Sora Variable", "Sora", system-ui, sans-serif; }}
   main {{ max-width: 1280px; margin: 0 auto; }}
-  h1 {{ font: 800 clamp(2rem, 5vw, 3.25rem)/1 "Bricolage Grotesque Variable", system-ui, sans-serif; margin: 0 0 12px; }}
-  h2 {{ font: 800 1.5rem/1.2 "Bricolage Grotesque Variable", system-ui, sans-serif; margin: 56px 0 20px; }}
+  h1 {{ font: 800 clamp(2rem, 5vw, 3.25rem)/1 "Sora Variable", system-ui, sans-serif; margin: 0 0 12px; }}
+  h2 {{ font: 800 1.5rem/1.2 "Sora Variable", system-ui, sans-serif; margin: 56px 0 20px; }}
   p {{ max-width: 70ch; margin: 0 0 16px; }}
   .row {{ display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-end; }}
   figure {{ margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }}
@@ -60,7 +60,7 @@ html = f"""<!doctype html>
   .scale .land {{ position: absolute; left: 6%; right: 6%; top: 18%; bottom: 8%; background: var(--scene-land); border-radius: 46% 54% 50% 50% / 55% 45% 55% 45%; border: 1.5px solid #B0306B; }}
   .scale > div[style] {{ position: absolute; }}
   .modes {{ border: 0; padding: 0; margin: 0 0 20px; display: flex; gap: 12px; flex-wrap: wrap; }}
-  .modes legend {{ font: 800 1.1rem/1.2 'Bricolage Grotesque Variable', system-ui, sans-serif; padding: 0; margin-bottom: 12px; }}
+  .modes legend {{ font: 800 1.1rem/1.2 'Sora Variable', system-ui, sans-serif; padding: 0; margin-bottom: 12px; }}
   .modes label {{ display: block; margin: 0; }}
   .modes input {{ position: absolute; opacity: 0; width: 1px; height: 1px; }}
   .modes span {{ display: inline-block; padding: 12px 24px; border: 1.5px solid #B0306B; border-radius: 999px; color: #B0306B; font-weight: 500; cursor: pointer; }}

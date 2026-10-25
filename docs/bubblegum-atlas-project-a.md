@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (map engine), 4 (journey hero) and 5 (day page with scrubber and now panel, plus the home page sections) are built and checked in headless Chromium, awaiting a real-browser check. Build step 6 (story trail, plan, party, RSVP, share card, info) is next.
+Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (map engine), 4 (journey hero), 5 (day page, home sections) and the first part of 6 (RSVP boarding pass) are built and checked in headless Chromium, awaiting a real-browser check. Build step 6 (story trail, plan, party, RSVP, share card, info) is next.
 
 ---
 
@@ -27,7 +27,7 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 (
 
 ### Proposed (awaiting confirmation)
 - All hex values in section 5 (estimated from the images, contrast verified on the style tile; confirm the look with a sampler).
-- Type pairing: Bricolage Grotesque, Caveat, DM Sans.
+- Type pairing: Sora (display and body) and Pacifico (script labels). Replaced Bricolage Grotesque, Caveat and DM Sans on 2026-10-25 at the owner's request.
 - Flair: cartographic furniture as UI (legend as menu, scale bar as progress, compass rose as logo and back-to-top), contour-line texture on land, label pills with a hairline berry border.
 - Hairline buttons and label pills (paper fill, 1.5 px berry border). The pale wash tokens stay in the system for soft fills only.
 - Night keyframe values and the night dimming amount in sections 5.2 and 7.
@@ -212,22 +212,22 @@ Glow (`--scene-glow`) drives the lit yellow of windows, lanterns and string ligh
 
 ### 5.3 Typography (Proposed)
 
-- **Display:** Bricolage Grotesque, weight 800. Chunky, friendly, a little quirky.
-- **Hand:** Caveat, weight 600, for map labels, captions and asides. Minimum 20px. Never body text.
-- **Body and UI:** DM Sans 400 and 500.
+- **Display:** Sora, weight 800. Clean, wide and friendly.
+- **Hand:** Pacifico, one weight (never faked bolder), for map labels, captions and asides. Minimum 20px, line height 1.45. Never body text.
+- **Body and UI:** Sora 400 and 500.
 - All three are on Google Fonts. Subset them and limit weights.
 
 Scale:
 
 | Style | Size | Line height | Notes |
 |---|---|---|---|
-| display | clamp(3.25rem, 9vw, 8rem) | 0.92 | tracking -0.02em |
-| h1 | clamp(2.5rem, 6vw, 4.5rem) | 1 | |
-| h2 | clamp(1.75rem, 3.5vw, 2.75rem) | 1.1 | |
+| display | clamp(2.75rem, 7vw, 6rem) | 0.92 | tracking -0.02em |
+| h1 | clamp(2.125rem, 5vw, 3.75rem) | 1 | |
+| h2 | clamp(1.5rem, 3vw, 2.375rem) | 1.1 | |
 | h3 | 1.5rem | 1.2 | |
 | body | 1.0625rem | 1.6 | max 70ch |
 | small | 0.875rem | 1.5 | |
-| hand label | 1.25rem | 1.15 | Caveat |
+| hand label | 1.25rem | 1.45 | Pacifico |
 
 Rules: sentence case, no all-caps labels. Big titles sit in a white banner or a tilted tag so the type is part of the picture. No single-word accents in headlines.
 
@@ -367,7 +367,7 @@ Each component gets a full spec (playbook section 9 template) when built.
 
 ## 10. Engine architecture (Proposed)
 
-**Stack.** React, TypeScript (strict), Vite, Tailwind CSS v4 (CSS-first `@theme`), React Router, deployed on Vercel. Fonts are self-hosted through Fontsource packages (`@fontsource-variable/bricolage-grotesque`, `@fontsource-variable/dm-sans`, `@fontsource-variable/caveat`). Tested versions: Node 22 in the sandbox and Node 24 on the owner machine, Vite 8, React 19, Tailwind 4.3, TypeScript 6. Animation: Framer Motion (`motion/react`) is the leading option for scroll progress and path drawing. GSAP ScrollTrigger is the alternative. Decide when scaffolding. Share card export: `html-to-image` (verify font embedding), with the Web Share API where supported and a download fallback. Illustration tooling lives in `tools/illustrations` (`gen.py`, `build_sheet.py`).
+**Stack.** React, TypeScript (strict), Vite, Tailwind CSS v4 (CSS-first `@theme`), React Router, deployed on Vercel. Fonts are self-hosted through Fontsource packages (`@fontsource-variable/sora`, `@fontsource/pacifico`). Tested versions: Node 22 in the sandbox and Node 24 on the owner machine, Vite 8, React 19, Tailwind 4.3, TypeScript 6. Animation: Framer Motion (`motion/react`) is the leading option for scroll progress and path drawing. GSAP ScrollTrigger is the alternative. Decide when scaffolding. Share card export: `html-to-image` (verify font embedding), with the Web Share API where supported and a download fallback. Illustration tooling lives in `tools/illustrations` (`gen.py`, `build_sheet.py`).
 
 **Folders.**
 ```
@@ -734,3 +734,13 @@ Open questions: Whether the home page needs a story trail teaser and a wedding p
 Files created or changed: `src/features/day/*`, `src/features/home/*`, `src/components/Accordion.tsx`, `SiteFooter.tsx`, `NavPill.tsx`, `src/routes/DayPage.tsx`, `JourneyPage.tsx`, `src/App.tsx`, `src/lib/time.ts`, `src/data/events/types.ts`, `wedding.ts`, `src/features/map/Pin.tsx`, `MapCanvas.tsx`, this brief.
 Parked issues: Not seen in a real browser or on a real phone. Lighthouse not run. Contrast of text on the scene is unaffected because text sits on fixed paper panels, but the pale label pills on the night map were checked by eye only. The home page is about 13 screens tall on a phone.
 Next step: Step 6, starting with the RSVP boarding pass (replaces the stub) and the story trail with the passport stamps.
+
+### Status: 2026-10-25 (fonts and RSVP pass)
+Stage: 8 Components and 9 Pages and flows
+Done this session: Swapped the type to Sora (display and body) and Pacifico (script labels), removed the three old font packages, and retuned the type scale for Sora's width and Pacifico's line height. Built the RSVP at `#/rsvp`: a form driven by `event.pass` (attending yes or no, name, email, party size, Saturday ferry, dinner, dietary needs, song) with visible labels, hints and errors that say how to fix the problem, and focus on the first error. A boarding pass fills in beside the form as a draft, then becomes Confirmed or Waitlist when sent (a party that does not fit in the remaining places is waitlisted). The reply is saved in the browser, survives a reload, and can be changed, cleared or printed on its own as a PDF. A "no" reply shows a thank-you with no pass. Added `Field`, `BoardingPass`, `RsvpForm`, `lib/storage.ts`.
+Decided this session: Fonts are Pacifico plus Sora.
+Proposed, awaiting confirmation: Sora for both display and body (two families in total). `PassConfig.maxPartySize` and `capacity` (mock headcount of 86 taken out of 90, so parties of 5 or more are waitlisted). Reference code format `LRK-XXXX`. The share card is not built yet.
+Open questions: Real capacity and party limit. Where replies should go once there is a server.
+Files created or changed: `src/features/rsvp/*`, `src/components/Field.tsx`, `src/lib/storage.ts`, `src/routes/RsvpPage.tsx`, `src/main.tsx`, `src/index.css`, `src/tile/Typography.tsx`, `src/features/day/DayExplorer.tsx`, `src/data/events/types.ts`, `wedding.ts`, `package.json`, `package-lock.json`, `tools/illustrations/build_sheet.py`, this brief.
+Parked issues: Not seen in a real browser or on a real phone. Replies are stored in the browser only. The print layout was checked with print media emulation, not a real printer or PDF. The social carousel and videos from earlier use the old fonts and will need regenerating if you want them to match.
+Next step: Story trail with passport stamps, then the share card for the boarding pass.

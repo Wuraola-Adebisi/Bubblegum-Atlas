@@ -9,7 +9,7 @@ const links = [
 
 export default function SiteFooter({ event }: { event: EventConfig }) {
   return (
-    <footer className="mx-auto max-w-7xl px-4 pb-12 sm:px-8">
+    <footer className="mx-auto max-w-7xl px-4 pb-12 sm:px-8 print:hidden">
       <div className="flex flex-col gap-6 border-t-2 border-dashed border-water-deep pt-8 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="font-display text-h3 font-extrabold">{event.title}</p>

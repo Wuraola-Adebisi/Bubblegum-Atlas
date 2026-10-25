@@ -12,17 +12,17 @@ export default function Typography() {
         <div className="rounded-panel bg-paper p-6">
           <p className="font-display text-h1 font-extrabold">Aa</p>
           <p className="mt-2 font-medium">Display</p>
-          <p className="text-small">Bricolage Grotesque, weight 800. Headlines and big numbers.</p>
+          <p className="text-small">Sora, weight 800. Headlines and big numbers.</p>
         </div>
         <div className="rounded-panel bg-paper p-6">
           <p className="font-hand text-h1 font-semibold">Aa</p>
           <p className="mt-2 font-medium">Hand</p>
-          <p className="text-small">Caveat, weight 600. Map labels, captions and asides. Never body text, 20px at the smallest.</p>
+          <p className="text-small">Pacifico, one weight. Map labels, captions and asides. Never body text, 20px at the smallest.</p>
         </div>
         <div className="rounded-panel bg-paper p-6">
           <p className="font-body text-h1 font-medium">Aa</p>
           <p className="mt-2 font-medium">Body and interface</p>
-          <p className="text-small">DM Sans, weights 400 and 500. Paragraphs, buttons, forms.</p>
+          <p className="text-small">Sora, weights 400 and 500. Paragraphs, buttons, forms.</p>
         </div>
       </div>
 
