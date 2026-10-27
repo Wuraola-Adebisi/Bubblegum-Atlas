@@ -6,6 +6,9 @@ import { dayKey, formatDay, formatMinutes, minutesOfDay } from '../../lib/time.t
 const linkBtn =
   'inline-flex min-h-11 items-center rounded-pill border-hair border-accent bg-paper px-6 py-2 font-medium text-accent shadow-press transition duration-micro ease-standard hover:bg-accent hover:text-paper active:translate-y-0.5 active:shadow-press-down'
 
+const primaryBtn =
+  'inline-flex min-h-11 items-center rounded-pill border-hair border-accent bg-accent px-6 py-2 font-medium text-paper shadow-press transition duration-micro ease-standard hover:bg-ink active:translate-y-0.5 active:shadow-press-down'
+
 const modeLabel = { walk: 'Walk', ferry: 'Ferry', shuttle: 'Shuttle', bike: 'Bike', courier: 'Courier' } as const
 
 function Schedule({ event, items }: { event: EventConfig; items: ScheduleItem[] }) {
@@ -130,7 +133,7 @@ export default function StationContent({ event, station }: { event: EventConfig;
           <p className="max-w-measure font-medium">{event.copy.rsvpTitle}</p>
           <p className="max-w-measure text-small">{event.copy.rsvpIntro}</p>
           <p>
-            <a href="#/rsvp" className={`${linkBtn} bg-accent text-paper hover:bg-ink`}>
+            <a href="#/rsvp" className={primaryBtn}>
               {event.copy.ctaRsvp}
             </a>
           </p>

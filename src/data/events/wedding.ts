@@ -68,8 +68,8 @@ export const wedding: EventConfig = {
       {
         from: 0,
         to: 0.14,
-        title: 'We are getting married',
-        body: 'September 10 to 12, 2027, at Willowmere House, across Lake Wren from Port Calloway. Guests arrive by ferry.',
+        title: 'How you get here',
+        body: 'Guests cross Lake Wren by ferry, from Port Calloway to Willowmere House. We drew the trip so you can see it before you make it.',
       },
       { from: 0.14, to: 0.29, title: 'Across the water', body: 'Port Calloway is where the ferry leaves. The guest hotel is a five-minute walk away.' },
       {
@@ -456,7 +456,10 @@ export const wedding: EventConfig = {
     mapTitle: 'The weekend map',
     journeyTitle: 'Maya and Theo',
     journeySkip: 'Skip to the date and the weekend map',
-    journeyDate: 'Willowmere, September 10 to 12, 2027',
+    journeyDate: 'September 10 to 12, 2027, at Willowmere House on Lake Wren',
+    welcomeKicker: 'Welcome to our wedding',
+    welcomeLine: 'We are glad you are here. The weekend starts with a ferry ride across the lake, so scroll down and take the crossing with us.',
+    welcomeCue: 'Scroll to take the ferry',
     journeyIntro: 'We are getting married at Willowmere House, across Lake Wren from Port Calloway. Guests arrive by ferry. Scroll to take the trip, or go straight to the map.',
     ctaFollow: 'Follow the ferry',
     ctaRsvp: 'Send RSVP',

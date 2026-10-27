@@ -33,6 +33,9 @@ function useSize<T extends HTMLElement>() {
 const linkBtn =
   'inline-flex min-h-11 items-center rounded-pill border-hair border-accent bg-paper px-6 py-2 font-medium text-accent shadow-press transition duration-micro ease-standard hover:bg-accent hover:text-paper active:translate-y-0.5 active:shadow-press-down'
 
+const primaryBtn =
+  'inline-flex min-h-11 items-center rounded-pill border-hair border-accent bg-accent px-6 py-2 font-medium text-paper shadow-press transition duration-micro ease-standard hover:bg-ink active:translate-y-0.5 active:shadow-press-down'
+
 const sparkColors = ['var(--color-glow)', 'var(--color-paper)', 'var(--color-land-strong)', 'var(--color-flag)']
 
 /** Twinkles on the water, as [x, y, delay, duration, size], in map units. Scroll-independent, so the lake always feels alive. */
@@ -98,6 +101,22 @@ export default function Journey({ event, journey }: JourneyProps) {
     return () => io.disconnect()
   }, [stageRef])
   const p = reduced ? 1 : scrolled
+  // Welcome beat: the names start large in the middle of the stage and settle into the corner as the journey begins.
+  const titleRef = useRef<HTMLDivElement>(null)
+  const [anchor, setAnchor] = useState({ dx: 0, dy: 0, s: 1, bh: 0, cy: 0 })
+  useLayoutEffect(() => {
+    const el = titleRef.current
+    if (!el || reduced) return
+    const bw = el.offsetWidth
+    const bh = el.offsetHeight
+    const s = Math.min(1.9, (size.w * 0.88) / bw)
+    const cy = size.h * 0.28
+    setAnchor({ dx: size.w / 2 - (el.offsetLeft + bw / 2), dy: cy - (el.offsetTop + bh / 2), s, bh, cy })
+  }, [size.w, size.h, reduced])
+  const settle = reduced ? 1 : ease(progressIn(p, 0.04, 0.13))
+  const welcomeOut = reduced ? 1 : progressIn(p, 0.012, 0.06)
+  const Title = reduced ? 'p' : 'h1'
+  const scrollOn = () => window.scrollBy({ top: window.innerHeight * 0.9, behavior: reduced ? 'auto' : 'smooth' })
   const [avatar] = useAvatar()
 
   const [lifted, setLifted] = useState<string | null>(null)
@@ -191,18 +210,37 @@ export default function Journey({ event, journey }: JourneyProps) {
 
   return (
     <>
+      {reduced && (
+        <section aria-label="Welcome" className="mx-auto max-w-measure px-4 pt-28 pb-6 text-center">
+          <h1 className="font-display text-h1 font-extrabold">{event.copy.journeyTitle}</h1>
+          <p className="mt-2 font-hand text-label">{event.copy.welcomeKicker}</p>
+          <p className="mt-1 font-display text-h3 font-extrabold">{event.copy.journeyDate}</p>
+          <p className="mt-2">{event.copy.welcomeLine}</p>
+          <p className="mt-4">
+            <a href="#/rsvp" className={primaryBtn}>
+              {event.copy.ctaRsvp}
+            </a>
+          </p>
+        </section>
+      )}
+
       <section
         ref={sectionRef}
         aria-label="The journey from Port Calloway to Willowmere"
         className="relative"
         style={reduced ? undefined : { height: `${journey.scrollVh}vh` }}
       >
-        <a
-          href="#journey-end"
-          className="fixed top-2 left-2 z-50 -translate-y-24 rounded-pill bg-paper px-5 py-2 font-medium text-accent focus:translate-y-0"
+        <button
+          type="button"
+          onClick={() => {
+            const end = document.getElementById('journey-end')
+            end?.focus()
+            end?.scrollIntoView()
+          }}
+          className="fixed top-2 left-2 z-50 -translate-y-24 cursor-pointer rounded-pill bg-paper px-5 py-2 font-medium text-accent focus:translate-y-0"
         >
           {event.copy.journeySkip}
-        </a>
+        </button>
         <div id="journey-end" tabIndex={-1} className="absolute left-0 h-px w-px" style={{ top: reduced ? '0' : 'calc(100% - 100svh + 6rem)' }} />
 
         <div
@@ -322,16 +360,43 @@ export default function Journey({ event, journey }: JourneyProps) {
             {announce}
           </p>
 
-          <div className="pointer-events-none absolute top-20 left-4 sm:top-6 sm:left-8">
-            <h1 className="inline-block -rotate-2 rounded-panel border-hair border-accent bg-paper px-5 py-2 font-display text-h2 font-extrabold">
+          <div
+            ref={titleRef}
+            className="pointer-events-none absolute top-20 left-4 origin-center will-change-transform sm:top-6 sm:left-8"
+            style={reduced ? undefined : { transform: `translate(${anchor.dx * (1 - settle)}px, ${anchor.dy * (1 - settle)}px) scale(${1 + (anchor.s - 1) * (1 - settle)})` }}
+          >
+            <Title className="inline-block -rotate-2 rounded-panel border-hair border-accent bg-paper px-5 py-2 font-display text-h2 font-extrabold">
               {event.copy.journeyTitle}
-            </h1>
+            </Title>
           </div>
+
+          {!reduced && (
+            <div
+              inert={welcomeOut > 0.95}
+              className="absolute left-1/2 w-11/12 max-w-md -translate-x-1/2 rounded-panel bg-paper p-5 text-center sm:p-6"
+              style={{ top: anchor.cy + (anchor.bh * anchor.s) / 2 + 20, opacity: 1 - welcomeOut, pointerEvents: welcomeOut > 0.5 ? 'none' : undefined }}
+            >
+              <p className="font-hand text-label">{event.copy.welcomeKicker}</p>
+              <p className="mt-1 font-display text-body font-extrabold">{event.copy.journeyDate}</p>
+              <p className="mt-2 text-small">{event.copy.welcomeLine}</p>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+                <a href="#/rsvp" className={primaryBtn}>
+                  {event.copy.ctaRsvp}
+                </a>
+                <button type="button" onClick={scrollOn} className={linkBtn}>
+                  {event.copy.welcomeCue}
+                  <svg className="cue-bob ml-2" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 6 L8 11 L13 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="absolute inset-x-4 bottom-32 sm:inset-x-auto sm:top-28 sm:bottom-auto sm:left-8 sm:w-112">
             <div className="relative min-h-40">
               {journey.chapters.map((c) => {
-                const on = c === active
+                const on = c === active && !(c === journey.chapters[0] && p < 0.1)
                 return (
                   <div
                     key={c.title}
@@ -357,9 +422,8 @@ export default function Journey({ event, journey }: JourneyProps) {
           </div>
 
           <div className="pointer-events-none absolute inset-x-4 bottom-4 space-y-2 sm:inset-x-8 sm:bottom-6">
-            {!reduced && p < 0.08 && (
-              <div className="flex flex-wrap gap-2">
-                <LabelTag variant="flag">Scroll slowly to follow the ferry</LabelTag>
+            {!reduced && p > 0.06 && p < 0.2 && (
+              <div className="hidden flex-wrap gap-2 sm:flex">
                 <LabelTag>Tap a building to say hi</LabelTag>
               </div>
             )}

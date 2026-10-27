@@ -392,3 +392,14 @@
 .sample-text::before {
   content: attr(data-sample);
 }
+
+/* Small bounce on the scroll cue. Off for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .cue-bob {
+    animation: cue-bob 1.6s ease-in-out infinite;
+  }
+}
+@keyframes cue-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
