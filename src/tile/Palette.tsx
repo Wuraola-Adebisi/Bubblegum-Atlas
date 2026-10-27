@@ -28,7 +28,7 @@ export default function Palette() {
       </ul>
 
       <h3 className="mt-16 mb-6 font-display text-h3 font-extrabold">Semantic roles</h3>
-      <div className="overflow-x-auto rounded-panel bg-paper p-4 sm:p-6">
+      <div tabIndex={0} role="region" aria-label="Palette table, scrollable" className="overflow-x-auto rounded-panel bg-paper p-4 sm:p-6">
         <table className="w-full min-w-xl text-left text-small">
           <thead>
             <tr>

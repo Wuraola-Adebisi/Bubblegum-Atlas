@@ -11,7 +11,7 @@ export default function PassportStamp({ label, state, tilt = 0 }: PassportStampP
   return (
     <span
       className={`inline-grid size-28 shrink-0 place-items-center rounded-pill border-hair p-3 text-center font-hand text-small leading-tight ${
-        on ? 'pin-pop border-accent bg-land-wash text-accent' : 'border-dashed border-water-deep text-ink opacity-60'
+        on ? 'pin-pop border-accent bg-land-wash text-accent' : 'border-dashed border-water-deep bg-paper text-ink'
       }`}
       style={{ transform: `rotate(${tilt}deg)` }}
     >

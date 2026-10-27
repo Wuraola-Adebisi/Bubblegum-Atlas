@@ -56,14 +56,14 @@ export default function ShareCard({ event, values, code, cardRef }: ShareCardPro
         {piece('prop-tree-round', 950, 330, 86)}
         {piece('landmark-ferry', 250, 700, 340)}
         <div style={{ position: 'absolute', left: 60, top: 56, background: 'var(--color-paper)', border: '3px solid var(--color-accent)', borderRadius: 999, padding: '10px 36px', transform: 'rotate(-3deg)' }}>
-          <span className="font-hand" style={{ fontSize: 48 }}>Larkmere Estate</span>
+          <span className="font-hand" style={{ fontSize: 48 }}>Willowmere</span>
         </div>
       </div>
 
       <div style={{ position: 'absolute', left: 60, right: 60, top: 740 }}>
-        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 92, lineHeight: 1.02, letterSpacing: '-0.02em' }}>{first} is going to Larkmere</div>
+        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 92, lineHeight: 1.02, letterSpacing: '-0.02em' }}>{first} is going to Willowmere</div>
         <div style={{ marginTop: 22, fontSize: 38, lineHeight: 1.35 }}>
-          {event.title.replace(' at Larkmere', '')}&apos;s wedding weekend, September 10 to 12, 2027
+          {event.title.replace(' at Willowmere', '')}&apos;s wedding weekend, September 10 to 12, 2027
         </div>
         <div style={{ marginTop: 40, display: 'flex', gap: 20 }}>
           {chip('Saturday ferry', ferry ? ferry.time : 'Not chosen')}
@@ -71,7 +71,7 @@ export default function ShareCard({ event, values, code, cardRef }: ShareCardPro
           {chip('Reference', code)}
         </div>
       </div>
-      <div className="font-hand" style={{ position: 'absolute', left: 60, bottom: 40, fontSize: 34 }}>Harbor Quay to Larkmere Estate</div>
+      <div className="font-hand" style={{ position: 'absolute', left: 60, bottom: 40, fontSize: 34 }}>Port Calloway to Willowmere</div>
     </div>
   )
 }

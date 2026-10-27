@@ -483,6 +483,63 @@ def shuttle():
         p.flat(lambda a, x=x: f'<circle cx="{x}" cy="84" r="5" {a}/>', 'hub')
     return p
 
+# ---------------- walking avatars and a cake (home page estate walk) ----------------
+def _grp(p, cls, *calls):
+    """Wrap the pieces drawn by `calls` in a <g class=...>, so CSS can swing them while someone walks."""
+    p.raw(f'<g class="{cls}">')
+    for c in calls:
+        c()
+    p.raw('</g>')
+
+def avatar_dress():
+    p = make('avdress', 'A guest in a berry dress who walks as you scroll', '0 0 64 112',
+             {'skin': 'var(--skin, #E3AE8A)', 'hair': 'var(--hair, #5A3A22)', 'dress': cv('accent'), 'shoe': cv('ink')}, pad=(12, 8),
+             line='accent', full=('skin', 'hair'))
+    p.flat(lambda a: f'<circle cx="24" cy="4" r="5.5" {a}/>', 'hair', sil=True)
+    p.flat(lambda a: f'<circle cx="24" cy="15" r="11.5" {a}/>', 'hair', sil=True)
+    p.flat(lambda a: f'<circle cx="24" cy="17" r="10" {a}/>', 'skin')
+    _grp(p, 'av-arm av-arm-a', lambda: p.flat(R(5, 32, 7, 28, 3.5), 'skin', sil=True))
+    _grp(p, 'av-arm av-arm-b', lambda: p.flat(R(36, 32, 7, 28, 3.5), 'skin', sil=True))
+    _grp(p, 'av-leg av-leg-a', lambda: p.flat(R(16, 62, 7, 26, 3.5), 'skin', sil=True),
+         lambda: p.flat(lambda a: f'<ellipse cx="19.5" cy="90" rx="6.5" ry="3.5" {a}/>', 'shoe', sil=True))
+    _grp(p, 'av-leg av-leg-b', lambda: p.flat(R(25, 62, 7, 26, 3.5), 'skin', sil=True),
+         lambda: p.flat(lambda a: f'<ellipse cx="28.5" cy="90" rx="6.5" ry="3.5" {a}/>', 'shoe', sil=True))
+    p.solid(P('M13 30 Q24 25 35 30 L42 68 Q24 75 6 68 Z'), (6, 25, 36, 50), 'dress')
+    return p
+
+def avatar_suit():
+    p = make('avsuit', 'A guest in a periwinkle suit who walks as you scroll', '0 0 64 112',
+             {'skin': 'var(--skin, #5E3B28)', 'hair': 'var(--hair, #2B2118)', 'suit': cv('water-deep'), 'shirt': cv('paper'),
+              'tie': cv('accent'), 'pants': cv('ink')}, pad=(12, 8), line='accent', full=('skin', 'hair', 'tie'))
+    p.flat(lambda a: f'<circle cx="24" cy="17" r="10" {a}/>', 'skin', sil=True)
+    p.flat(P('M13.5 16 A10.5 10.5 0 0 1 34.5 16 Q24 8.5 13.5 16 Z'), 'hair')
+    _grp(p, 'av-leg av-leg-a', lambda: p.solid(R(14, 66, 9, 24, 3), (14, 66, 9, 24), 'pants', sil=True, shade=False),
+         lambda: p.flat(lambda a: f'<ellipse cx="18.5" cy="91" rx="7" ry="3.5" {a}/>', 'pants', sil=True))
+    _grp(p, 'av-leg av-leg-b', lambda: p.solid(R(25, 66, 9, 24, 3), (25, 66, 9, 24), 'pants', sil=True, shade=False),
+         lambda: p.flat(lambda a: f'<ellipse cx="29.5" cy="91" rx="7" ry="3.5" {a}/>', 'pants', sil=True))
+    p.solid(R(11, 28, 26, 42, 9), (11, 28, 26, 42), 'suit')
+    _grp(p, 'av-arm av-arm-a', lambda: p.solid(R(3, 30, 9, 32, 4.5), (3, 30, 9, 32), 'suit'),
+         lambda: p.flat(lambda a: f'<circle cx="7.5" cy="64" r="4" {a}/>', 'skin', sil=True))
+    _grp(p, 'av-arm av-arm-b', lambda: p.solid(R(36, 30, 9, 32, 4.5), (36, 30, 9, 32), 'suit'),
+         lambda: p.flat(lambda a: f'<circle cx="40.5" cy="64" r="4" {a}/>', 'skin', sil=True))
+    p.flat(P('M19 28 L24 42 L29 28 Z'), 'shirt')
+    p.flat(P('M22.5 33 L25.5 33 L26.5 44 L24 48 L21.5 44 Z'), 'tie')
+    return p
+
+def cake():
+    p = make('cake', 'A three tier wedding cake with a lit candle', '0 0 144 140',
+             {'plate': cv('water-deep'), 'tier1': cv('paper'), 'tier2': cv('land-strong'), 'tier3': cv('paper'),
+              'candle': cv('accent'), 'bulb': cv('paper'), 'berry': cv('flag')}, line='accent')
+    p.flat(R(4, 118, 136, 12, 6), 'plate', sil=True)
+    p.solid(R(12, 84, 120, 36, 9), (12, 84, 120, 36), 'tier1')
+    p.solid(R(32, 54, 80, 32, 9), (32, 54, 80, 32), 'tier2')
+    p.solid(R(52, 28, 40, 28, 9), (52, 28, 40, 28), 'tier3')
+    for x in (30, 52, 72, 92, 114):
+        p.ball(x, 84, 5, 'berry')
+    p.flat(R(70, 10, 4, 20, 2), 'candle')
+    p.circle_glow(72, 6, 6, 'bulb')
+    return p
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description='Generate the Bubblegum Atlas illustrations.')
     ap.add_argument('--style', choices=['deep-line', 'deep', 'light', 'v1'], default='deep-line')
@@ -502,6 +559,9 @@ if __name__ == '__main__':
         'wedding/landmark-cafe': cafe(),
         'wedding/landmark-hotel': hotel(),
         'wedding/prop-shuttle': shuttle(),
+        'wedding/prop-cake': cake(),
+        'shared/avatar-dress': avatar_dress(),
+        'shared/avatar-suit': avatar_suit(),
     }
     for fname, piece in pieces.items():
         path = f'{args.out}/{fname}.svg'

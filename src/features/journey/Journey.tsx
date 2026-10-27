@@ -193,7 +193,7 @@ export default function Journey({ event, journey }: JourneyProps) {
     <>
       <section
         ref={sectionRef}
-        aria-label="The journey from Harbor Quay to Larkmere Estate"
+        aria-label="The journey from Port Calloway to Willowmere"
         className="relative"
         style={reduced ? undefined : { height: `${journey.scrollVh}vh` }}
       >
@@ -323,9 +323,9 @@ export default function Journey({ event, journey }: JourneyProps) {
           </p>
 
           <div className="pointer-events-none absolute top-20 left-4 sm:top-6 sm:left-8">
-            <p className="inline-block -rotate-2 rounded-panel border-hair border-accent bg-paper px-5 py-2 font-display text-h2 font-extrabold">
+            <h1 className="inline-block -rotate-2 rounded-panel border-hair border-accent bg-paper px-5 py-2 font-display text-h2 font-extrabold">
               {event.copy.journeyTitle}
-            </p>
+            </h1>
           </div>
 
           <div className="absolute inset-x-4 bottom-32 sm:inset-x-auto sm:top-28 sm:bottom-auto sm:left-8 sm:w-112">

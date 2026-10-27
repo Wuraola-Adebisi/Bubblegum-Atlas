@@ -38,7 +38,7 @@ export default function Typography() {
         <div className="py-8">
           <p className="font-hand text-label">body: 1.0625rem, line height 1.6, measure capped at 70 characters</p>
           <p className="mt-2 max-w-measure text-body">
-            The ferry leaves Harbor Quay at 1:00 pm. Please arrive by 12:45 so there is time to find your seat. The crossing takes
+            The ferry leaves Port Calloway at 1:00 pm. Please arrive by 12:45 so there is time to find your seat. The crossing takes
             about twenty minutes, and the estate is a short walk from the jetty along the lakeside path.
           </p>
         </div>

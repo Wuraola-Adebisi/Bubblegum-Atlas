@@ -67,7 +67,7 @@ export default function RsvpPage() {
     reply?.status === 'confirmed' ? 'You are on the list' : reply?.status === 'waitlist' ? 'You are on the waitlist' : 'We will miss you'
 
   return (
-    <main className="mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-8">
+    <main id="main" className="focus:outline-hidden mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-8">
       {showForm ? (
         <>
           <header className="mb-8 max-w-measure">

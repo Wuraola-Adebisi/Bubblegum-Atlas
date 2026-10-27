@@ -61,7 +61,7 @@ export function statusFor(event: EventConfig, attending: boolean, values: Record
 /** The chosen ferry as a schedule item, so the pass can show the real day and an arrive-by time. */
 export function ferryDetails(event: EventConfig, option: string | undefined) {
   if (!option) return null
-  const item = event.schedule.find((s) => s.pinId === 'quay-jetty' && formatMinutes(minutesOfDay(s.start, event.timezone), event.locale.hour12) === option)
+  const item = event.schedule.find((s) => s.pinId === 'calloway-jetty' && formatMinutes(minutesOfDay(s.start, event.timezone), event.locale.hour12) === option)
   if (!item) return null
   const start = minutesOfDay(item.start, event.timezone)
   return {

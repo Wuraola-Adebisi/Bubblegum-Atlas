@@ -30,7 +30,7 @@ export default function PinList({ zones, pins, selectedId, onSelect }: PinListPr
                   <button
                     type="button"
                     aria-pressed={p.id === selectedId}
-                    aria-controls="pin-details"
+                    aria-controls={p.id === selectedId ? 'pin-details' : undefined}
                     onClick={() => onSelect(p.id)}
                     className={`flex min-h-11 w-full cursor-pointer items-start gap-3 rounded-panel border-hair px-4 py-3 text-left transition duration-micro ease-standard ${
                       p.id === selectedId ? 'border-accent bg-land-wash' : 'border-water-deep-wash hover:bg-land-wash'

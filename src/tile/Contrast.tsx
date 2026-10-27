@@ -10,7 +10,7 @@ function verdict(ratio: number | null, intent: Pair['intent']) {
 
 export default function Contrast() {
   return (
-    <div className="overflow-x-auto rounded-panel bg-paper p-4 sm:p-6">
+    <div tabIndex={0} role="region" aria-label="Contrast table, scrollable" className="overflow-x-auto rounded-panel bg-paper p-4 sm:p-6">
       <table className="w-full min-w-2xl text-left text-small">
         <thead>
           <tr>
@@ -32,10 +32,11 @@ export default function Contrast() {
               <tr key={`${p.fg}-${p.bg}`} className="border-t border-land-wash">
                 <td className="p-3">
                   <span
-                    className="inline-block rounded-pill border-hair border-water-deep px-4 py-1 font-display font-extrabold"
+                    className={`inline-block rounded-pill border-hair border-water-deep px-4 py-1 font-display text-h3 font-extrabold ${p.intent === 'forbidden' ? 'sample-text' : ''}`}
                     style={{ color: `var(--color-${p.fg})`, backgroundColor: `var(--color-${p.bg})` }}
+                    data-sample="Aa"
                   >
-                    Aa
+                    {p.intent === 'forbidden' ? '' : 'Aa'}
                   </span>
                 </td>
                 <td className="p-3">

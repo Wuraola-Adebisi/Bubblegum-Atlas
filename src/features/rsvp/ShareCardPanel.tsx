@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { toPng } from 'html-to-image'
 import type { EventConfig } from '../../data/events/types.ts'
 import ShareCard, { CARD_H, CARD_W } from './ShareCard.tsx'
 
@@ -23,6 +22,8 @@ export default function ShareCardPanel({ event, values, code }: ShareCardPanelPr
 
   const render = async () => {
     if (!ref.current) throw new Error('no card')
+    // Loaded on first use so the library stays out of the main bundle.
+    const { toPng } = await import('html-to-image')
     return toPng(ref.current, { width: CARD_W, height: CARD_H, pixelRatio: 1, cacheBust: true, style: { transform: 'none', transformOrigin: 'top left' } })
   }
 
@@ -33,7 +34,7 @@ export default function ShareCardPanel({ event, values, code }: ShareCardPanelPr
       const url = await render()
       const a = document.createElement('a')
       a.href = url
-      a.download = 'larkmere-share-card.png'
+      a.download = 'willowmere-share-card.png'
       a.click()
       setNote('Saved. Check your downloads.')
     } catch {
@@ -49,7 +50,7 @@ export default function ShareCardPanel({ event, values, code }: ShareCardPanelPr
     try {
       const url = await render()
       const blob = await (await fetch(url)).blob()
-      const file = new File([blob], 'larkmere-share-card.png', { type: 'image/png' })
+      const file = new File([blob], 'willowmere-share-card.png', { type: 'image/png' })
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: event.title, text: `I am going to ${event.title}.` })
         setNote('Shared.')

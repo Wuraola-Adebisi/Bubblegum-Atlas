@@ -45,7 +45,7 @@ function Schedule({ event, items }: { event: EventConfig; items: ScheduleItem[] 
 /** The text for one station. Everything comes from the event config, so a new event fills the same stations. */
 export default function StationContent({ event, station }: { event: EventConfig; station: WalkStation }) {
   const pin = (id: string) => event.pins.find((p) => p.id === id)
-  const main = pin(station.pinIds[station.kind === 'lakeshore' ? 1 : 0])
+  const main = pin(station.pinIds[station.kind === 'wren-shore' ? 1 : 0])
   const itemsAt = (ids: string[]) => event.schedule.filter((s) => ids.includes(s.pinId))
   const time = (iso: string) => formatMinutes(minutesOfDay(iso, event.timezone), event.locale.hour12)
 
@@ -59,14 +59,14 @@ export default function StationContent({ event, station }: { event: EventConfig;
 
   if (station.kind === 'here') {
     const sat = event.mainDay ?? ''
-    const out = event.schedule.filter((s) => s.pinId === 'quay-jetty' && dayKey(s.start, event.timezone) === sat)
-    const back = event.schedule.filter((s) => s.pinId === 'larkmere-jetty' && s.title.toLowerCase().includes('return'))
-    const hotel = pin('quay-hotel')
+    const out = event.schedule.filter((s) => s.pinId === 'calloway-jetty' && dayKey(s.start, event.timezone) === sat)
+    const back = event.schedule.filter((s) => s.pinId === 'heron-jetty' && s.title.toLowerCase().includes('return'))
+    const hotel = pin('alder-inn')
     return (
       <>
         <h2 id={`station-${station.id}`} className="font-display text-h2 font-extrabold">{station.title}</h2>
         <p className="mt-3 max-w-measure text-body">{event.copy.hereIntro}</p>
-        <h3 className="mt-6 font-medium">Saturday ferries from Harbor Quay</h3>
+        <h3 className="mt-6 font-medium">Saturday ferries from Port Calloway</h3>
         <ul className="mt-3 flex flex-wrap gap-3">
           {out.map((s) => (
             <li key={s.id}>
@@ -74,7 +74,7 @@ export default function StationContent({ event, station }: { event: EventConfig;
             </li>
           ))}
         </ul>
-        <h3 className="mt-5 font-medium">Return ferries from Larkmere</h3>
+        <h3 className="mt-5 font-medium">Return ferries from Willowmere</h3>
         <ul className="mt-3 flex flex-wrap gap-3">
           {back.map((s) => (
             <li key={s.id}>
@@ -119,12 +119,12 @@ export default function StationContent({ event, station }: { event: EventConfig;
     )
   }
 
-  const ids = station.kind === 'lakeshore' ? ['boathouse'] : station.pinIds
+  const ids = station.kind === 'wren-shore' ? ['boathouse'] : station.pinIds
   return (
     <>
       {head}
       <Schedule event={event} items={itemsAt(ids)} />
-      {station.kind === 'ceremony' && <p className="mt-5 max-w-measure text-small">If it rains, the ceremony moves into the marquee.</p>}
+      {station.kind === 'ceremony' && <p className="mt-5 max-w-measure text-small">If it rains, the ceremony moves into the Lantern Marquee.</p>}
       {station.kind === 'party' && (
         <div className="mt-6 space-y-3 border-t-2 border-dashed border-water-deep pt-5">
           <p className="max-w-measure font-medium">{event.copy.rsvpTitle}</p>

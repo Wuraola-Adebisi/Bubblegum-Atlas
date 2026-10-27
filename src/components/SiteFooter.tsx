@@ -1,10 +1,10 @@
 import type { EventConfig } from '../data/events/types.ts'
 
 const links = [
-  { href: '#/', label: 'Journey' },
+  { href: '#/', label: 'Welcome' },
+  { href: '#/story', label: 'Our story' },
   { href: '#/day', label: 'The day' },
   { href: '#/map', label: 'Map' },
-  { href: '#/story', label: 'Story' },
   { href: '#/rsvp', label: 'RSVP' },
 ]
 
@@ -28,6 +28,13 @@ export default function SiteFooter({ event }: { event: EventConfig }) {
           </ul>
         </nav>
       </div>
+      <p className="mt-6 max-w-measure text-small">
+        About this site: an event website built as a design and engineering showcase, with one map engine behind it. Source on{' '}
+        <a href="https://github.com/Wuraola-Adebisi/Bubblegum-Atlas" className="font-medium text-accent underline underline-offset-4">
+          GitHub
+        </a>
+        .
+      </p>
     </footer>
   )
 }

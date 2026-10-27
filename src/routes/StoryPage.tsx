@@ -13,7 +13,7 @@ export default function StoryPage() {
   const stamps = event.passport.stamps
   const done = passport.got.length === passport.total
   return (
-    <main className="mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-8">
+    <main id="main" className="focus:outline-hidden mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-8">
       <header className="mb-10 max-w-measure">
         <h1 className="font-display text-h1 font-extrabold">Our story, in five stops</h1>
         <p className="mt-3 text-body">

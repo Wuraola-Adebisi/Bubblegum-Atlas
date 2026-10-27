@@ -52,8 +52,9 @@ export default function MapExplorer({ event }: { event: EventConfig }) {
           pins={visiblePins}
           route={route}
           selectedId={selected?.id ?? null}
+          detailsId="pin-details"
           onSelect={setSelectedId}
-          label={`${event.title}, map of Harbor Quay and Larkmere Estate`}
+          label={`${event.title}, map of Port Calloway and Willowmere`}
           sceneStyle={sceneStyle(scene)}
         />
       ) : (

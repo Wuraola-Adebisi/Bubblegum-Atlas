@@ -120,7 +120,7 @@ export default function ShapesControls() {
           </Cell>
           <Cell label="pill with a hairline">
             <span className="inline-block rounded-pill border-hair border-accent bg-paper px-5 py-1 font-hand text-label font-semibold text-ink">
-              Boathouse
+              Heron Boathouse
             </span>
           </Cell>
           <Cell label="handwritten, on a pale pill">

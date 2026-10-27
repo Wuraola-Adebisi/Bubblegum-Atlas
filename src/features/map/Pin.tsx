@@ -6,24 +6,26 @@ interface PinProps {
   selected: boolean
   /** Lit: something is happening here at the chosen time. */
   active?: boolean
+  /** Id of the details panel this pin controls. Leave out when no such panel exists. */
+  controls?: string
   onSelect: (id: string) => void
   onFocusPin: (pin: PinData) => void
   registerRef: (id: string, el: HTMLButtonElement | null) => void
 }
 
-/** A map marker. 24px visible, 44px hit area. Unnumbered, because places are not a sequence. */
-export default function Pin({ pin, selected, active = false, onSelect, onFocusPin, registerRef }: PinProps) {
+/** A map marker. 24px visible, 44px hit area, or 32px when the map box is narrow so neighbouring hit areas do not overlap (the list view is the full-size alternative). Unnumbered, because places are not a sequence. */
+export default function Pin({ pin, selected, active = false, controls, onSelect, onFocusPin, registerRef }: PinProps) {
   return (
     <button
       type="button"
       ref={(el) => registerRef(pin.id, el)}
       data-pin-id={pin.id}
       aria-pressed={selected}
-      aria-controls="pin-details"
+      aria-controls={controls}
       aria-label={`${pin.title}, ${pin.kind}`}
       onClick={() => onSelect(pin.id)}
       onFocus={() => onFocusPin(pin)}
-      className="group absolute top-0 left-0 grid size-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer place-items-center rounded-pill"
+      className="group absolute top-0 left-0 grid size-8 @2xl:size-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer place-items-center rounded-pill"
     >
       <span
         className={`grid size-6 place-items-center rounded-pill border-hair border-accent transition duration-micro ease-standard group-hover:-translate-y-1 ${

@@ -159,7 +159,7 @@ export interface WalkArt {
 
 export interface WalkStation {
   id: string
-  kind: 'here' | 'lakeshore' | 'cafe' | 'questions' | 'estate' | 'ceremony' | 'party'
+  kind: 'here' | 'wren-shore' | 'cafe' | 'questions' | 'estate' | 'ceremony' | 'party'
   title: string
   /** Pins this station covers. Its schedule items are the ones at these pins. */
   pinIds: string[]

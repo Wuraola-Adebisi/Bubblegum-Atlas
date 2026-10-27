@@ -14,6 +14,8 @@ interface MapCanvasProps {
   selectedId: string | null
   /** Pins to light up, for example the places with something on right now. */
   activeIds?: string[]
+  /** Id of the place details panel, passed only while that panel is on the page. */
+  detailsId?: string
   onSelect: (id: string | null) => void
   label: string
   sceneStyle: CSSProperties
@@ -35,7 +37,7 @@ function Chevron({ dir }: { dir: Dir }) {
   )
 }
 
-export default function MapCanvas({ map, pins, route, selectedId, activeIds = [], onSelect, label, sceneStyle }: MapCanvasProps) {
+export default function MapCanvas({ map, pins, route, selectedId, activeIds = [], detailsId, onSelect, label, sceneStyle }: MapCanvasProps) {
   const vb = map.viewBox
   const [view, setView] = useState<View>(() => resetView(vb))
   const [dragging, setDragging] = useState(false)
@@ -175,7 +177,7 @@ export default function MapCanvas({ map, pins, route, selectedId, activeIds = []
                   <div className={selected ? '' : '@max-2xl:hidden'} aria-hidden="true">
                     <PinLabel pin={pin} flag={selected} />
                   </div>
-                  <Pin pin={pin} selected={selected} active={activeIds.includes(pin.id)} onSelect={onSelect} onFocusPin={reveal} registerRef={registerRef} />
+                  <Pin pin={pin} selected={selected} active={activeIds.includes(pin.id)} controls={selected ? detailsId : undefined} onSelect={onSelect} onFocusPin={reveal} registerRef={registerRef} />
                 </div>
               )
             })}

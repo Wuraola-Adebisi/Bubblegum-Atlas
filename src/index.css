@@ -387,3 +387,8 @@
     transform: none;
   }
 }
+
+/* Forbidden contrast samples draw their text as generated content, so they show the failing pair without being real text. */
+.sample-text::before {
+  content: attr(data-sample);
+}
