@@ -108,8 +108,8 @@ export default function Journey({ event, journey }: JourneyProps) {
     if (!el || reduced) return
     const bw = el.offsetWidth
     const bh = el.offsetHeight
-    const s = Math.min(1.9, (size.w * 0.88) / bw)
-    const cy = size.h * 0.28
+    const s = Math.min(size.h < 700 ? 1.4 : 1.9, (size.w * 0.88) / bw)
+    const cy = size.h * 0.25
     setAnchor({ dx: size.w / 2 - (el.offsetLeft + bw / 2), dy: cy - (el.offsetTop + bh / 2), s, bh, cy })
   }, [size.w, size.h, reduced])
   const settle = reduced ? 1 : ease(progressIn(p, 0.04, 0.13))
@@ -396,7 +396,7 @@ export default function Journey({ event, journey }: JourneyProps) {
               content={wContent}
               parted={wParted}
               sky={wSky}
-              textTop={anchor.cy + (anchor.bh * anchor.s) / 2 + 20}
+              textTop={anchor.cy + (anchor.bh * anchor.s) / 2 + 16}
               soundOn={soundOn}
               onToggleSound={toggleSound}
               onScrollOn={scrollOn}

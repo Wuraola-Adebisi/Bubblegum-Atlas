@@ -135,7 +135,7 @@ function Sparklers({ active }: { active: boolean }) {
   return <canvas ref={ref} aria-hidden="true" className="pointer-events-none absolute inset-0 size-full" />
 }
 
-export function Couple({ className = '' }: { className?: string }) {
+export function Couple({ className = '', fit = false }: { className?: string; fit?: boolean }) {
   return (
     <div aria-hidden="true" className={`relative flex items-end justify-center gap-2 ${className}`}>
       {couple.map((c) => {
@@ -144,7 +144,7 @@ export function Couple({ className = '' }: { className?: string }) {
         return (
           <div
             key={c.id}
-            className="illo w-24 sm:w-32"
+            className={`illo ${fit ? 'couple-fig h-full' : 'w-24 sm:w-32'}`}
             style={{ ['--skin' as string]: c.skin, ['--hair' as string]: c.hair }}
             dangerouslySetInnerHTML={{ __html: art.svg }}
           />
@@ -209,24 +209,25 @@ export default function Welcome({ content, parted, sky, textTop, soundOn, onTogg
         ))}
       </div>
 
-      <div className="absolute inset-0" style={{ opacity: 1 - content }}>
-        <div className="absolute inset-x-0 mx-auto w-11/12 max-w-xl text-center" style={{ top: textTop }}>
+      <div className="absolute inset-0 flex flex-col items-center px-4 pb-4" style={{ opacity: 1 - content, paddingTop: textTop }}>
+        <div className="w-full max-w-xl text-center">
           <p className="font-hand text-label">Welcome to our wedding</p>
           <p className="mt-1 font-display text-h3 font-extrabold">{dateLine}</p>
           <p className="mt-2 text-body">{line}</p>
         </div>
 
-        <div className="absolute inset-x-0 bottom-28 flex justify-center sm:bottom-24">
-          <div className="relative">
-            <div className="absolute -inset-x-6 -bottom-3 h-10 rounded-pill border-hair border-accent bg-land sm:-inset-x-10" aria-hidden="true" />
-            <Couple className="relative" />
-            <div className="absolute -inset-x-24 -top-24 bottom-0 sm:-inset-x-32">
+        {/* The couple take the space left between the text and the buttons, so nothing overlaps on a short window. */}
+        <div className="flex min-h-24 w-full flex-1 items-end justify-center py-3">
+          <div className="relative h-full max-h-72 pb-4">
+            <div className="absolute -inset-x-6 bottom-0 h-8 rounded-pill border-hair border-accent bg-land sm:-inset-x-10" aria-hidden="true" />
+            <Couple fit className="relative h-full" />
+            <div className="absolute -inset-x-24 -top-6 bottom-0 sm:-inset-x-32">
               <Sparklers active={parted < 0.2} />
             </div>
           </div>
         </div>
 
-        <div className="absolute inset-x-0 bottom-4 flex flex-wrap items-center justify-center gap-3 px-4">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <button type="button" onClick={onScrollOn} className={btn}>
             {cue}
             <svg className="cue-bob ml-2" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">

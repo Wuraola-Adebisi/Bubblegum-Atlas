@@ -414,3 +414,11 @@
   0%, 100% { transform: scale(0.7); opacity: 0.6; }
   50% { transform: scale(1.15); opacity: 1; }
 }
+
+/* Welcome couple: scale the figures to the height of their box. */
+.couple-fig svg {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  display: block;
+}
