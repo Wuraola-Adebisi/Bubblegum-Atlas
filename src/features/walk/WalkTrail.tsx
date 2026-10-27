@@ -2,7 +2,8 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import type { RefObject } from 'react'
 import { useMotionValueEvent, useScroll } from 'motion/react'
 import type { EventConfig } from '../../data/events/types.ts'
-import { sceneAt, sceneStyle } from '../../lib/scene.ts'
+import { sceneAt, sceneGlowVars } from '../../lib/scene.ts'
+import type { SceneState } from '../../lib/scene.ts'
 import { illustrations } from '../map/illustrations.ts'
 import { measurePath } from '../journey/pathMeasure.ts'
 import { nearestByY } from './walkGeometry.ts'
@@ -19,6 +20,7 @@ export interface Geo {
   /** Path fraction at which each station's stamps are collected. */
   thresholds: number[]
   leaders: { x1: number; y1: number; x2: number; y2: number }[]
+  lawns: { cx: number; cy: number; rx: number; ry: number }[]
 }
 
 interface WalkTrailProps {
@@ -39,6 +41,8 @@ const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
  */
 export default function WalkTrail({ geo, event, containerRef, avatar, stampsByStation, onCollect, onFocusInside }: WalkTrailProps) {
   const [pos, setPos] = useState<Sample>(geo.samples[0])
+  const [sc, setSc] = useState<SceneState>(() => sceneAt(0.3, event.scene))
+  const lastVars = useRef('')
   const [walking, setWalking] = useState(false)
   const timer = useRef<number | undefined>(undefined)
   const inside = useRef(false)
@@ -52,8 +56,15 @@ export default function WalkTrail({ geo, event, containerRef, avatar, stampsBySt
     const focus = window.innerHeight * 0.55 - top
     const s = nearestByY(geo.samples, clamp(focus, 0, geo.h))
     setPos(s)
-    const sc = sceneAt(0.3 + clamp(focus / geo.h, 0, 1) * 0.7, event.scene)
-    for (const [k, v] of Object.entries(sceneStyle(sc))) c.style.setProperty(k, String(v))
+    const next = sceneAt(0.3 + clamp(focus / geo.h, 0, 1) * 0.7, event.scene)
+    setSc(next)
+    // The light variables restyle everything inside, so they only change when their rounded value does (steps of 0.1, so ten changes from midday to night).
+    const vars = sceneGlowVars(next, 0.1) as Record<string, string>
+    const key = `${vars['--scene-glow']}|${vars['--scene-halo']}`
+    if (key !== lastVars.current) {
+      lastVars.current = key
+      for (const [k, v] of Object.entries(vars)) c.style.setProperty(k, v)
+    }
     geo.thresholds.forEach((thr, i) => {
       if (s.f >= thr - 0.003) stampsByStation[i]?.forEach(onCollect)
     })
@@ -82,6 +93,7 @@ export default function WalkTrail({ geo, event, containerRef, avatar, stampsBySt
 
   return (
     <>
+      <div className="pointer-events-none absolute inset-0 z-0" style={{ background: sc.water }} aria-hidden="true" />
       <svg className="pointer-events-none absolute inset-0 z-0" width={geo.w} height={geo.h} aria-hidden="true">
         <g fill="none" stroke="var(--color-water-deep)" strokeWidth={1.5} strokeLinecap="round">
           {waves.map(([x, y]) => (
@@ -89,7 +101,10 @@ export default function WalkTrail({ geo, event, containerRef, avatar, stampsBySt
           ))}
         </g>
         <path d={geo.d} fill="none" stroke="var(--color-accent)" strokeWidth={landW + 3} strokeLinecap="round" strokeLinejoin="round" />
-        <path d={geo.d} fill="none" stroke="var(--scene-land)" strokeWidth={landW} strokeLinecap="round" strokeLinejoin="round" />
+        <path d={geo.d} fill="none" stroke={sc.land} strokeWidth={landW} strokeLinecap="round" strokeLinejoin="round" />
+        {geo.lawns.map((l, i) => (
+          <ellipse key={i} cx={l.cx} cy={l.cy} rx={l.rx} ry={l.ry} fill={sc.park} stroke="var(--color-park-deep)" strokeWidth={1} />
+        ))}
         <path d={geo.d} fill="none" stroke="var(--color-paper)" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" opacity={0.85} />
         <path d={geo.d} fill="none" stroke="var(--color-accent)" strokeWidth={2.5} strokeLinecap="round" strokeDasharray="1 9" opacity={0.3} />
         <mask id="walk-reveal" maskUnits="userSpaceOnUse" x={0} y={0} width={geo.w} height={geo.h}>

@@ -8,6 +8,8 @@ interface MapBaseProps {
   map: MapConfig
   win: Win
   route?: Route | null
+  /** Direct colours for the water, land and park. Leave out to read the scene variables. */
+  fills?: { water: string; land: string; park: string }
   /** Illustration ids to leave out, for pieces a scene draws itself (the moving ferry). */
   hide?: string[]
   /** The pin whose artwork is lifted, for example under the pointer. */
@@ -21,24 +23,24 @@ interface MapBaseProps {
 }
 
 /** The painted map: water, land, parks, roads, an optional route and the inlined illustrations. */
-export default function MapBase({ map, win, route, hide = [], liftedPin = null, pokedPin = null, svgExtra, children }: MapBaseProps) {
+export default function MapBase({ map, win, route, fills, hide = [], liftedPin = null, pokedPin = null, svgExtra, children }: MapBaseProps) {
   const vb = map.viewBox
   const placements = [...map.placements].filter((p) => !hide.includes(p.illustrationId)).sort((a, b) => a.y - b.y)
   return (
     <>
       <svg viewBox={`${win.x} ${win.y} ${win.w} ${win.h}`} className="absolute inset-0 block h-full w-full" aria-hidden="true">
-        <rect x={vb[0] - 3000} y={vb[1] - 3000} width={vb[2] + 6000} height={vb[3] + 6000} fill="var(--scene-water)" />
+        <rect x={vb[0] - 3000} y={vb[1] - 3000} width={vb[2] + 6000} height={vb[3] + 6000} fill={fills?.water ?? 'var(--scene-water)'} />
         <g fill="none" stroke="var(--color-water-deep)" strokeWidth={1.5} strokeLinecap="round">
           {map.waves?.map(([x, y]) => (
             <path key={`${x}-${y}`} d={`M${x} ${y} q24 -14 48 0 t48 0 t48 0`} vectorEffect="non-scaling-stroke" />
           ))}
         </g>
-        <path d={map.landPath} fill="var(--scene-land)" stroke="var(--color-accent)" strokeWidth={1.5} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d={map.landPath} fill={fills?.land ?? 'var(--scene-land)'} stroke="var(--color-accent)" strokeWidth={1.5} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         {map.parkPaths.map((d) => (
-          <path key={d} d={d} fill="var(--scene-park)" stroke="var(--color-park-deep)" strokeWidth={1} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <path key={d} d={d} fill={fills?.park ?? 'var(--scene-park)'} stroke="var(--color-park-deep)" strokeWidth={1} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         ))}
         {map.waterPaths.map((d) => (
-          <path key={d} d={d} fill="var(--scene-water)" stroke="var(--color-water-deep)" strokeWidth={1.5} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <path key={d} d={d} fill={fills?.water ?? 'var(--scene-water)'} stroke="var(--color-water-deep)" strokeWidth={1.5} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         ))}
         <g fill="none" stroke="var(--color-paper)" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
           {map.roadPaths.map((d) => (

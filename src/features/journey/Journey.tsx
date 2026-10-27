@@ -4,7 +4,7 @@ import { useMotionValueEvent, useReducedMotion, useScroll, useSpring } from 'mot
 import type { EventConfig, JourneyConfig } from '../../data/events/types.ts'
 import LabelTag from '../../components/LabelTag.tsx'
 import ScaleBar from '../../components/ScaleBar.tsx'
-import { clockAt, sceneAt, sceneStyle } from '../../lib/scene.ts'
+import { clockAt, sceneAt, sceneGlowVars } from '../../lib/scene.ts'
 import { placeStyle, project } from '../map/geometry.ts'
 import { illustrations } from '../map/illustrations.ts'
 import MapBase from '../map/MapBase.tsx'
@@ -81,12 +81,22 @@ export default function Journey({ event, journey }: JourneyProps) {
   const [scrolled, setScrolled] = useState(0)
   const [walking, setWalking] = useState(false)
   const walkTimer = useRef<number | undefined>(undefined)
+  const [inView, setInView] = useState(true)
   useMotionValueEvent(smooth, 'change', (v) => {
-    setScrolled(Math.min(1, Math.max(0, v)))
+    // Rounded, so a spring that has settled stops causing renders.
+    setScrolled(Math.round(Math.min(1, Math.max(0, v)) * 10000) / 10000)
+    if (!inView) return
     setWalking(true)
     window.clearTimeout(walkTimer.current)
     walkTimer.current = window.setTimeout(() => setWalking(false), 160)
   })
+  useLayoutEffect(() => {
+    const el = stageRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting))
+    io.observe(el)
+    return () => io.disconnect()
+  }, [stageRef])
   const p = reduced ? 1 : scrolled
   const [avatar] = useAvatar()
 
@@ -199,10 +209,11 @@ export default function Journey({ event, journey }: JourneyProps) {
           ref={stageRef}
           onPointerMove={trail}
           className={`${reduced ? 'relative h-svh' : 'sticky top-0 h-svh'} overflow-hidden`}
-          style={{ ...sceneStyle(scene), background: 'var(--scene-water)' }}
+          style={{ ...sceneGlowVars(scene), background: scene.water }}
         >
-          <MapBase map={event.map} win={win} hide={journey.hide} liftedPin={lifted} pokedPin={poked} svgExtra={svgExtra}>
+          <MapBase map={event.map} win={win} fills={{ water: scene.water, land: scene.land, park: scene.park }} hide={journey.hide} liftedPin={lifted} pokedPin={poked} svgExtra={svgExtra}>
             {!reduced &&
+              inView &&
               ambient.map(([x, y, delay, dur, s], i) => {
                 const pos = project(x, y, win)
                 if (pos.left < -5 || pos.left > 105 || pos.top < -5 || pos.top > 105) return null
@@ -227,7 +238,7 @@ export default function Journey({ event, journey }: JourneyProps) {
               return (
                 <div
                   key={`v-${leg.id}`}
-                  className={`illo absolute ${isPerson ? `avatar-walk ${walking && !reduced ? 'walking' : ''}` : ''}`}
+                  className={`illo absolute ${isPerson ? `avatar-walk ${walking && inView && !reduced ? 'walking' : ''}` : ''}`}
                   style={{
                     ...placeStyle(win, pos.x, pos.y, w, h),
                     opacity: isPerson && p < leg.from ? 0 : 1,

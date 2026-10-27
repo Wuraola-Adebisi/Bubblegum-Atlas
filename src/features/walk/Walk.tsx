@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { EventConfig, WalkConfig } from '../../data/events/types.ts'
-import { sceneAt, sceneStyle } from '../../lib/scene.ts'
+import { sceneAt, sceneGlowVars } from '../../lib/scene.ts'
 import AvatarPicker from './AvatarPicker.tsx'
 import Station from './Station.tsx'
 import { smoothPath, sampleCurve } from './walkGeometry.ts'
@@ -48,6 +48,7 @@ export default function Walk({ event, walk }: WalkProps) {
       const anchors: Pt[] = []
       const route: Pt[] = []
       const leaders: Geo['leaders'] = []
+      const lawns: Geo['lawns'] = []
       walk.stations.forEach((st, i) => {
         const a = arts.current[i]
         const k = cards.current[i]
@@ -58,6 +59,7 @@ export default function Walk({ event, walk }: WalkProps) {
         anchors.push({ x, y: ar.top + ar.height * 0.94 })
         // Hug the art column for the whole station, so the walk only crosses the page in the gaps between stations.
         route.push({ x, y: ar.top + ar.height * 0.3 }, { x, y: ar.top + ar.height * 0.94 })
+        if (st.lawn) lawns.push({ cx: ar.left + ar.width / 2, cy: ar.top + ar.height * 0.66, rx: ar.width * 0.46, ry: ar.height * 0.34 })
         const main = st.art[0]
         const tx = ar.left + (ar.width * main.x) / 100
         const ty = ar.top + (ar.height * (main.y - 18)) / 100
@@ -77,7 +79,7 @@ export default function Walk({ event, walk }: WalkProps) {
         for (const s of samples) if (Math.abs(s.y - a.y) < Math.abs(best.y - a.y)) best = s
         return best.f
       })
-      setGeo({ w, h, desktop, d, samples, thresholds, leaders })
+      setGeo({ w, h, desktop, d, samples, thresholds, leaders, lawns })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -86,14 +88,14 @@ export default function Walk({ event, walk }: WalkProps) {
     return () => ro.disconnect()
   }, [walk])
 
-  const first = sceneStyle(sceneAt(0.3, event.scene))
+  const first = sceneGlowVars(sceneAt(0.3, event.scene))
 
   return (
     <section
       ref={containerRef}
       aria-labelledby="walk-heading"
       className="relative isolate overflow-hidden"
-      style={{ ...first, background: 'var(--scene-water)' }}
+      style={first}
     >
       {geo && (
         <WalkTrail

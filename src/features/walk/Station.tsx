@@ -17,12 +17,6 @@ const Station = memo(function Station({ event, station, artRight, artRef, cardRe
   return (
     <section aria-labelledby={`station-${station.id}`} className="relative grid items-center gap-8 py-14 lg:grid-cols-2 lg:gap-20 lg:py-24">
       <div ref={artRef} aria-hidden="true" className={`relative z-10 ${artRight ? 'lg:order-2' : ''}`} style={{ aspectRatio: '5 / 4' }}>
-        {station.lawn && (
-          <div
-            className="absolute rounded-[50%] border border-park-deep"
-            style={{ left: '4%', right: '4%', top: '30%', bottom: '2%', background: 'var(--scene-park)' }}
-          />
-        )}
         {station.art.map((a, i) => {
           const art = illustrations[a.id]
           if (!art) return null

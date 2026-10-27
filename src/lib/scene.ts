@@ -78,3 +78,14 @@ export function clockAt(t: number, startMin = 8 * 60, endMin = 23 * 60 + 30): st
   const h12 = h24 % 12 === 0 ? 12 : h24 % 12
   return `${h12}:${String(m).padStart(2, '0')} ${suffix}`
 }
+
+const quantize = (v: number, step: number) => Math.round(v / step) * step
+
+/**
+ * Only the light variables, rounded to steps (0.02 by default). Everything inside the scene reads them (every window, lantern
+ * and string light), so changing them restyles the whole subtree. Scroll-driven scenes use this and paint the sky,
+ * water, land and park colours directly, so only a handful of elements restyle on each frame.
+ */
+export function sceneGlowVars(s: SceneState, step = 0.02): CSSProperties {
+  return { '--scene-glow': quantize(s.glow, step).toFixed(2), '--scene-halo': quantize(s.halo, step).toFixed(2) } as CSSProperties
+}
