@@ -16,6 +16,12 @@ interface RsvpFormProps {
 const choice =
   'flex min-h-11 flex-1 cursor-pointer items-center justify-center rounded-pill border-hair border-accent px-5 py-2 text-center font-medium text-accent transition duration-micro ease-standard has-[:checked]:bg-accent has-[:checked]:text-paper has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink'
 
+const groups = [
+  { id: 'who', title: 'Who is coming', fieldIds: ['name', 'email', 'party'] },
+  { id: 'saturday', title: 'Your Saturday', fieldIds: ['ferry', 'meal'] },
+  { id: 'extras', title: 'Anything else', fieldIds: ['dietary', 'song'] },
+]
+
 /** The RSVP form. Fields come from the event's pass config. A "no" reply only asks for a name and an email. */
 export default function RsvpForm({ event, attending, values, errors, onAttending, onChange, onSubmit }: RsvpFormProps) {
   const group = useId()
@@ -48,7 +54,8 @@ export default function RsvpForm({ event, attending, values, errors, onAttending
 
       {attending && (
         <>
-          {fields.map((f) => {
+        {(() => {
+          const render = (f: (typeof fields)[number]) => {
             const id = `rsvp-${f.id}`
             const required = !!f.required && (yes || f.id === 'name' || f.id === 'email')
             return (
@@ -82,14 +89,30 @@ export default function RsvpForm({ event, attending, values, errors, onAttending
                 }
               </Field>
             )
-          })}
+          }
+          const placed = new Set(groups.flatMap((g) => g.fieldIds))
+          const all = [...groups, { id: 'more', title: 'Details', fieldIds: fields.filter((f) => !placed.has(f.id)).map((f) => f.id) }]
+          return all.map((g) => {
+            const inGroup = fields.filter((f) => g.fieldIds.includes(f.id))
+            if (!inGroup.length) return null
+            return (
+              <section key={g.id} aria-labelledby={`${group}-${g.id}`} className="relative ml-2 space-y-5 border-l-2 border-dashed border-water-deep pl-6">
+                <span aria-hidden="true" className="absolute top-1 -left-2.25 size-4 rounded-pill border-hair border-accent bg-land" />
+                <h2 id={`${group}-${g.id}`} className="font-hand text-label">
+                  {g.title}
+                </h2>
+                {inGroup.map(render)}
+              </section>
+            )
+          })
+        })()}
           <button
             type="submit"
             className="inline-flex min-h-11 cursor-pointer items-center rounded-pill border-hair border-accent bg-accent px-8 py-2 font-medium text-paper shadow-press transition duration-micro ease-standard hover:bg-ink active:translate-y-0.5 active:shadow-press-down"
           >
-            Send RSVP
+            {yes ? 'Get my boarding pass' : 'Save my reply'}
           </button>
-          <p className="text-small">This is a demo. Your reply is saved in this browser only.</p>
+          <p className="text-small">Your reply is saved on this device only. After you save it, you can copy it and send it to us.</p>
         </>
       )}
     </form>

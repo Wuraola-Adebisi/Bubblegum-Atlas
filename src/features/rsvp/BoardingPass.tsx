@@ -76,7 +76,7 @@ export default function BoardingPass({ event, values, state, code }: BoardingPas
         <div className="relative flex flex-col justify-between gap-4 border-t-2 border-dashed border-water-deep p-6 sm:p-8 @2xl:border-t-0 @2xl:border-l-2">
           <div>
             <p className="font-hand text-label">Reference</p>
-            <p className="font-display text-h3 font-extrabold tabular-nums">{code ?? 'LRK-····'}</p>
+            <p className="font-display text-h3 font-extrabold tabular-nums">{code ?? 'WLM-····'}</p>
           </div>
           <div
             aria-hidden="true"

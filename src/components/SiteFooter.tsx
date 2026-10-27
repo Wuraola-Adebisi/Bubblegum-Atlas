@@ -29,7 +29,7 @@ export default function SiteFooter({ event }: { event: EventConfig }) {
         </nav>
       </div>
       <p className="mt-6 max-w-measure text-small">
-        About this site: an event website built as a design and engineering showcase, with one map engine behind it. Source on{' '}
+        Site design and development by Wuraola Adebisi, on a reusable event map system. Source on{' '}
         <a href="https://github.com/Wuraola-Adebisi/Bubblegum-Atlas" className="font-medium text-accent underline underline-offset-4">
           GitHub
         </a>

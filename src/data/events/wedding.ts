@@ -462,7 +462,7 @@ export const wedding: EventConfig = {
     welcomeCue: 'Scroll to take the ferry',
     journeyIntro: 'We are getting married at Willowmere House, across Lake Wren from Port Calloway. Guests arrive by ferry. Scroll to take the trip, or go straight to the map.',
     ctaFollow: 'Follow the ferry',
-    ctaRsvp: 'Send RSVP',
+    ctaRsvp: 'RSVP',
     ctaMap: 'See the weekend map',
     dayTitle: 'Saturday, hour by hour',
     dayIntro: 'Drag the time to see Lake Wren from breakfast to the last ferry. The map shifts from morning to night, and the panel says what is happening and where.',
@@ -473,7 +473,7 @@ export const wedding: EventConfig = {
     faqTitle: 'Questions',
     rsvpTitle: 'Tell us you are coming',
     rsvpIntro: 'The RSVP form asks for your name, party size, dinner choice, dietary needs and a song request.',
-    rsvpPageIntro: 'Fill this in and your boarding pass appears beside the form. Reply once for your whole party.',
+    rsvpPageIntro: 'Answer once for your whole party. Your boarding pass fills in beside the form as you go.',
     mapIntro: 'Port Calloway to Willowmere. Turn layers on, pick a route, or switch to the list.',
   },
 }

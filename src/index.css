@@ -403,3 +403,14 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(3px); }
 }
+
+/* Twinkling stars on the welcome screen. Off for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .twinkle {
+    animation: twinkle 2.4s ease-in-out infinite;
+  }
+}
+@keyframes twinkle {
+  0%, 100% { transform: scale(0.7); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}

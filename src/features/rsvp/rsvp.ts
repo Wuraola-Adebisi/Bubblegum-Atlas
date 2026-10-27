@@ -17,7 +17,7 @@ export const storageKey = (event: EventConfig) => `ba:rsvp:${event.id}`
 export function passCode(name: string, party: string): string {
   let h = 7
   for (const ch of `${name.trim().toLowerCase()}|${party}`) h = (h * 31 + ch.charCodeAt(0)) >>> 0
-  return `LRK-${h.toString(36).toUpperCase().padStart(4, '0').slice(0, 4)}`
+  return `WLM-${h.toString(36).toUpperCase().padStart(4, '0').slice(0, 4)}`
 }
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
@@ -69,4 +69,17 @@ export function ferryDetails(event: EventConfig, option: string | undefined) {
     time: option,
     arriveBy: formatMinutes(start - 15, event.locale.hour12),
   }
+}
+
+/** A plain-text copy of the reply, for the guest to paste into a message to the couple. */
+export function replySummary(event: EventConfig, reply: RsvpReply): string {
+  const v = reply.values
+  const lines = [`RSVP for ${event.title}`, `Name: ${v.name ?? ''}`, `Email: ${v.email ?? ''}`, `Coming: ${reply.attending ? 'Yes' : 'No'}`]
+  if (reply.attending) {
+    lines.push(`Guests: ${v.party ?? ''}`, `Saturday ferry: ${v.ferry ?? ''}`, `Dinner: ${v.meal ?? ''}`)
+    if (v.dietary?.trim()) lines.push(`Dietary needs: ${v.dietary.trim()}`)
+    if (v.song?.trim()) lines.push(`Song request: ${v.song.trim()}`)
+  }
+  lines.push(`Reference: ${reply.code}`)
+  return lines.join('\n')
 }

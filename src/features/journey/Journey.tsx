@@ -1,4 +1,6 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import Welcome, { Couple } from './Welcome.tsx'
+import { playFanfare, playShimmer } from '../../lib/sound.ts'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { useMotionValueEvent, useReducedMotion, useScroll, useSpring } from 'motion/react'
 import type { EventConfig, JourneyConfig } from '../../data/events/types.ts'
@@ -32,9 +34,6 @@ function useSize<T extends HTMLElement>() {
 
 const linkBtn =
   'inline-flex min-h-11 items-center rounded-pill border-hair border-accent bg-paper px-6 py-2 font-medium text-accent shadow-press transition duration-micro ease-standard hover:bg-accent hover:text-paper active:translate-y-0.5 active:shadow-press-down'
-
-const primaryBtn =
-  'inline-flex min-h-11 items-center rounded-pill border-hair border-accent bg-accent px-6 py-2 font-medium text-paper shadow-press transition duration-micro ease-standard hover:bg-ink active:translate-y-0.5 active:shadow-press-down'
 
 const sparkColors = ['var(--color-glow)', 'var(--color-paper)', 'var(--color-land-strong)', 'var(--color-flag)']
 
@@ -114,7 +113,24 @@ export default function Journey({ event, journey }: JourneyProps) {
     setAnchor({ dx: size.w / 2 - (el.offsetLeft + bw / 2), dy: cy - (el.offsetTop + bh / 2), s, bh, cy })
   }, [size.w, size.h, reduced])
   const settle = reduced ? 1 : ease(progressIn(p, 0.04, 0.13))
-  const welcomeOut = reduced ? 1 : progressIn(p, 0.012, 0.06)
+  // The opening screen: text and couple fade first, then the clouds part and the sky clears.
+  const wContent = reduced ? 1 : ease(progressIn(p, 0.01, 0.05))
+  const wParted = reduced ? 1 : ease(progressIn(p, 0.03, 0.11))
+  const wSky = reduced ? 1 : progressIn(p, 0.05, 0.1)
+  const [soundOn, setSoundOn] = useState(false)
+  const toggleSound = () => {
+    const next = !soundOn
+    setSoundOn(next)
+    if (next) playFanfare()
+  }
+  const shimmered = useRef(false)
+  const parting = !reduced && p > 0.03
+  useEffect(() => {
+    if (parting && soundOn && !shimmered.current) {
+      shimmered.current = true
+      playShimmer()
+    }
+  }, [parting, soundOn])
   const Title = reduced ? 'p' : 'h1'
   const scrollOn = () => window.scrollBy({ top: window.innerHeight * 0.9, behavior: reduced ? 'auto' : 'smooth' })
   const [avatar] = useAvatar()
@@ -216,10 +232,15 @@ export default function Journey({ event, journey }: JourneyProps) {
           <p className="mt-2 font-hand text-label">{event.copy.welcomeKicker}</p>
           <p className="mt-1 font-display text-h3 font-extrabold">{event.copy.journeyDate}</p>
           <p className="mt-2">{event.copy.welcomeLine}</p>
+          <Couple className="mt-6" />
           <p className="mt-4">
-            <a href="#/rsvp" className={primaryBtn}>
-              {event.copy.ctaRsvp}
-            </a>
+            <button
+              type="button"
+              onClick={toggleSound}
+              className="inline-flex min-h-11 cursor-pointer items-center rounded-pill border-hair border-accent bg-paper px-6 py-2 font-medium text-accent shadow-press transition duration-micro ease-standard hover:bg-accent hover:text-paper"
+            >
+              {soundOn ? 'Turn sound off' : 'Turn sound on'}
+            </button>
           </p>
         </section>
       )}
@@ -362,7 +383,7 @@ export default function Journey({ event, journey }: JourneyProps) {
 
           <div
             ref={titleRef}
-            className="pointer-events-none absolute top-20 left-4 origin-center will-change-transform sm:top-6 sm:left-8"
+            className="pointer-events-none absolute top-20 left-4 z-40 origin-center will-change-transform sm:top-6 sm:left-8"
             style={reduced ? undefined : { transform: `translate(${anchor.dx * (1 - settle)}px, ${anchor.dy * (1 - settle)}px) scale(${1 + (anchor.s - 1) * (1 - settle)})` }}
           >
             <Title className="inline-block -rotate-2 rounded-panel border-hair border-accent bg-paper px-5 py-2 font-display text-h2 font-extrabold">
@@ -371,26 +392,18 @@ export default function Journey({ event, journey }: JourneyProps) {
           </div>
 
           {!reduced && (
-            <div
-              inert={welcomeOut > 0.95}
-              className="absolute left-1/2 w-11/12 max-w-md -translate-x-1/2 rounded-panel bg-paper p-5 text-center sm:p-6"
-              style={{ top: anchor.cy + (anchor.bh * anchor.s) / 2 + 20, opacity: 1 - welcomeOut, pointerEvents: welcomeOut > 0.5 ? 'none' : undefined }}
-            >
-              <p className="font-hand text-label">{event.copy.welcomeKicker}</p>
-              <p className="mt-1 font-display text-body font-extrabold">{event.copy.journeyDate}</p>
-              <p className="mt-2 text-small">{event.copy.welcomeLine}</p>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-                <a href="#/rsvp" className={primaryBtn}>
-                  {event.copy.ctaRsvp}
-                </a>
-                <button type="button" onClick={scrollOn} className={linkBtn}>
-                  {event.copy.welcomeCue}
-                  <svg className="cue-bob ml-2" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M3 6 L8 11 L13 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            <Welcome
+              content={wContent}
+              parted={wParted}
+              sky={wSky}
+              textTop={anchor.cy + (anchor.bh * anchor.s) / 2 + 20}
+              soundOn={soundOn}
+              onToggleSound={toggleSound}
+              onScrollOn={scrollOn}
+              dateLine={event.copy.journeyDate}
+              line={event.copy.welcomeLine}
+              cue={event.copy.welcomeCue}
+            />
           )}
 
           <div className="absolute inset-x-4 bottom-32 sm:inset-x-auto sm:top-28 sm:bottom-auto sm:left-8 sm:w-112">

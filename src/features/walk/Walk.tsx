@@ -23,6 +23,7 @@ export default function Walk({ event, walk }: WalkProps) {
   const containerRef = useRef<HTMLElement>(null)
   const arts = useRef<(HTMLDivElement | null)[]>([])
   const cards = useRef<(HTMLDivElement | null)[]>([])
+  const intro = useRef<HTMLDivElement>(null)
   const [geo, setGeo] = useState<Geo | null>(null)
   const [avatar, setAvatar] = useAvatar()
   const passport = usePassport(event)
@@ -71,7 +72,9 @@ export default function Walk({ event, walk }: WalkProps) {
         }
       })
       if (anchors.length !== walk.stations.length) return
-      const pts: Pt[] = [{ x: anchors[0].x, y: 24 }, ...route, { x: anchors[anchors.length - 1].x, y: h - 24 }]
+      // On narrow screens the intro panel spans the page, so the walk starts below it. On desktop the panel sits on the far side from the path.
+      const startY = !desktop && intro.current ? rel(intro.current).top + intro.current.offsetHeight + 16 : 24
+      const pts: Pt[] = [{ x: anchors[0].x, y: startY }, ...route, { x: anchors[anchors.length - 1].x, y: h - 24 }]
       const d = smoothPath(pts)
       const samples = sampleCurve(d)
       const thresholds = anchors.map((a) => {
@@ -111,7 +114,7 @@ export default function Walk({ event, walk }: WalkProps) {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-8">
         <div className="pt-16 sm:pt-24">
-          <div className="relative z-20 max-w-3xl rounded-panel bg-paper p-5 sm:p-8">
+          <div ref={intro} className="relative z-20 max-w-3xl rounded-panel bg-paper p-5 sm:p-8 lg:ml-auto lg:max-w-xl">
             <h2 id="walk-heading" className="font-display text-h1 font-extrabold">
               {walk.intro.title}
             </h2>
