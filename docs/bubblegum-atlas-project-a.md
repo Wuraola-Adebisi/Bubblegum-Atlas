@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 to 5 and most of step 6 (RSVP boarding pass, share card, story trail, home page as an unwinding map) are built and checked in headless Chromium, awaiting a real-browser check. Build step 6 (story trail, plan, party, RSVP, share card, info) is next.
+Last updated: 2026-10-27. Stage: 8 and 9 (components and pages). Build steps 3 to 5 and most of step 6 (RSVP boarding pass, share card, story trail, home page as an unwinding map) are built and checked in headless Chromium, awaiting a real-browser check. Build step 6 (story trail, plan, party, RSVP, share card, info) is next.
 
 ---
 
@@ -28,6 +28,13 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 t
 - The home page below the journey is an unwinding map, not plain white sections. Each section is a station: a place on the estate with its own illustrations and text, tied to it by a leader line. A guest avatar (suit or dress, with a skin tone choice) walks a dotted path down the page as you scroll (2026-10-25).
 - The story trail and passport stamps are part of that walk: the guest collects a stamp at five stops, and the story page unlocks a chapter per stamp (2026-10-25).
 
+- The wedding site must read as a live project, not a demo or portfolio piece (2026-10-27). Honest wording: replies are saved on this device only and are never claimed to be sent to the couple. The footer carries one plain credit line with the repo link: "Site design and development by Wuraola Adebisi, on a reusable event map system. Source on GitHub."
+- Place names (2026-10-27, applied in data, ids, copy and illustrations): Port Calloway, Calloway Jetty, The Alder Inn, Wren Shore, Lake Wren, Heron Jetty, Willowmere (zone) and Willowmere House, The Heron Boathouse, Kestrel Cafe, Orchard Gate shuttle, Wisteria Arch, The Lantern Marquee. Pin and zone ids were renamed to match, so passport progress saved under old ids is ignored.
+- Nav: Welcome, Our story, The day, Map, RSVP. RSVP is the one filled primary pill. The RSVP button is NOT on the welcome screen, so guests take the scroll experience.
+- Welcome screen (2026-10-27): a full-page opening with sky, clouds, stars, sparklers in the couple's hands, the names, the date and place and a welcome line. The text and couple fade on scroll, the clouds part, the sky clears to the map and the names settle into the corner. Optional sound, off by default (a synthesized fanfare on opt-in and a shimmer as the clouds part). Maya and Theo appear as avatars (placeholder tones).
+- Pages must carry the cartographic world (leading lines, illustrated places, the guest avatar, small play), not plain white panels. The RSVP page is done as the model; the day, map, story and info pages are next.
+- Fonts: Sora (variable) and Pacifico, self-hosted through Fontsource. Pacifico loads from its latin-only file.
+
 ### Proposed (awaiting confirmation)
 - All hex values in section 5 (estimated from the images, contrast verified on the style tile; confirm the look with a sampler).
 - Type pairing: Sora (display and body) and Pacifico (script labels). Replaced Bricolage Grotesque, Caveat and DM Sans on 2026-10-25 at the owner's request.
@@ -45,6 +52,10 @@ Last updated: 2026-10-23. Stage: 8 and 9 (components and pages). Build steps 3 t
 - Journey (step 4, bird's-eye version): a full-screen sticky stage over 650vh of scroll, seen from above with the whole estate in view (zoom 0.7 to 1.05, water extends past the map so wide short windows are not cropped). A spring smooths the scroll. It opens on the whole map with two labelled places and a faint route preview, holds still between moves, and the camera and chapter text follow. Buildings are interactive: hover lifts them, click or Enter makes them hop, throws a star burst and opens a short note; a star trail follows a mouse. Twinkles sit on the water, the ferry leaves a wake and puffs smoke as the page scrolls, and the walker uses the avatar chosen lower down the page. Reduced motion shows the finished state with no twinkles, bursts or swing. A floating `NavPill` links the pages, `#/rsvp` is the RSVP, and a skip link jumps to the final card.
 
 ### Open
+- Whether to move the heron-jetty pin away from the boathouse pin so it passes the 24 px target-size check at 390 px, or to keep it and note the list-view exception (WCAG 2.5.8 equivalent control). axe still flags it.
+- Whether the couple avatars also appear at the Wisteria Arch stamp in the walk.
+- Contact channel for guests to send their reply to (the RSVP page tells them to copy it and send it to the couple).
+- Real domain for the Open Graph image URL (currently relative).
 - Final couple names, venue name and dates (placeholders for now).
 - Pop-up brand name and product category.
 - Whether to include a passcode gate on the wedding site.
@@ -778,3 +789,17 @@ Open questions: Whether the walk reaches an acceptable frame rate on a real phon
 Files created or changed: `src/lib/scene.ts`, `src/features/map/MapBase.tsx`, `src/features/journey/Journey.tsx`, `src/features/walk/Station.tsx`, `Walk.tsx`, `WalkTrail.tsx`, this brief.
 Parked issues: Accessibility fixes found by Lighthouse are NOT applied yet: invalid `aria-controls` on map pins where no details panel exists, a dense-map pin that fails the 24 px target size because neighbouring hit areas overlap, low contrast on the muted draft text in the boarding pass, no `robots.txt`, no `h1` on the home page, route changes do not reset scroll, focus or the page title. Code splitting, latin-only font imports, meta tags and favicon are not done. The walk still runs at roughly 8 to 10 fps under 4x throttling (remaining cost: the avatar's leg swing is a main-thread SVG animation, and about 3,900 DOM nodes).
 Next step: Finish the accessibility and performance list above, then the copy, naming, hero intro and per-page redesign recorded in the owner's feedback.
+
+6. **Live-project pass (2026-10-27).** Feedback: it must read as a real wedding site. Places renamed, nav and copy rewritten in the couple's voice, demo wording removed, an honest "saved on this device" note and a Copy my reply button added. A first welcome card with an RSVP button was tried and replaced: the owner wanted a full-page opening with sparklers, sound and clouds that disperse, and no RSVP button there. The estate intro panel moved to the far side of the path so it no longer covers the walking guest.
+
+---
+
+### Status: 2026-10-27
+Stage: 9 Pages and flows (home welcome and RSVP page done; day, map, story and info pages next), with the accessibility and code-splitting part of step 7 done
+Done this session: Fonts diagnosed (wiring correct in headless Chromium; the missing `html-to-image` entry in package.json was the likely reason a clean install or deploy failed). Places renamed everywhere. Accessibility fixes: conditional `aria-controls`, 32 px pin hit area on narrow map boxes, solid accent for muted boarding-pass text, locked stamp contrast, one h1, route change resets scroll, sets the title and focuses main, skip links as buttons, robots.txt, meta, theme-color and Open Graph tags with a generated og-image. Code splitting: lazy routes, lazy Walk, DaySection and RsvpBand, `html-to-image` loaded on use (main bundle 520 kB to about 417 kB before the welcome work). Full-page welcome built (clouds, sparklers, couple, optional synthesized sound). RSVP page rebuilt with a harbor scene, route-stop form groups, honest copy and Copy my reply. Passport count fixed (stale ids ignored). Walk intro panel no longer covers the guest. Invisible RSVP button text fixed (a class conflict between bg-paper and bg-accent).
+Decided this session: See section 1 (live-project wording, place names, nav, welcome screen, no RSVP button on the welcome).
+Proposed, awaiting confirmation: Couple avatars at the arch stamp. Moving the heron-jetty pin. Couple skin and hair tones.
+Open questions: See section 1, Open.
+Files created or changed: `src/App.tsx`, `src/main.tsx`, `index.html`, `public/robots.txt`, `public/og-image.png`, `src/components/SkipLink.tsx`, `NavPill.tsx`, `SiteFooter.tsx`, `PassportStamp.tsx`, `src/features/journey/Journey.tsx`, `Welcome.tsx`, `src/features/map/Pin.tsx`, `MapCanvas.tsx`, `MapExplorer.tsx`, `PinList.tsx`, `src/features/rsvp/RsvpScene.tsx`, `RsvpForm.tsx`, `rsvp.ts`, `BoardingPass.tsx`, `ShareCardPanel.tsx`, `src/features/walk/Walk.tsx`, `StationContent.tsx`, `usePassport.ts`, `src/lib/sound.ts`, `src/routes/*`, `src/data/events/wedding.ts`, `types.ts`, `src/index.css`, `src/tile/*`, this brief.
+Parked issues: (1) axe `target-size` on the heron-jetty pin at 390 px: it sits about 20 px from the boathouse pin, so no hit area of 24 px or more avoids overlap. Tried 32 px hit areas. Ruled out: smaller hit areas (still overlap). Next: move the pin in the data, or accept the list-view exception and record it. (2) Sound is only checked for errors in headless Chromium, never heard. (3) The estate walk frame rate under 4x CPU throttling was not re-measured after the welcome and code-splitting changes; the earlier figure was about 8 to 10 fps (walk) and about 20 fps (hero) in headless Chromium, which has no GPU. (4) Lighthouse mobile was not re-run. Last known: performance 83, accessibility 91, best practices 100, SEO 91, LCP 2.3 s, TBT 520 ms. (5) Nothing has been verified in a real browser or on a real phone.
+Next step: (a) Day page, then map, story and info pages, one at a time, each with the cartographic treatment, the guest avatar and all states. (b) Rewrite remaining copy in the wedding voice as each page is done. (c) Performance: avatar leg swing as a compositor transform, node count, content-visibility on offscreen stations if geometry still measures, hero camera as one transformed layer. (d) Re-measure with Lighthouse mobile plus frame times and style recalculation under 4x CPU throttling, and say headless has no GPU. (e) Regenerate og-image after any hero change.
