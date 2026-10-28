@@ -422,3 +422,18 @@
   max-width: none;
   display: block;
 }
+
+/* The guest on the day map bobs while moving. Transform only, and off for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .guest-bob {
+    animation: guest-bob 0.42s ease-in-out infinite alternate;
+  }
+}
+@keyframes guest-bob {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-3px);
+  }
+}

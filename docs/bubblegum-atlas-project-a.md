@@ -2,7 +2,7 @@
 
 Design system and build brief. Read together with `studio-playbook.md` (the playbook holds the general rules, this file holds everything specific to Project A). If they disagree, this file wins.
 
-Last updated: 2026-10-27. Stage: 8 and 9 (components and pages). Build steps 3 to 5 and most of step 6 (RSVP boarding pass, share card, story trail, home page as an unwinding map) are built and checked in headless Chromium, awaiting a real-browser check. Build step 6 (story trail, plan, party, RSVP, share card, info) is next.
+Last updated: 2026-10-28. Stage: 9 (pages and flows). Built and checked in headless Chromium only, awaiting a real-browser check: build steps 3 to 5, the welcome, the journey hero, the estate walk, the story trail, the RSVP page with boarding pass and share card, and the day page (rebuilt 2026-10-28). Next: the map page, the story page and an info and FAQ page, each with the same cartographic treatment as the RSVP and day pages, then the performance pass.
 
 ---
 
@@ -48,18 +48,20 @@ Last updated: 2026-10-27. Stage: 8 and 9 (components and pages). Build steps 3 t
 - Performance and accessibility targets in section 17.
 - Step 3 additions to the `EventConfig` types (all optional except `clock`): `EventConfig.clock`, `MapConfig.waves`, `Pin.labelSide`, `Route.note`. Placement `scale` multiplies the illustration's own viewBox width. Section 10 gets updated once these are confirmed.
 - Map keyboard model: arrow keys move focus to the nearest place in that direction, Enter opens details, Shift with arrows pans, plus and minus zoom, 0 resets, Escape closes details.
-- Hash routing until React Router arrives with step 6: `#/` home, `#/day` the day, `#/map` map, `#/rsvp` RSVP stub, `#/tile` style tile.
+- Hash routing, kept (React Router is not installed): `#/` welcome and journey, `#/day` the day, `#/map` map, `#/story` our story, `#/rsvp` RSVP, `#/tile` style tile. An info and FAQ page at `#/info` would be linked from the footer and the walk, not the nav (the nav is Decided).
 - Journey (step 4, bird's-eye version): a full-screen sticky stage over 650vh of scroll, seen from above with the whole estate in view (zoom 0.7 to 1.05, water extends past the map so wide short windows are not cropped). A spring smooths the scroll. It opens on the whole map with two labelled places and a faint route preview, holds still between moves, and the camera and chapter text follow. Buildings are interactive: hover lifts them, click or Enter makes them hop, throws a star burst and opens a short note; a star trail follows a mouse. Twinkles sit on the water, the ferry leaves a wake and puffs smoke as the page scrolls, and the walker uses the avatar chosen lower down the page. Reduced motion shows the finished state with no twinkles, bursts or swing. A floating `NavPill` links the pages, `#/rsvp` is the RSVP, and a skip link jumps to the final card.
 
+- Day page (2026-10-28): the guest avatar follows a dotted route through the places the day visits, with the walked part solid and the rest faint. The guest rides the ferry they choose (from the saved RSVP, otherwise the middle ferry) and leaves for each place 8 minutes before the next thing starts. The scrubber moves in 5-minute steps so a jump to 1:00 pm lands on 1:00 pm. The panel sits beside the list and stays in view on wide screens. The saved reply (confirmed, waitlist, declined, none) changes one line of text above the ferry choice. Nothing planned at the chosen time offers a jump to the next event. The last ferry home (12:15 am) is listed after the evening.
+- The waitlist status on the RSVP page comes from a placeholder headcount (`pass.capacity`, 86 of 90). It reads as real on the live-project wording, so it needs the couple's real numbers or a plain "we will confirm" line before launch.
+
 ### Open
-- Whether to move the heron-jetty pin away from the boathouse pin so it passes the 24 px target-size check at 390 px, or to keep it and note the list-view exception (WCAG 2.5.8 equivalent control). axe still flags it.
+- Heron-jetty pin (axe `target-size` at 390 px, home, day and map). Measured 2026-10-28: at 390 px one map unit is 0.209 px, the pin is 20.6 px from the boathouse pin and no other pair is closer than 37 px. Moving the pin from (760, 816) to (630, 790), the landing end of the jetty where the ferry route ends, clears axe on all three routes at 390 and 1280 px (tested on a scratch copy, not applied). The other option is to keep it and record the list-view exception. Recommendation: move it.
 - Whether the couple avatars also appear at the Wisteria Arch stamp in the walk.
 - Contact channel for guests to send their reply to (the RSVP page tells them to copy it and send it to the couple).
 - Real domain for the Open Graph image URL (currently relative).
 - Final couple names, venue name and dates (placeholders for now).
 - Pop-up brand name and product category.
 - Whether to include a passcode gate on the wedding site.
-- Whether to include optional ambient sound (default: no).
 - Repo names and domains.
 - Whether the hairlines read well on a real phone (not yet checked in a real browser).
 - Where the Day, Dusk and Night switch sits in the page layouts, and whether it replaces or sits beside the continuous scrubber on the wedding site.
@@ -381,7 +383,7 @@ Each component gets a full spec (playbook section 9 template) when built.
 
 ## 10. Engine architecture (Proposed)
 
-**Stack.** React, TypeScript (strict), Vite, Tailwind CSS v4 (CSS-first `@theme`), React Router, deployed on Vercel. Fonts are self-hosted through Fontsource packages (`@fontsource-variable/sora`, `@fontsource/pacifico`). Tested versions: Node 22 in the sandbox and Node 24 on the owner machine, Vite 8, React 19, Tailwind 4.3, TypeScript 6. Animation: Framer Motion (`motion/react`) is the leading option for scroll progress and path drawing. GSAP ScrollTrigger is the alternative. Decide when scaffolding. Share card export: `html-to-image` (verify font embedding), with the Web Share API where supported and a download fallback. Illustration tooling lives in `tools/illustrations` (`gen.py`, `build_sheet.py`).
+**Stack.** React, TypeScript (strict), Vite, Tailwind CSS v4 (CSS-first `@theme`), hash routing in `src/App.tsx` (no router library), deployed on Vercel. Fonts are self-hosted through Fontsource packages (`@fontsource-variable/sora`, `@fontsource/pacifico`). Tested versions: Node 22 in the sandbox and Node 24 on the owner machine, Vite 8, React 19, Tailwind 4.3, TypeScript 6. Animation: Framer Motion (`motion/react`), decided 2026-10-23. Share card export: `html-to-image` (verify font embedding), with the Web Share API where supported and a download fallback. Illustration tooling lives in `tools/illustrations` (`gen.py`, `build_sheet.py`).
 
 **Folders.**
 ```
@@ -503,13 +505,13 @@ export interface PassConfig {
 
 ## 11. Build 1: Wedding weekend (Proposed concept)
 
-**Placeholders (Open).** Couple: Maya and Theo. Venue: Larkmere Estate, a lakeside estate reached by a short ferry from Harbor Quay. Dates: Friday September 10 to Sunday September 12, 2027. About 90 guests. USD and 12-hour times.
+**Placeholders (Open).** Couple: Maya and Theo. Venue: Willowmere House on Lake Wren, reached by a short ferry from Port Calloway. Dates: Friday September 10 to Sunday September 12, 2027. About 90 guests. USD and 12-hour times.
 
 **Story.** Maya and Theo met on this ferry crossing six years ago. The ferry is the guests' transport and the origin of the story. The site tells the story by letting guests travel the route and unlock chapters along it.
 
 **Realistic details to design for.**
-- Friday: welcome drinks, 6:00 pm, the Boathouse terrace
-- Saturday: ferries from Harbor Quay at 12:30, 1:00 and 1:30 pm; ceremony 3:30 pm; cocktail hour 4:30 pm; dinner 6:30 pm; first dance at dusk, about 8:30 pm; party until midnight; return ferries 11:30 pm and 12:15 am
+- Friday: welcome drinks, 6:00 pm, the Heron Boathouse terrace
+- Saturday: ferries from Port Calloway at 12:30, 1:00 and 1:30 pm; ceremony 3:30 pm; cocktail hour 4:30 pm; dinner 6:30 pm; first dance at dusk, about 8:30 pm; party until midnight; return ferries 11:30 pm and 12:15 am
 - Sunday: farewell brunch 10:00 am; last ferry 12:30 pm
 - Dress code: garden formal. Kids welcome. Rain plan: the marquee.
 - Hotel block at an invented hotel near the quay, with a booking code
@@ -520,18 +522,17 @@ export interface PassConfig {
 
 | Route | Section | Key interaction |
 |---|---|---|
-| `/story` | Story trail | Five stamps, collected by walking the home page or with "Stamp it" here. Each unlocks a chapter, and finishing shows a closing note |
 | `/` | Journey | Ferry crossing scroll ends at the estate with date and RSVP |
-| `/day` | The day, hour by hour | Time scrubber and NowPanel |
-| `/story` | Story trail | Passport: five pins unlock chapters (the ferry deck where they met, first date cafe, the trip that went wrong, the jetty where Theo proposed, the arch where they marry). Completion reveals a note and the registry |
-| `/plan` | Plan your weekend | Pick events, route draws with transport times, saved itinerary |
+| `/day` | The day, hour by hour | Time scrubber in 5-minute steps, a guest who follows the day's dotted route and rides the ferry the guest chose, NowPanel, the day as a list including the last ferry after midnight |
+| `/story` | Story trail | Five stamps, collected by walking the home page or with "Stamp it" on the page. Passport: five pins unlock chapters (the ferry deck where they met, first date cafe, the trip that went wrong, the jetty where Theo proposed, the arch where they marry). Completion reveals a note and the registry |
+| `/plan` (not built, not in the nav) | Plan your weekend | Pick events, route draws with transport times, saved itinerary |
 | `/map` | Map and layers | Layers: stay, eat, explore, getting around. List view toggle |
-| `/party` | The wedding party | Flip cards with a fun fact on the back |
+| `/party` (not built, not in the nav) | The wedding party | Flip cards with a fun fact on the back |
 | `/rsvp` | RSVP | Boarding-pass flow: name, party size, meal, dietary, song request. Confirmation pass and share card |
-| `/info` | Info and FAQ | Getting here, accommodation, dress code, kids, weather, accessibility |
+| `/info` (not built, Proposed) | Info and FAQ | Getting here, accommodation, dress code, kids, weather, accessibility |
 
 **Voice.** Warm, specific, lightly funny, first person plural ("we"). Short sentences. Practical details first.
-- Do: "The ferry leaves Harbor Quay at 1:00 pm. Please arrive by 12:45."
+- Do: "The ferry leaves Port Calloway at 1:00 pm. Please arrive by 12:45."
 - Don't: "Embark on a magical journey to our special day!"
 - Buttons: "Send RSVP", "Add to my plan", "See the route".
 
@@ -792,6 +793,8 @@ Next step: Finish the accessibility and performance list above, then the copy, n
 
 6. **Live-project pass (2026-10-27).** Feedback: it must read as a real wedding site. Places renamed, nav and copy rewritten in the couple's voice, demo wording removed, an honest "saved on this device" note and a Copy my reply button added. A first welcome card with an RSVP button was tried and replaced: the owner wanted a full-page opening with sparklers, sound and clouds that disperse, and no RSVP button there. The estate intro panel moved to the far side of the path so it no longer covers the walking guest.
 
+7. **Day page (2026-10-28).** The day page was a map, a scrubber and a list on white panels. It now carries a guest who follows the day's dotted route. A first version drew the walked part with an SVG mask, which added about 40 ms per frame when scrubbing under 4x CPU throttling, so it was replaced with a second dotted path that stops at the guest.
+
 ---
 
 ### Status: 2026-10-27
@@ -803,3 +806,13 @@ Open questions: See section 1, Open.
 Files created or changed: `src/App.tsx`, `src/main.tsx`, `index.html`, `public/robots.txt`, `public/og-image.png`, `src/components/SkipLink.tsx`, `NavPill.tsx`, `SiteFooter.tsx`, `PassportStamp.tsx`, `src/features/journey/Journey.tsx`, `Welcome.tsx`, `src/features/map/Pin.tsx`, `MapCanvas.tsx`, `MapExplorer.tsx`, `PinList.tsx`, `src/features/rsvp/RsvpScene.tsx`, `RsvpForm.tsx`, `rsvp.ts`, `BoardingPass.tsx`, `ShareCardPanel.tsx`, `src/features/walk/Walk.tsx`, `StationContent.tsx`, `usePassport.ts`, `src/lib/sound.ts`, `src/routes/*`, `src/data/events/wedding.ts`, `types.ts`, `src/index.css`, `src/tile/*`, this brief.
 Parked issues: (1) axe `target-size` on the heron-jetty pin at 390 px: it sits about 20 px from the boathouse pin, so no hit area of 24 px or more avoids overlap. Tried 32 px hit areas. Ruled out: smaller hit areas (still overlap). Next: move the pin in the data, or accept the list-view exception and record it. (2) Sound is only checked for errors in headless Chromium, never heard. (3) The estate walk frame rate under 4x CPU throttling was not re-measured after the welcome and code-splitting changes; the earlier figure was about 8 to 10 fps (walk) and about 20 fps (hero) in headless Chromium, which has no GPU. (4) Lighthouse mobile was not re-run. Last known: performance 83, accessibility 91, best practices 100, SEO 91, LCP 2.3 s, TBT 520 ms. (5) Nothing has been verified in a real browser or on a real phone.
 Next step: (a) Day page, then map, story and info pages, one at a time, each with the cartographic treatment, the guest avatar and all states. (b) Rewrite remaining copy in the wedding voice as each page is done. (c) Performance: avatar leg swing as a compositor transform, node count, content-visibility on offscreen stations if geometry still measures, hero camera as one transformed layer. (d) Re-measure with Lighthouse mobile plus frame times and style recalculation under 4x CPU throttling, and say headless has no GPU. (e) Regenerate og-image after any hero change.
+
+### Status: 2026-10-28
+Stage: 9 Pages and flows (day page done; map, story and info pages next)
+Done this session: Read the playbook, both briefs and the repo. The repo copy of the brief is newer than the project-files copy (805 against 671 lines), so it was treated as current. Corrected stale parts of the brief in place (header, routing, stack, venue and place names in section 11, a duplicate story row). Measured axe on every route at 390 and 1280 px: only the heron-jetty `target-size` item at 390 px on home, day and map. Rebuilt the day page: the guest follows a dotted route through the day's places and rides the chosen ferry, the scrubber moves in 5-minute steps (a jump to 1:00 pm used to land on 12:58), the now panel has a picture of the current place and an empty state with a jump button, the saved reply changes one line of text, the list shows the last ferry after midnight, and the panel stays in view beside the list on wide screens. Day copy rewritten.
+Decided this session: None.
+Proposed, awaiting confirmation: See section 1 (day page, waitlist headcount, `#/info` page). Move the heron-jetty pin to (630, 790).
+Open questions: Heron-jetty pin, move or keep with an exception.
+Files created or changed: `src/features/day/dayPath.ts`, `GuestMarker.tsx`, `DayRoute.tsx` (new); `DayExplorer.tsx`, `DayTimeline.tsx`, `NowPanel.tsx`, `dayData.ts`; `src/features/map/MapCanvas.tsx`, `src/features/scene/ModeSwitch.tsx`, `TimeScrubber.tsx`, `src/data/events/wedding.ts` (dayIntro only), `src/index.css`, this brief.
+Parked issues: (1) Scrubbing the day page under 4x CPU throttling in headless Chromium (no GPU) averages about 85 ms per frame, the same as before this session. Most of that is style recalculation, caused by the six scene variables set on the map root on every tick. Painting the water, land and park colours directly and rounding the light variables, as the hero does, is the likely fix (not tried). (2) The map is small at 390 px, so the guest is about 20 px wide there. (3) The night route colour on deep blue water is low contrast, decorative only. (4) Nothing is verified in a real browser or on a real phone. (5) `public/illustration-sheet.html` still shows Larkmere and Harbor Quay (it is generated by `build_sheet.py`).
+Next step: Map page, then story page, then info and FAQ page, then the performance pass and the Lighthouse re-run.

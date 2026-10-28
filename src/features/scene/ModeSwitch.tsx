@@ -10,16 +10,18 @@ interface ModeSwitchProps {
   /** Scrubber position, 0 to 100. */
   value: number
   onChange: (value: number) => void
+  /** Group label. */
+  legend?: string
 }
 
 /** Radio group that jumps the scrubber to a preset and follows it when it is dragged. */
-export default function ModeSwitch({ value, onChange }: ModeSwitchProps) {
+export default function ModeSwitch({ value, onChange, legend = 'Scene mode' }: ModeSwitchProps) {
   const name = useId()
   const t = value / 100
   const current = t < 0.55 ? 'day' : t < 0.9 ? 'dusk' : 'night'
   return (
     <fieldset>
-      <legend className="font-display text-h3 font-extrabold">Scene mode</legend>
+      <legend className="font-display text-h3 font-extrabold">{legend}</legend>
       <div className="mt-3 flex flex-wrap gap-3">
         {modes.map((m) => (
           <label

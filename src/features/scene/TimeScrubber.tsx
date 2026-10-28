@@ -5,10 +5,14 @@ interface TimeScrubberProps {
   onChange: (value: number) => void
   clock: string
   sceneName: string
+  /** Range and step. The default is 0 to 100 in steps of 1. */
+  min?: number
+  max?: number
+  step?: number
 }
 
 /** Native range input with a 44px target. The value text carries the time and the scene name. */
-export default function TimeScrubber({ value, onChange, clock, sceneName }: TimeScrubberProps) {
+export default function TimeScrubber({ value, onChange, clock, sceneName, min = 0, max = 100, step = 1 }: TimeScrubberProps) {
   const id = useId()
   const text = `${clock}, ${sceneName.toLowerCase()}`
   return (
@@ -20,9 +24,9 @@ export default function TimeScrubber({ value, onChange, clock, sceneName }: Time
       <input
         id={id}
         type="range"
-        min={0}
-        max={100}
-        step={1}
+        min={min}
+        max={max}
+        step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         aria-valuetext={text}

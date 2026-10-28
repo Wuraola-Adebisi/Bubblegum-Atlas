@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
-import type { CSSProperties, KeyboardEvent, PointerEvent } from 'react'
+import type { CSSProperties, KeyboardEvent, PointerEvent, ReactNode } from 'react'
 import type { MapConfig, Pin as PinData, Route } from '../../data/events/types.ts'
 import { MAX_ZOOM, clampView, project, resetView, windowOf } from './geometry.ts'
-import type { View } from './geometry.ts'
+import type { View, Win } from './geometry.ts'
 import MapBase from './MapBase.tsx'
 import Pin from './Pin.tsx'
 import PinLabel from './PinLabel.tsx'
@@ -19,6 +19,10 @@ interface MapCanvasProps {
   onSelect: (id: string | null) => void
   label: string
   sceneStyle: CSSProperties
+  /** Extra SVG drawn above the roads, in map units (for example a day route). */
+  svgExtra?: ReactNode
+  /** Extra HTML drawn under the pins and labels. Gets the visible window so it can place things with `project`. */
+  overlay?: (win: Win) => ReactNode
 }
 
 type Dir = 'left' | 'right' | 'up' | 'down'
@@ -37,7 +41,7 @@ function Chevron({ dir }: { dir: Dir }) {
   )
 }
 
-export default function MapCanvas({ map, pins, route, selectedId, activeIds = [], detailsId, onSelect, label, sceneStyle }: MapCanvasProps) {
+export default function MapCanvas({ map, pins, route, selectedId, activeIds = [], detailsId, onSelect, label, sceneStyle, svgExtra, overlay }: MapCanvasProps) {
   const vb = map.viewBox
   const [view, setView] = useState<View>(() => resetView(vb))
   const [dragging, setDragging] = useState(false)
@@ -160,11 +164,12 @@ export default function MapCanvas({ map, pins, route, selectedId, activeIds = []
             cursor: zoomed ? (dragging ? 'grabbing' : 'grab') : undefined,
           }}
         >
-          <MapBase map={map} win={win} route={route} />
+          <MapBase map={map} win={win} route={route} svgExtra={svgExtra} />
 
           <div className="pointer-events-none absolute top-4 left-4 size-9 rounded-pill bg-paper" style={{ opacity: 'var(--scene-halo)' }} aria-hidden="true" />
 
           <div className="absolute inset-0">
+            {overlay?.(win)}
             {pins.map((pin) => {
               const pos = project(pin.x, pin.y, win)
               const selected = pin.id === selectedId

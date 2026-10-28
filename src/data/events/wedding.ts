@@ -465,7 +465,7 @@ export const wedding: EventConfig = {
     ctaRsvp: 'RSVP',
     ctaMap: 'See the weekend map',
     dayTitle: 'Saturday, hour by hour',
-    dayIntro: 'Drag the time to see Lake Wren from breakfast to the last ferry. The map shifts from morning to night, and the panel says what is happening and where.',
+    dayIntro: 'Saturday, September 11. All times are Eastern. Drag the time to see what is on and where you would be. The day starts with breakfast at the hotel and ends with the last ferry home.',
     weekendTitle: 'The weekend at a glance',
     weekendIntro: 'Welcome drinks on Friday, the wedding on Saturday and a farewell brunch on Sunday. All times are Eastern.',
     hereTitle: 'Getting to Willowmere',
