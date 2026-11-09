@@ -1,12 +1,11 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import type { EventConfig, WalkConfig } from '../../data/events/types.ts'
+import { swell } from '../../lib/audio.ts'
+import { confetti, confettiCannons } from '../../lib/confetti.ts'
 import { sceneAt, sceneGlowVars } from '../../lib/scene.ts'
-import AvatarPicker from './AvatarPicker.tsx'
 import Station from './Station.tsx'
 import { smoothPath, sampleCurve } from './walkGeometry.ts'
 import type { Pt } from './walkGeometry.ts'
-import { usePassport } from './usePassport.ts'
-import { useAvatar } from './useAvatar.ts'
 import WalkTrail from './WalkTrail.tsx'
 import type { Geo } from './WalkTrail.tsx'
 
@@ -17,7 +16,7 @@ interface WalkProps {
 
 /**
  * The home page below the journey, as an unwinding map. Each station is a place on the estate with its own text.
- * A dotted path links the stations and a guest walks it as you scroll, collecting story stamps on the way.
+ * A dotted path links the stations and a guest walks it as you scroll. The couple's story is told at the stops along the way.
  */
 export default function Walk({ event, walk }: WalkProps) {
   const containerRef = useRef<HTMLElement>(null)
@@ -25,14 +24,12 @@ export default function Walk({ event, walk }: WalkProps) {
   const cards = useRef<(HTMLDivElement | null)[]>([])
   const intro = useRef<HTMLDivElement>(null)
   const [geo, setGeo] = useState<Geo | null>(null)
-  const [avatar, setAvatar] = useAvatar()
-  const passport = usePassport(event)
-  const [inside, setInside] = useState(false)
-
-  const stampsByStation = useMemo(
-    () => walk.stations.map((s) => s.pinIds.filter((id) => event.passport.stamps.some((st) => st.pinId === id))),
-    [walk, event.passport.stamps],
-  )
+  const arrive = () => {
+    const r = arts.current[arts.current.length - 1]?.getBoundingClientRect()
+    if (r) confetti(r.left + r.width * 0.4, r.top + r.height * 0.3, { count: 110, spread: Math.PI * 2, power: 1.1 })
+    confettiCannons()
+    swell()
+  }
 
   useLayoutEffect(() => {
     const c = containerRef.current
@@ -74,15 +71,11 @@ export default function Walk({ event, walk }: WalkProps) {
       if (anchors.length !== walk.stations.length) return
       // On narrow screens the intro panel spans the page, so the walk starts below it. On desktop the panel sits on the far side from the path.
       const startY = !desktop && intro.current ? rel(intro.current).top + intro.current.offsetHeight + 16 : 24
-      const pts: Pt[] = [{ x: anchors[0].x, y: startY }, ...route, { x: anchors[anchors.length - 1].x, y: h - 24 }]
+      // The path ends at the base of the last station's art, which is the arch, so the walk finishes at the altar.
+      const pts: Pt[] = [{ x: anchors[0].x, y: startY }, ...route]
       const d = smoothPath(pts)
       const samples = sampleCurve(d)
-      const thresholds = anchors.map((a) => {
-        let best = samples[0]
-        for (const s of samples) if (Math.abs(s.y - a.y) < Math.abs(best.y - a.y)) best = s
-        return best.f
-      })
-      setGeo({ w, h, desktop, d, samples, thresholds, leaders, lawns })
+      setGeo({ w, h, desktop, d, samples, leaders, lawns })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -105,10 +98,7 @@ export default function Walk({ event, walk }: WalkProps) {
           geo={geo}
           event={event}
           containerRef={containerRef}
-          avatar={avatar}
-          stampsByStation={stampsByStation}
-          onCollect={passport.collect}
-          onFocusInside={setInside}
+          onArrive={arrive}
         />
       )}
 
@@ -119,9 +109,14 @@ export default function Walk({ event, walk }: WalkProps) {
               {walk.intro.title}
             </h2>
             <p className="mt-3 max-w-measure text-body">{walk.intro.body}</p>
-            <div className="mt-6">
-              <AvatarPicker choice={avatar} onChange={setAvatar} />
-            </div>
+            <p className="mt-4">
+              <a
+                href="#/program"
+                className="inline-flex min-h-11 items-center rounded-pill border-hair border-accent bg-paper px-6 py-2 font-medium text-accent shadow-press transition duration-micro ease-standard hover:bg-accent hover:text-paper active:translate-y-0.5 active:shadow-press-down"
+              >
+                See the program
+              </a>
+            </p>
           </div>
         </div>
         {walk.stations.map((st, i) => (
@@ -138,24 +133,10 @@ export default function Walk({ event, walk }: WalkProps) {
             }}
           />
         ))}
-        <div className="h-16 sm:h-24" />
+        {/* Room below the arch so the walker can reach the end of the path on any screen height. */}
+        <div aria-hidden="true" style={{ height: '30svh' }} />
       </div>
 
-      <div aria-live="polite" className="pointer-events-none fixed bottom-20 left-4 z-40 sm:bottom-4 print:hidden">
-        {passport.landed && inside && (
-          <p className="rounded-pill border-hair border-accent bg-paper px-5 py-2 font-medium text-accent">
-            Stamp collected: {event.passport.stamps.find((s) => s.pinId === passport.landed)?.label}
-          </p>
-        )}
-      </div>
-      {inside && (
-        <a
-          href="#/story"
-          className="fixed right-4 bottom-4 z-40 inline-flex min-h-11 items-center rounded-pill border-hair border-accent bg-paper px-5 py-2 font-medium text-accent transition duration-micro ease-standard hover:bg-accent hover:text-paper print:hidden"
-        >
-          Passport: {passport.got.length} of {passport.total} stamps
-        </a>
-      )}
     </section>
   )
 }

@@ -23,15 +23,18 @@ export function cameraAt(keys: JourneyCamera[], p: number): JourneyCamera {
 export function windowFor(cam: JourneyCamera, vb: ViewBox, aspect: number): Win {
   const [x, y, W, H] = vb
   const base = vb[2] / vb[3]
-  const narrow = Math.min(1, aspect / base) ** 0.5
+  const narrow = Math.min(1, aspect / base) ** 0.25
   const floor = 0.4
   const zoom = Math.max(cam.zoom * narrow, floor)
   const h = H / zoom
   const w = h * aspect
-  // Keep the whole window over the map when it is smaller, and the whole map inside the window when it is larger.
+  // The water runs on past the map's edges, so the window may drift a little beyond them to follow the ferry along the shore.
+  const margin = 0.18
   const clamp = (v: number, a: number, b: number) => Math.min(Math.max(a, b), Math.max(Math.min(a, b), v))
-  const cx = clamp(cam.cx, x + w / 2, x + W - w / 2)
-  const cy = clamp(cam.cy, y + h / 2, y + H - h / 2)
+  // On a tall phone screen the caption sits at the bottom, so the focus is held a tenth of the way above the middle.
+  const lift = aspect < 0.9 ? 0.1 * h : 0
+  const cx = clamp(cam.cx, x + w / 2 - margin * W, x + W - w / 2 + margin * W)
+  const cy = clamp(cam.cy + lift, y + h / 2 - margin * H, y + H - h / 2 + margin * H)
   return { x: cx - w / 2, y: cy - h / 2, w, h }
 }
 

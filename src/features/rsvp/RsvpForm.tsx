@@ -42,7 +42,7 @@ export default function RsvpForm({ event, attending, values, errors, onAttending
           </label>
           <label className={choice}>
             <input type="radio" name={group} className="sr-only" checked={attending === 'no'} onChange={() => onAttending('no')} />
-            No, I cannot make it
+            Send my regrets
           </label>
         </div>
         {errors.attending && (
@@ -110,9 +110,9 @@ export default function RsvpForm({ event, attending, values, errors, onAttending
             type="submit"
             className="inline-flex min-h-11 cursor-pointer items-center rounded-pill border-hair border-accent bg-accent px-8 py-2 font-medium text-paper shadow-press transition duration-micro ease-standard hover:bg-ink active:translate-y-0.5 active:shadow-press-down"
           >
-            {yes ? 'Get my boarding pass' : 'Save my reply'}
+            {yes ? 'Get my boarding pass' : 'Send my regrets'}
           </button>
-          <p className="text-small">Your reply is saved on this device only. After you save it, you can copy it and send it to us.</p>
+          <p className="max-w-measure text-small">{yes ? 'Next you will see your boarding pass and a button that sends your reply to Maya and Theo. You can change it afterwards.' : 'Next you will see a button that sends your note to Maya and Theo. You can change it afterwards.'}</p>
         </>
       )}
     </form>

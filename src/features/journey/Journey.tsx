@@ -1,5 +1,7 @@
 import Welcome, { Couple } from './Welcome.tsx'
-import { playFanfare, playShimmer } from '../../lib/sound.ts'
+import { confettiCannons } from '../../lib/confetti.ts'
+import { setMusicLevel, setWaterLevel } from '../../lib/audio.ts'
+import { playHorn, playShimmer, playSwish } from '../../lib/sound.ts'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { useMotionValueEvent, useReducedMotion, useScroll, useSpring } from 'motion/react'
@@ -112,27 +114,38 @@ export default function Journey({ event, journey }: JourneyProps) {
     const cy = size.h * 0.25
     setAnchor({ dx: size.w / 2 - (el.offsetLeft + bw / 2), dy: cy - (el.offsetTop + bh / 2), s, bh, cy })
   }, [size.w, size.h, reduced])
-  const settle = reduced ? 1 : ease(progressIn(p, 0.04, 0.13))
-  // The opening screen: text and couple fade first, then the clouds part and the sky clears.
-  const wContent = reduced ? 1 : ease(progressIn(p, 0.01, 0.05))
-  const wParted = reduced ? 1 : ease(progressIn(p, 0.03, 0.11))
-  const wSky = reduced ? 1 : progressIn(p, 0.05, 0.1)
-  const [soundOn, setSoundOn] = useState(false)
-  const toggleSound = () => {
-    const next = !soundOn
-    setSoundOn(next)
-    if (next) playFanfare()
-  }
+  const settle = reduced ? 1 : ease(progressIn(p, 0.1, 0.17))
+  // The opening: the curtains gather as you scroll, the couple and the stage floor slide away, then the curtains leave.
+  const wCurtain = reduced ? 1 : ease(progressIn(p, 0.006, 0.085))
+  const wApron = reduced ? 1 : ease(progressIn(p, 0.02, 0.085))
+  const wExit = reduced ? 1 : ease(progressIn(p, 0.085, 0.13))
   const shimmered = useRef(false)
-  const parting = !reduced && p > 0.03
   useEffect(() => {
-    if (parting && soundOn && !shimmered.current) {
+    if (reduced) return
+    if (p > 0.012 && !shimmered.current) {
       shimmered.current = true
+      playSwish()
       playShimmer()
-    }
-  }, [parting, soundOn])
+    } else if (p < 0.003) shimmered.current = false
+  }, [reduced, p])
+  // Confetti cannons go off once as the curtains open. Arriving halfway down the page, for example after a reload, stays quiet.
+  const popped = useRef(false)
+  useEffect(() => {
+    if (reduced) return
+    if (p >= 0.1) popped.current = true
+    else if (wCurtain > 0.12 && !popped.current) {
+      popped.current = true
+      confettiCannons()
+    } else if (p < 0.003) popped.current = false
+  }, [reduced, wCurtain, p])
+  // The score grows as the journey goes on.
+  useEffect(() => {
+    if (reduced) return
+    if (inView && p > 0) setMusicLevel(0.05 + 0.2 * Math.min(1, p))
+    // Water laps under the ferry while it is in view and fades once the walk up from the jetty begins.
+    setWaterLevel(inView ? progressIn(p, 0.1, 0.2) * (1 - progressIn(p, 0.6, 0.72)) : 0)
+  }, [reduced, inView, p])
   const Title = reduced ? 'p' : 'h1'
-  const scrollOn = () => window.scrollBy({ top: window.innerHeight * 0.9, behavior: reduced ? 'auto' : 'smooth' })
   const [avatar] = useAvatar()
 
   const [lifted, setLifted] = useState<string | null>(null)
@@ -155,7 +168,11 @@ export default function Journey({ event, journey }: JourneyProps) {
   const legs = journey.legs.map((leg) => {
     const m = measurePath(leg.pathD)
     const lt = ease(progressIn(p, leg.from, leg.to))
-    return { leg, m, lt, pos: m.at(lt) }
+    const base = m.at(lt)
+    // A vehicle with an arrival sails in from far away before its leg begins.
+    const away = leg.arrive && p < leg.from ? 1 - ease(progressIn(p, leg.arrive.from, leg.arrive.to)) : 0
+    const pos = leg.arrive && away > 0 ? { ...base, x: base.x + leg.arrive.dx * away, y: base.y + leg.arrive.dy * away } : base
+    return { leg, m, lt, pos }
   })
   const ferry = legs.find((l) => l.leg.vehicle === 'landmark-ferry')
 
@@ -219,10 +236,58 @@ export default function Journey({ event, journey }: JourneyProps) {
           })}
         </g>
       )}
+      {ferry && !reduced && ferry.lt > 0.01 && ferry.lt < 0.995 &&
+        [-1, 1].map((side) => (
+          <g key={`wake-${side}`} fill="none" stroke="var(--color-paper)" strokeLinecap="round" strokeWidth={5} vectorEffect="non-scaling-stroke">
+            {Array.from({ length: 9 }, (_, k) => {
+              const t0 = Math.max(0, ferry.lt - k * 0.014)
+              const t1 = Math.max(0, ferry.lt - (k + 1) * 0.014)
+              const a = ferry.m.at(t0)
+              const b = ferry.m.at(t1)
+              const ang = Math.atan2(a.y - b.y, a.x - b.x)
+              const off0 = (5 + k * 3.4) * side
+              const off1 = (5 + (k + 1) * 3.4) * side
+              const x0 = a.x - Math.sin(ang) * off0
+              const y0 = a.y + Math.cos(ang) * off0 - 6
+              const x1 = b.x - Math.sin(ang) * off1
+              const y1 = b.y + Math.cos(ang) * off1 - 6
+              return <line key={k} x1={x0} y1={y0} x2={x1} y2={y1} opacity={0.85 - k * 0.09} vectorEffect="non-scaling-stroke" />
+            })}
+          </g>
+        ))}
+      {!reduced && p > 0.1 && p < 0.74 && (
+        <g opacity={progressIn(p, 0.12, 0.2) * (1 - progressIn(p, 0.62, 0.72))} fill="none" stroke="var(--color-ink)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+          {[
+            { x: 250, y: 560, k: 520, s: 2.6, d: 0 },
+            { x: 360, y: 640, k: 700, s: 2.1, d: 0.2 },
+            { x: 170, y: 500, k: 420, s: 3, d: 0.4 },
+          ].map((g, i) => (
+            <g key={i} transform={`translate(${g.x + Math.max(0, p - 0.1) * g.k} ${g.y + Math.sin(p * 40 + i * 2) * 10}) scale(${g.s})`}>
+              <path className="gull-wing" d="M-9 3 Q-5 -5 0 1 Q5 -5 9 3" vectorEffect="non-scaling-stroke" style={{ animationDelay: `${g.d}s` }} />
+            </g>
+          ))}
+        </g>
+      )}
     </>
   )
 
   const placements = event.map.placements.filter((pl) => pl.pinId)
+
+  // The ferry sounds its horn as it leaves Calloway Jetty and again as it docks at Heron Jetty.
+  const horn = useRef({ out: false, in: false })
+  const ferryLt = ferry?.lt ?? 0
+  useEffect(() => {
+    if (reduced || !inView) return
+    if (ferryLt > 0.02 && !horn.current.out) {
+      horn.current.out = true
+      playHorn()
+    } else if (ferryLt <= 0.005) horn.current.out = false
+    if (ferryLt >= 0.995 && !horn.current.in) {
+      horn.current.in = true
+      playHorn()
+    } else if (ferryLt < 0.9) horn.current.in = false
+  }, [reduced, inView, ferryLt])
+  const [toot, setToot] = useState(0)
 
   return (
     <>
@@ -233,15 +298,6 @@ export default function Journey({ event, journey }: JourneyProps) {
           <p className="mt-1 font-display text-h3 font-extrabold">{event.copy.journeyDate}</p>
           <p className="mt-2">{event.copy.welcomeLine}</p>
           <Couple className="mt-6" />
-          <p className="mt-4">
-            <button
-              type="button"
-              onClick={toggleSound}
-              className="inline-flex min-h-11 cursor-pointer items-center rounded-pill border-hair border-accent bg-paper px-6 py-2 font-medium text-accent shadow-press transition duration-micro ease-standard hover:bg-accent hover:text-paper"
-            >
-              {soundOn ? 'Turn sound off' : 'Turn sound on'}
-            </button>
-          </p>
         </section>
       )}
 
@@ -308,6 +364,32 @@ export default function Journey({ event, journey }: JourneyProps) {
                 />
               )
             })}
+            {ferry &&
+              (() => {
+                const fa = illustrations['landmark-ferry']
+                if (!fa) return null
+                const fw = fa.width * ferry.leg.scale
+                const fh = fa.height * ferry.leg.scale
+                const bob = reduced ? 0 : Math.sin(p * 90) * 1.5
+                return [
+                  { id: 'person-guest-01', fx: 0.8 },
+                  { id: 'person-guest-02', fx: 0.9 },
+                ].map((g, i) => {
+                  const pa = illustrations[g.id]
+                  if (!pa) return null
+                  const pw = 21
+                  const ph = (pw * pa.height) / pa.width
+                  return (
+                    <div
+                      key={`${g.id}-${toot}`}
+                      aria-hidden="true"
+                      className={`illo absolute ${toot > 0 ? 'poke' : ''}`}
+                      style={{ ...placeStyle(win, ferry.pos.x + (g.fx - 0.5) * fw, ferry.pos.y - 0.4 * fh, pw, ph), transform: `translateY(${bob}px)`, animation: reduced || toot > 0 ? undefined : `deck-wave 1.1s ease-in-out ${i * 0.4}s infinite alternate` }}
+                      dangerouslySetInnerHTML={{ __html: pa.svg }}
+                    />
+                  )
+                })
+              })()}
             {journey.stops.map((s) => {
               const pin = pinsById.get(s.pinId)
               if (!pin || p < s.at) return null
@@ -316,29 +398,38 @@ export default function Journey({ event, journey }: JourneyProps) {
                 <div key={s.pinId} className="absolute" style={{ left: `${pos.left}%`, top: `${pos.top}%` }}>
                   <div className="pin-pop absolute top-0 left-0 size-6 -translate-x-1/2 -translate-y-1/2 rounded-pill border-hair border-accent bg-paper" />
                   <div className="pin-pop">
-                    <PinLabel pin={pin} side={s.side} />
+                    <PinLabel pin={pin} side={size.w < 640 ? ((pos.left / 100) * size.w < 130 ? 'right' : (pos.left / 100) * size.w > size.w - 130 ? 'left' : s.side) : s.side} />
                   </div>
                 </div>
               )
             })}
             {bubble &&
               (() => {
+                const node = (left: number, top: number, title: string, text: string) => {
+                  // Near the top of the screen the bubble opens below the thing instead of above it.
+                  const below = top < 30
+                  return (
+                    <div key={bubble} className={`pin-pop absolute z-10 w-56 -translate-x-1/2 ${below ? '' : '-translate-y-full'}`} style={{ left: `${left}%`, top: `${top}%`, marginTop: below ? 10 : -10 }}>
+                      <div className="rounded-panel border-hair border-accent bg-paper px-4 py-3 text-center">
+                        <p className="font-hand text-label">{title}</p>
+                        <p className="text-small">{text}</p>
+                      </div>
+                    </div>
+                  )
+                }
+                if (bubble === 'ferry') {
+                  const fa = ferry && illustrations['landmark-ferry']
+                  if (!ferry || !fa) return null
+                  const at = project(ferry.pos.x, ferry.pos.y - fa.height * ferry.leg.scale, win)
+                  return node(at.left, at.top, 'The ferry', 'All aboard. Next stop Willowmere.')
+                }
                 const pin = pinsById.get(bubble)
                 const pl = placements.find((x) => x.pinId === bubble)
                 const art = pl && illustrations[pl.illustrationId]
                 if (!pin || !pl || !art) return null
                 const top = project(pl.x, pl.y - art.height * pl.scale, win)
-                // Near the top of the screen the bubble opens below the building instead of above it.
-                const below = top.top < 30
-                const pos = below ? project(pl.x, pl.y, win) : top
-                return (
-                  <div key={bubble} className={`pin-pop absolute z-10 w-56 -translate-x-1/2 ${below ? '' : '-translate-y-full'}`} style={{ left: `${pos.left}%`, top: `${pos.top}%`, marginTop: below ? 10 : -10 }}>
-                    <div className="rounded-panel border-hair border-accent bg-paper px-4 py-3 text-center">
-                      <p className="font-hand text-label">{pin.title}</p>
-                      <p className="text-small">{pin.summary}</p>
-                    </div>
-                  </div>
-                )
+                const at = top.top < 30 ? project(pl.x, pl.y, win) : top
+                return node(at.left, at.top, pin.title, pin.hello ?? pin.summary)
               })()}
             {sparks.map((s) => (
               <span
@@ -377,6 +468,32 @@ export default function Journey({ event, journey }: JourneyProps) {
             })}
           </div>
 
+          {ferry &&
+            (() => {
+              const fa = illustrations['landmark-ferry']
+              if (!fa) return null
+              const fw = fa.width * ferry.leg.scale
+              const fh = fa.height * ferry.leg.scale
+              return (
+                <div className="pointer-events-none absolute inset-0 z-10">
+                  <button
+                    type="button"
+                    aria-label="The ferry. Press to sound the horn."
+                    className="pointer-events-auto absolute cursor-pointer rounded-panel"
+                    style={{ ...placeStyle(win, ferry.pos.x, ferry.pos.y, fw, fh), height: `${(fh / win.h) * 100}%`, minWidth: 44, minHeight: 44 }}
+                    onClick={() => {
+                      playHorn()
+                      setToot((n) => n + 1)
+                      setBubble('ferry')
+                      setAnnounce('The ferry sounds its horn. All aboard. Next stop Willowmere.')
+                      window.clearTimeout(bubbleTimer.current)
+                      bubbleTimer.current = window.setTimeout(() => setBubble(null), 3800)
+                    }}
+                  />
+                </div>
+              )
+            })()}
+
           <p className="sr-only" aria-live="polite">
             {announce}
           </p>
@@ -384,37 +501,34 @@ export default function Journey({ event, journey }: JourneyProps) {
           <div
             ref={titleRef}
             className="pointer-events-none absolute top-20 left-4 z-40 origin-center will-change-transform sm:top-6 sm:left-8"
-            style={reduced ? undefined : { transform: `translate(${anchor.dx * (1 - settle)}px, ${anchor.dy * (1 - settle)}px) scale(${1 + (anchor.s - 1) * (1 - settle)})` }}
+            style={reduced ? undefined : { transform: `translate(${anchor.dx * (1 - settle)}px, ${anchor.dy * (1 - settle)}px) scale(${1 + (anchor.s - 1) * (1 - settle)})`, opacity: size.w < 640 ? 1 - settle : 1 }}
           >
-            <Title className="inline-block -rotate-2 rounded-panel border-hair border-accent bg-paper px-5 py-2 font-display text-h2 font-extrabold">
+            <Title className={`${reduced ? '' : 'intro-drop '}inline-block -rotate-2 rounded-panel border-hair border-accent bg-paper px-5 py-2 font-display text-h3 font-extrabold sm:text-h2`}>
               {event.copy.journeyTitle}
             </Title>
           </div>
 
           {!reduced && (
             <Welcome
-              content={wContent}
-              parted={wParted}
-              sky={wSky}
-              textTop={anchor.cy + (anchor.bh * anchor.s) / 2 + 16}
-              soundOn={soundOn}
-              onToggleSound={toggleSound}
-              onScrollOn={scrollOn}
+              curtain={wCurtain}
+              apron={wApron}
+              exit={wExit}
+              textTop={anchor.cy + (anchor.bh * anchor.s) / 2 + 20}
+              kicker={event.copy.welcomeKicker}
               dateLine={event.copy.journeyDate}
-              line={event.copy.welcomeLine}
-              cue={event.copy.welcomeCue}
+              openLabel={event.copy.welcomeOpen}
             />
           )}
 
-          <div className="absolute inset-x-4 bottom-32 sm:inset-x-auto sm:top-28 sm:bottom-auto sm:left-8 sm:w-112">
+          <div className="absolute inset-x-4 bottom-32 sm:inset-x-auto sm:top-24 sm:bottom-auto sm:left-8 sm:w-96">
             <div className="relative min-h-40">
               {journey.chapters.map((c) => {
-                const on = c === active && !(c === journey.chapters[0] && p < 0.1)
+                const on = c === active && !(c === journey.chapters[0] && p < 0.17)
                 return (
                   <div
                     key={c.title}
                     inert={!on}
-                    className={`absolute inset-x-0 bottom-0 rounded-panel bg-paper p-5 transition-opacity duration-standard ease-standard sm:top-0 sm:bottom-auto sm:p-6 ${on ? 'opacity-100' : 'opacity-0'}`}
+                    className={`absolute inset-x-0 bottom-0 rounded-panel bg-paper p-4 transition-opacity duration-standard ease-standard sm:top-0 sm:bottom-auto sm:p-5 ${on ? 'opacity-100' : 'opacity-0'}`}
                   >
                     <h2 className="font-display text-h3 font-extrabold">{c.title}</h2>
                     <p className="mt-2">{c.body}</p>
@@ -422,9 +536,6 @@ export default function Journey({ event, journey }: JourneyProps) {
                       <div className="mt-4 flex flex-wrap gap-3">
                         <a href="#/rsvp" className={linkBtn}>
                           {event.copy.ctaRsvp}
-                        </a>
-                        <a href="#/map" className={linkBtn}>
-                          {event.copy.ctaMap}
                         </a>
                       </div>
                     )}
@@ -434,13 +545,13 @@ export default function Journey({ event, journey }: JourneyProps) {
             </div>
           </div>
 
-          <div className="pointer-events-none absolute inset-x-4 bottom-4 space-y-2 sm:inset-x-8 sm:bottom-6">
-            {!reduced && p > 0.06 && p < 0.2 && (
+          <div className="pointer-events-none absolute inset-x-4 bottom-4 space-y-2 sm:inset-x-8 sm:bottom-6" style={reduced ? undefined : { opacity: progressIn(p, 0.12, 0.17) }}>
+            {!reduced && p > 0.2 && p < 0.34 && (
               <div className="hidden flex-wrap gap-2 sm:flex">
                 <LabelTag>Tap a building to say hi</LabelTag>
               </div>
             )}
-            <p className="font-hand text-label" aria-hidden="true">
+            <p className="hidden font-hand text-label sm:block" aria-hidden="true">
               <span className="rounded-pill bg-paper px-3">{clock}</span>
             </p>
             <ScaleBar progress={p} start={journey.scale.start} end={journey.scale.end} />

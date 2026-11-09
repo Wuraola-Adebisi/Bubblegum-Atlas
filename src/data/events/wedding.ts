@@ -32,10 +32,10 @@ export const wedding: EventConfig = {
   scene: sceneKeyframes,
 
   journey: {
-    scrollVh: 650,
+    scrollVh: 780,
     hide: ['landmark-ferry'],
     legs: [
-      { id: 'ferry', pathD: 'M430 752 C500 790 600 790 660 760', vehicle: 'landmark-ferry', scale: 0.67, from: 0.3, to: 0.58 },
+      { id: 'ferry', pathD: 'M430 752 C500 790 600 790 660 760', vehicle: 'landmark-ferry', scale: 0.67, from: 0.3, to: 0.58, arrive: { from: 0.09, to: 0.23, dx: -560, dy: 230 } },
       {
         id: 'walk',
         pathD: 'M760 790 L790 712 C840 696 920 706 970 726 C985 620 995 520 1010 416',
@@ -47,19 +47,20 @@ export const wedding: EventConfig = {
     ],
     // Wide opening, then slow moves and holds so each beat can be read before the camera travels again.
     camera: [
-      { p: 0, cx: 800, cy: 560, zoom: 0.72 },
-      { p: 0.12, cx: 800, cy: 560, zoom: 0.72 },
-      { p: 0.22, cx: 420, cy: 700, zoom: 1.05 },
-      { p: 0.3, cx: 450, cy: 720, zoom: 1.05 },
-      { p: 0.58, cx: 640, cy: 730, zoom: 1.0 },
-      { p: 0.7, cx: 720, cy: 720, zoom: 1.0 },
-      { p: 0.82, cx: 900, cy: 600, zoom: 0.95 },
-      { p: 0.93, cx: 1000, cy: 520, zoom: 0.85 },
-      { p: 1, cx: 1000, cy: 520, zoom: 0.8 },
+      // The whole estate while the curtains open and the ferry sails in, then in close on the quay, the crossing and the walk up from the jetty.
+      { p: 0, cx: 800, cy: 560, zoom: 0.8 },
+      { p: 0.1, cx: 800, cy: 560, zoom: 0.8 },
+      { p: 0.23, cx: 380, cy: 655, zoom: 1.4 },
+      { p: 0.3, cx: 440, cy: 665, zoom: 1.5 },
+      { p: 0.58, cx: 640, cy: 670, zoom: 1.45 },
+      { p: 0.7, cx: 740, cy: 725, zoom: 1.4 },
+      { p: 0.82, cx: 900, cy: 600, zoom: 1.2 },
+      { p: 0.93, cx: 1000, cy: 520, zoom: 1.05 },
+      { p: 1, cx: 1000, cy: 520, zoom: 0.95 },
     ],
     stops: [
-      { pinId: 'calloway-jetty', at: 0, side: 'above' },
-      { pinId: 'estate', at: 0 },
+      { pinId: 'calloway-jetty', at: 0.16, side: 'below' },
+      { pinId: 'estate', at: 0.16 },
       { pinId: 'heron-jetty', at: 0.58 },
       { pinId: 'boathouse', at: 0.74, side: 'above' },
       { pinId: 'cafe', at: 0.82 },
@@ -67,13 +68,13 @@ export const wedding: EventConfig = {
     chapters: [
       {
         from: 0,
-        to: 0.14,
+        to: 0.2,
         title: 'How you get here',
         body: 'Guests cross Lake Wren by ferry, from Port Calloway to Willowmere House. We drew the trip so you can see it before you make it.',
       },
-      { from: 0.14, to: 0.29, title: 'Across the water', body: 'Port Calloway is where the ferry leaves. The guest hotel is a five-minute walk away.' },
+      { from: 0.2, to: 0.3, title: 'Across the water', body: 'Port Calloway is where the ferry leaves. The guest hotel is a five-minute walk away.' },
       {
-        from: 0.29,
+        from: 0.3,
         to: 0.58,
         title: 'The 1:00 pm ferry',
         body: 'Saturday ferries leave at 12:30, 1:00 and 1:30 pm. Please arrive 15 minutes before departure. The crossing takes about 12 minutes.',
@@ -89,7 +90,7 @@ export const wedding: EventConfig = {
         from: 0.93,
         to: 1.01,
         title: 'See you at Willowmere',
-        body: 'Saturday, September 11, 2027. Tell us you are coming, or look around the weekend map.',
+        body: 'Saturday, September 11, 2027. Tell us you are coming, then follow the path from the ferry to the arch.',
         final: true,
       },
     ],
@@ -146,9 +147,16 @@ export const wedding: EventConfig = {
   },
 
   walk: {
+    coupleLines: [
+      'Hello! Mind the gravel. It is a long walk in these shoes.',
+      'We have walked this path in our heads a hundred times.',
+      'Nearly there. The arch is just past the marquee.',
+      'Yes, this is the real aisle. No, we are not nervous.',
+      'Thank you for coming this far with us.',
+    ],
     intro: {
       title: 'Walk the estate',
-      body: 'Pick a guest and scroll. They walk the path you will walk on Saturday, and collect a stamp from our story at five stops.',
+      body: 'Maya and Theo lead the way from the quay at Port Calloway to the Wisteria Arch. Each stop has a little of our story, and the buildings say hello if you tap them.',
     },
     stations: [
       {
@@ -162,6 +170,9 @@ export const wedding: EventConfig = {
           { id: 'landmark-ferry', x: 80, y: 68, w: 38 },
           { id: 'prop-tree-round', x: 8, y: 94, w: 9 },
         ],
+        story: [
+          { label: 'Maya, on the ferry deck', text: 'Six years ago I had the last window seat on the 1:00 pm ferry. A man asked if the seat beside me was taken. It was not, and he talked for the whole crossing.' },
+        ],
       },
       {
         id: 'wren-shore',
@@ -173,6 +184,10 @@ export const wedding: EventConfig = {
           { id: 'landmark-jetty', x: 72, y: 96, w: 50 },
           { id: 'prop-tree-round', x: 8, y: 80, w: 9 },
           { id: 'prop-tree-round', x: 94, y: 70, w: 8 },
+        ],
+        story: [
+          { label: 'Theo, at the Heron Boathouse', text: 'On our third trip here I rented a rowboat to impress her. I lost an oar in the first ten minutes, and a very patient man named Gus towed us back.' },
+          { label: 'Maya, on Heron Jetty', text: 'Theo proposed at the end of this jetty at dusk, in shoes still wet from the boathouse. I said yes before he had finished the question.' },
         ],
       },
       {
@@ -186,11 +201,14 @@ export const wedding: EventConfig = {
           { id: 'prop-tree-round', x: 90, y: 80, w: 9 },
           { id: 'prop-tree-round', x: 82, y: 94, w: 8 },
         ],
+        story: [
+          { label: 'Theo, at Kestrel Cafe', text: 'Our first date was here: two coffees, one slice of lemon cake and four hours of talking. I have been trying to get the last bite ever since.' },
+        ],
       },
       {
         id: 'shuttle',
         kind: 'questions',
-        title: 'Questions',
+        title: 'Getting around',
         pinIds: ['shuttle'],
         art: [
           { id: 'prop-shuttle', x: 48, y: 88, w: 46 },
@@ -211,6 +229,18 @@ export const wedding: EventConfig = {
         ],
       },
       {
+        id: 'marquee',
+        kind: 'party',
+        title: 'The Lantern Marquee',
+        pinIds: ['marquee'],
+        art: [
+          { id: 'landmark-marquee', x: 42, y: 88, w: 64 },
+          { id: 'prop-cake', x: 82, y: 92, w: 22 },
+          { id: 'prop-tree-round', x: 8, y: 90, w: 9 },
+          { id: 'prop-tree-round', x: 94, y: 70, w: 8 },
+        ],
+      },
+      {
         id: 'arch',
         kind: 'ceremony',
         title: 'Wisteria Arch',
@@ -223,17 +253,8 @@ export const wedding: EventConfig = {
           { id: 'prop-tree-round', x: 10, y: 84, w: 10 },
           { id: 'prop-tree-round', x: 92, y: 80, w: 9 },
         ],
-      },
-      {
-        id: 'marquee',
-        kind: 'party',
-        title: 'The Lantern Marquee',
-        pinIds: ['marquee'],
-        art: [
-          { id: 'landmark-marquee', x: 42, y: 88, w: 64 },
-          { id: 'prop-cake', x: 82, y: 92, w: 22 },
-          { id: 'prop-tree-round', x: 8, y: 90, w: 9 },
-          { id: 'prop-tree-round', x: 94, y: 70, w: 8 },
+        story: [
+          { label: 'Maya and Theo, at the Wisteria Arch', text: 'This is where we get married, on Saturday at 3:30 pm. Thank you for walking all the way here with us.' },
         ],
       },
     ],
@@ -262,6 +283,7 @@ export const wedding: EventConfig = {
       kind: 'Hotel',
       layerIds: ['stay'],
       summary: 'The guest hotel, a five-minute walk from the ferry jetty.',
+      hello: 'Hello! Your room block is held under Willowmere. Breakfast is at 8.',
       details: 'Ask for the Willowmere room block when you book. Parking is behind the building.',
       labelSide: 'below',
     },
@@ -274,6 +296,7 @@ export const wedding: EventConfig = {
       kind: 'Ferry',
       layerIds: ['getting-around'],
       summary: 'Ferries to Willowmere leave from here. Please arrive 15 minutes before departure.',
+      hello: 'Hello! Ferries leave on the half hour. Please do not run on my boards.',
       details: 'Saturday departures are 12:30, 1:00 and 1:30 pm. The crossing takes about 12 minutes.',
       labelSide: 'below',
     },
@@ -286,6 +309,7 @@ export const wedding: EventConfig = {
       kind: 'Ferry',
       layerIds: ['getting-around'],
       summary: 'Where the ferry lands. Return ferries leave from here too.',
+      hello: 'Welcome across. Mind the gap, and the gulls.',
       details: 'Saturday returns are at 11:30 pm and 12:15 am. The last ferry on Sunday is at 12:30 pm.',
       labelSide: 'below',
     },
@@ -298,6 +322,7 @@ export const wedding: EventConfig = {
       kind: 'Drinks',
       layerIds: ['eat'],
       summary: 'Welcome drinks on Friday at 6:00 pm, on the terrace by the water.',
+      hello: 'Hello again. Friday drinks are on my terrace, and yes, we found the oar.',
       labelSide: 'left',
     },
     {
@@ -309,6 +334,7 @@ export const wedding: EventConfig = {
       kind: 'Cafe',
       layerIds: ['eat'],
       summary: 'Coffee and pastries by Lake Wren. The farewell brunch is here on Sunday.',
+      hello: 'Hello! Two coffees and a slice of lemon cake, as usual.',
       labelSide: 'below',
     },
     {
@@ -320,6 +346,7 @@ export const wedding: EventConfig = {
       kind: 'Shuttle',
       layerIds: ['getting-around'],
       summary: 'A step-free shuttle links Heron Jetty, Kestrel Cafe, the Lantern Marquee and Wisteria Arch all weekend.',
+      hello: 'Hop on. I loop every ten minutes and I am step-free.',
       labelSide: 'below',
     },
     {
@@ -331,6 +358,7 @@ export const wedding: EventConfig = {
       kind: 'Venue',
       layerIds: ['explore'],
       summary: 'Cocktail hour is on the front lawn at 4:30 pm on Saturday.',
+      hello: 'Welcome to Willowmere. Lawn games start at 2.',
       details: 'The house itself is closed to guests.',
       labelSide: 'left',
     },
@@ -343,6 +371,7 @@ export const wedding: EventConfig = {
       kind: 'Ceremony',
       layerIds: ['explore'],
       summary: 'The ceremony starts at 3:30 pm on Saturday. Please be seated by 3:15.',
+      hello: 'Hello! Please be seated by 3:15. I am wearing my best wisteria.',
       details: 'Seating is open and on grass. Flat shoes are a good idea.',
       labelSide: 'right',
     },
@@ -355,6 +384,7 @@ export const wedding: EventConfig = {
       kind: 'Reception',
       layerIds: ['eat'],
       summary: 'Dinner at 6:30 pm, then the party until midnight. The Lantern Marquee is also the rain plan.',
+      hello: 'Hello! Dinner at 6:30, dancing until midnight. I am also the rain plan.',
       labelSide: 'right',
     },
   ],
@@ -413,21 +443,6 @@ export const wedding: EventConfig = {
     item('last-ferry', 'Last ferry', sun, '12:30', '12:42', 'heron-jetty', 'travel', 'The last crossing back to Port Calloway.'),
   ],
 
-  passport: {
-    // Placeholder story. Replace with the couple's own.
-    stamps: [
-      { pinId: 'calloway-jetty', label: 'The ferry deck', unlock: 'Six years ago we met on the 1:00 pm ferry. Maya had the last seat by the window and Theo asked if it was taken.' },
-      { pinId: 'cafe', label: 'Kestrel Cafe', unlock: 'Our first date was here: two coffees, one slice of lemon cake and four hours of talking.' },
-      { pinId: 'boathouse', label: 'The Heron Boathouse', unlock: 'The trip that went wrong. We rented a rowboat, lost an oar and were towed back by a very patient man named Gus.' },
-      { pinId: 'heron-jetty', label: 'Heron Jetty', unlock: 'Theo proposed at the end of this jetty, at dusk, still in wet shoes from the Heron Boathouse. Maya said yes before he finished the sentence.' },
-      { pinId: 'arch', label: 'Wisteria Arch', unlock: 'This is where we get married, on Saturday at 3:30 pm. Thank you for walking all the way here with us.' },
-    ],
-    completionReward: {
-      title: 'Story complete',
-      body: 'That is how we got here. Registry links will appear on this page once Maya and Theo add them.',
-    },
-  },
-
   pass: {
     fields: [
       { id: 'name', label: 'Full name', type: 'text', required: true },
@@ -452,28 +467,67 @@ export const wedding: EventConfig = {
     { q: 'Can I bring a plus-one?', a: 'Your invitation says who is invited. Tell us your party size in the RSVP.' },
   ],
 
+  dress: {
+    headline: 'Garden formal',
+    notes: [
+      { label: 'Ceremony and dinner', text: 'Suits and ties, or long and midi dresses. The ceremony is on grass, so block heels and flat shoes work better than stilettos.' },
+      { label: 'Evenings by the lake', text: 'It cools down quickly after sunset. Bring a wrap or a jacket.' },
+      { label: 'Sunday brunch', text: 'Smart casual, whatever is comfortable for the ferry home.' },
+      { label: 'Colors', text: 'Wear any color you love. Maya will be in white, so we are saving white and ivory for her.' },
+    ],
+  },
+
+  rsvp: { to: 'rsvp@mayaandtheo.example' },
+
+  registry: {
+    intro: 'Your company is the gift. If you would also like to give something, here are two ways. Neither is expected.',
+    fund: {
+      title: 'Honeymoon fund',
+      blurb: 'We are going to the Scottish islands in October. Pick a part of the trip and chip in toward it.',
+      items: [
+        { id: 'cabin', title: 'A cabin by the water', blurb: 'Three nights in a lakeside cabin on the Isle of Skye.', amount: 240, raised: 120 },
+        { id: 'ferry', title: 'The ferry across', blurb: 'Return ferry tickets for two. We have a type.', amount: 90, raised: 90 },
+        { id: 'kayak', title: 'A day on the water', blurb: 'A guided sea kayak trip for two, with fewer lost oars.', amount: 60, raised: 20 },
+        { id: 'dinner', title: 'A long dinner', blurb: 'A tasting menu at the harbor restaurant we found last year.', amount: 150, raised: 0 },
+      ],
+    },
+    shops: [
+      { name: 'Linen and Wool', blurb: 'Towels, bedding and a duvet that is warm enough for the Scottish islands.', url: 'https://example.com/linen-and-wool' },
+      { name: 'The Kettle Shop', blurb: 'The good saucepan, a kettle and knives that we will actually use.', url: 'https://example.com/the-kettle-shop' },
+      { name: 'Small Hours Home', blurb: 'Lamps, rugs and a reading chair for the flat.', url: 'https://example.com/small-hours-home' },
+    ],
+    notes: {
+      title: 'Leave us a note',
+      intro: 'Write us a line, a memory or advice. We will read every one on the ferry home.',
+      seed: [
+        { name: 'Aunt Dee', text: 'I have been waiting six years for this ferry story to end at an altar. See you on the lawn.' },
+        { name: 'Gus', text: 'Still have your oar. Bring a better one on the honeymoon.' },
+        { name: 'Priya and Sam', text: 'Booked the 1:00 ferry and the window seat. Obviously.' },
+        { name: 'Grandpa Joe', text: 'Save me a dance after dinner, and the good chair.' },
+        { name: 'Lena', text: 'Practicing my toast on the dog. He is moved.' },
+        { name: 'The Okafor family', text: 'The kids have already picked their outfits and which cake they want. Sorry.' },
+      ],
+    },
+  },
+
   copy: {
-    mapTitle: 'The weekend map',
     journeyTitle: 'Maya and Theo',
-    journeySkip: 'Skip to the date and the weekend map',
+    journeySkip: 'Skip to the date and the details',
     journeyDate: 'September 10 to 12, 2027, at Willowmere House on Lake Wren',
     welcomeKicker: 'Welcome to our wedding',
     welcomeLine: 'We are glad you are here. The weekend starts with a ferry ride across the lake, so scroll down and take the crossing with us.',
     welcomeCue: 'Scroll to take the ferry',
-    journeyIntro: 'We are getting married at Willowmere House, across Lake Wren from Port Calloway. Guests arrive by ferry. Scroll to take the trip, or go straight to the map.',
+    welcomeOpen: 'Scroll to open the curtains',
+    journeyIntro: 'We are getting married at Willowmere House, across Lake Wren from Port Calloway. Guests arrive by ferry. Scroll to take the trip.',
     ctaFollow: 'Follow the ferry',
     ctaRsvp: 'RSVP',
-    ctaMap: 'See the weekend map',
-    dayTitle: 'Saturday, hour by hour',
-    dayIntro: 'Saturday, September 11. All times are Eastern. Drag the time to see what is on and where you would be. The day starts with breakfast at the hotel and ends with the last ferry home.',
-    weekendTitle: 'The weekend at a glance',
-    weekendIntro: 'Welcome drinks on Friday, the wedding on Saturday and a farewell brunch on Sunday. All times are Eastern.',
     hereTitle: 'Getting to Willowmere',
     hereIntro: 'Willowmere House is on the far side of Lake Wren. The ferry from Port Calloway is the way in, and it is step-free.',
     faqTitle: 'Questions',
     rsvpTitle: 'Tell us you are coming',
     rsvpIntro: 'The RSVP form asks for your name, party size, dinner choice, dietary needs and a song request.',
+    programTitle: 'The weekend',
+    programIntro: 'Three days at Willowmere: welcome drinks on Friday, the wedding on Saturday and a farewell brunch on Sunday. All times are local.',
     rsvpPageIntro: 'Answer once for your whole party. Your boarding pass fills in beside the form as you go.',
-    mapIntro: 'Port Calloway to Willowmere. Turn layers on, pick a route, or switch to the list.',
   },
 }

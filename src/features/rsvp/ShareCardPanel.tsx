@@ -77,7 +77,7 @@ export default function ShareCardPanel({ event, values, code }: ShareCardPanelPr
         <h2 id="share-heading" className="font-display text-h3 font-extrabold">
           Share your card
         </h2>
-        <p className="mt-2 max-w-measure text-body">A 1080 by 1350 image that fits an Instagram or TikTok carousel slide. It shows your ferry and party size.</p>
+        <p className="mt-2 max-w-measure text-body">Your boarding pass as an image, 1080 by 1350, the right size for an Instagram or TikTok slide.</p>
         <div className="mt-5 flex flex-wrap gap-3">
           <button type="button" className={btn} disabled={busy} onClick={download}>
             Download share card

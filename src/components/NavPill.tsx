@@ -1,15 +1,14 @@
 const links = [
   { href: '#/', label: 'Welcome' },
-  { href: '#/story', label: 'Our story' },
-  { href: '#/day', label: 'The day' },
-  { href: '#/map', label: 'Map' },
+  { href: '#/program', label: 'Program' },
+  { href: '#/gifts', label: 'Gifts' },
   { href: '#/rsvp', label: 'RSVP' },
 ]
 
 /** Floating site navigation. `current` is the hash of the page being shown. */
 export default function NavPill({ current }: { current: string }) {
   return (
-    <nav aria-label="Main" className="pointer-events-none fixed inset-x-0 top-3 z-40 flex justify-center px-4">
+    <nav aria-label="Main" className="pointer-events-none fixed inset-x-0 top-3 z-40 flex justify-start px-3 sm:justify-center sm:px-4">
       <ul className="pointer-events-auto flex gap-1 rounded-pill border-hair border-accent bg-paper p-1">
         {links.map((l) => {
           const on = l.href === current

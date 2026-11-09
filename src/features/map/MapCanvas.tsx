@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
-import type { CSSProperties, KeyboardEvent, PointerEvent, ReactNode } from 'react'
+import type { KeyboardEvent, PointerEvent, ReactNode } from 'react'
 import type { MapConfig, Pin as PinData, Route } from '../../data/events/types.ts'
+import { sceneGlowVars } from '../../lib/scene.ts'
+import type { SceneState } from '../../lib/scene.ts'
 import { MAX_ZOOM, clampView, project, resetView, windowOf } from './geometry.ts'
 import type { View, Win } from './geometry.ts'
 import MapBase from './MapBase.tsx'
@@ -18,7 +20,8 @@ interface MapCanvasProps {
   detailsId?: string
   onSelect: (id: string | null) => void
   label: string
-  sceneStyle: CSSProperties
+  /** The scene at the chosen time. Sky, water, land and park are painted directly; only glow and halo go through CSS variables, rounded, so scrubbing restyles little. */
+  scene: SceneState
   /** Extra SVG drawn above the roads, in map units (for example a day route). */
   svgExtra?: ReactNode
   /** Extra HTML drawn under the pins and labels. Gets the visible window so it can place things with `project`. */
@@ -41,7 +44,7 @@ function Chevron({ dir }: { dir: Dir }) {
   )
 }
 
-export default function MapCanvas({ map, pins, route, selectedId, activeIds = [], detailsId, onSelect, label, sceneStyle, svgExtra, overlay }: MapCanvasProps) {
+export default function MapCanvas({ map, pins, route, selectedId, activeIds = [], detailsId, onSelect, label, scene, svgExtra, overlay }: MapCanvasProps) {
   const vb = map.viewBox
   const [view, setView] = useState<View>(() => resetView(vb))
   const [dragging, setDragging] = useState(false)
@@ -141,7 +144,7 @@ export default function MapCanvas({ map, pins, route, selectedId, activeIds = []
   }
 
   return (
-    <div className="@container" style={sceneStyle}>
+    <div className="@container" style={sceneGlowVars(scene)}>
       <div
         role="group"
         aria-roledescription="map"
@@ -149,7 +152,7 @@ export default function MapCanvas({ map, pins, route, selectedId, activeIds = []
         aria-describedby="map-keys"
         onKeyDown={onKeyDown}
         className="rounded-panel p-3 sm:p-4"
-        style={{ background: 'var(--scene-sky)' }}
+        style={{ background: scene.sky }}
       >
         <div
           ref={boxRef}
@@ -164,7 +167,7 @@ export default function MapCanvas({ map, pins, route, selectedId, activeIds = []
             cursor: zoomed ? (dragging ? 'grabbing' : 'grab') : undefined,
           }}
         >
-          <MapBase map={map} win={win} route={route} svgExtra={svgExtra} />
+          <MapBase map={map} win={win} route={route} fills={{ water: scene.water, land: scene.land, park: scene.park }} svgExtra={svgExtra} />
 
           <div className="pointer-events-none absolute top-4 left-4 size-9 rounded-pill bg-paper" style={{ opacity: 'var(--scene-halo)' }} aria-hidden="true" />
 

@@ -526,6 +526,52 @@ def avatar_suit():
     p.flat(P('M22.5 33 L25.5 33 L26.5 44 L24 48 L21.5 44 Z'), 'tie')
     return p
 
+def avatar_bride():
+    p = make('avbride', 'A bride in a white gown with a veil and a bouquet, who walks as you scroll', '0 0 64 112',
+             {'skin': 'var(--skin, #94603F)', 'hair': 'var(--hair, #2B2118)', 'gown': cv('paper'), 'veil': cv('paper'),
+              'sash': cv('land-strong'), 'bloom': cv('land-strong'), 'bloom2': cv('flag'), 'leaf': cv('park'), 'shoe': cv('ink')},
+             pad=(12, 8), line='accent', full=('skin', 'hair'))
+    p.solid(P('M11 14 Q24 -3 37 14 L45 72 Q24 82 3 72 Z'), (3, -3, 42, 85), 'veil', shade=False)
+    p.flat(lambda a: f'<circle cx="24" cy="4" r="5.5" {a}/>', 'hair', sil=True)
+    p.flat(lambda a: f'<circle cx="24" cy="15" r="11.5" {a}/>', 'hair', sil=True)
+    p.flat(lambda a: f'<circle cx="24" cy="17" r="10" {a}/>', 'skin')
+    _grp(p, 'av-arm av-arm-a', lambda: p.flat(R(5, 32, 7, 26, 3.5), 'skin', sil=True))
+    _grp(p, 'av-arm av-arm-b', lambda: p.flat(R(36, 32, 7, 26, 3.5), 'skin', sil=True))
+    _grp(p, 'av-leg av-leg-a', lambda: p.flat(lambda a: f'<ellipse cx="19.5" cy="90" rx="6.5" ry="3.5" {a}/>', 'shoe', sil=True))
+    _grp(p, 'av-leg av-leg-b', lambda: p.flat(lambda a: f'<ellipse cx="28.5" cy="90" rx="6.5" ry="3.5" {a}/>', 'shoe', sil=True))
+    p.solid(P('M13 30 Q24 25 35 30 L47 80 Q24 90 1 80 Z'), (1, 25, 46, 65), 'gown')
+    p.flat(R(14, 38, 20, 4.5, 2), 'sash')
+    p.flat(lambda a: f'<ellipse cx="24" cy="60" rx="8" ry="3.5" {a}/>', 'leaf', sil=True)
+    p.ball(19.5, 54, 4.6, 'bloom')
+    p.ball(28.5, 54, 4.6, 'bloom2')
+    p.ball(24, 49.5, 4.6, 'bloom')
+    return p
+
+def avatar_groom():
+    p = make('avgroom', 'A groom in a tuxedo with a bow tie and a flower, who walks as you scroll', '0 0 64 112',
+             {'skin': 'var(--skin, #C68A62)', 'hair': 'var(--hair, #2B2118)', 'jacket': cv('ink'), 'lapel': cv('water-deep'),
+              'shirt': cv('paper'), 'bow': cv('accent'), 'pants': cv('ink'), 'bloom': cv('land-strong')},
+             pad=(12, 8), line='accent', full=('skin', 'hair', 'bow'))
+    p.flat(lambda a: f'<circle cx="24" cy="17" r="10" {a}/>', 'skin', sil=True)
+    p.flat(P('M13.5 16 A10.5 10.5 0 0 1 34.5 16 Q24 8.5 13.5 16 Z'), 'hair')
+    _grp(p, 'av-leg av-leg-a', lambda: p.solid(R(14, 66, 9, 24, 3), (14, 66, 9, 24), 'pants', sil=True, shade=False),
+         lambda: p.flat(lambda a: f'<ellipse cx="18.5" cy="91" rx="7" ry="3.5" {a}/>', 'pants', sil=True))
+    _grp(p, 'av-leg av-leg-b', lambda: p.solid(R(25, 66, 9, 24, 3), (25, 66, 9, 24), 'pants', sil=True, shade=False),
+         lambda: p.flat(lambda a: f'<ellipse cx="29.5" cy="91" rx="7" ry="3.5" {a}/>', 'pants', sil=True))
+    p.solid(R(11, 28, 26, 44, 9), (11, 28, 26, 44), 'jacket')
+    _grp(p, 'av-arm av-arm-a', lambda: p.solid(R(3, 30, 9, 32, 4.5), (3, 30, 9, 32), 'jacket'),
+         lambda: p.flat(lambda a: f'<circle cx="7.5" cy="64" r="4" {a}/>', 'skin', sil=True))
+    _grp(p, 'av-arm av-arm-b', lambda: p.solid(R(36, 30, 9, 32, 4.5), (36, 30, 9, 32), 'jacket'),
+         lambda: p.flat(lambda a: f'<circle cx="40.5" cy="64" r="4" {a}/>', 'skin', sil=True))
+    p.flat(P('M18 28 L24 52 L30 28 Z'), 'shirt')
+    p.flat(P('M18 28 L22.5 44 L15 46 Z'), 'lapel')
+    p.flat(P('M30 28 L25.5 44 L33 46 Z'), 'lapel')
+    p.flat(P('M24 31 L17.5 27 L17.5 35 Z'), 'bow')
+    p.flat(P('M24 31 L30.5 27 L30.5 35 Z'), 'bow')
+    p.ball(24, 31, 2, 'bow')
+    p.ball(31.5, 40, 2.4, 'bloom')
+    return p
+
 def cake():
     p = make('cake', 'A three tier wedding cake with a lit candle', '0 0 144 140',
              {'plate': cv('water-deep'), 'tier1': cv('paper'), 'tier2': cv('land-strong'), 'tier3': cv('paper'),
@@ -562,6 +608,8 @@ if __name__ == '__main__':
         'wedding/prop-cake': cake(),
         'shared/avatar-dress': avatar_dress(),
         'shared/avatar-suit': avatar_suit(),
+        'shared/avatar-bride': avatar_bride(),
+        'shared/avatar-groom': avatar_groom(),
     }
     for fname, piece in pieces.items():
         path = f'{args.out}/{fname}.svg'

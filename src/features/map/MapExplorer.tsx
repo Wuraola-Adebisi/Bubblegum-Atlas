@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import type { EventConfig } from '../../data/events/types.ts'
-import { clockAt, sceneAt, sceneStyle } from '../../lib/scene.ts'
+import { clockAt, sceneAt } from '../../lib/scene.ts'
 import ModeSwitch from '../scene/ModeSwitch.tsx'
 import TimeScrubber from '../scene/TimeScrubber.tsx'
 import LegendCard from './LegendCard.tsx'
@@ -55,7 +55,7 @@ export default function MapExplorer({ event }: { event: EventConfig }) {
           detailsId="pin-details"
           onSelect={setSelectedId}
           label={`${event.title}, map of Port Calloway and Willowmere`}
-          sceneStyle={sceneStyle(scene)}
+          scene={scene}
         />
       ) : (
         <PinList zones={event.zones} pins={visiblePins} selectedId={selected?.id ?? null} onSelect={setSelectedId} />

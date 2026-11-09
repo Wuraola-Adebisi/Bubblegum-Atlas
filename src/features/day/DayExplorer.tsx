@@ -1,6 +1,6 @@
 import { useId, useMemo, useState } from 'react'
 import type { EventConfig } from '../../data/events/types.ts'
-import { clockAt, sceneAt, sceneStyle } from '../../lib/scene.ts'
+import { clockAt, sceneAt } from '../../lib/scene.ts'
 import { readJson } from '../../lib/storage.ts'
 import { formatMinutes } from '../../lib/time.ts'
 import MapCanvas from '../map/MapCanvas.tsx'
@@ -99,7 +99,7 @@ export default function DayExplorer({ event, showTimeline = true }: DayExplorerP
         activeIds={activePinIds}
         onSelect={setSelectedId}
         label={`${event.title}, map of the day`}
-        sceneStyle={sceneStyle(scene)}
+        scene={scene}
         svgExtra={path && guest ? <DayRoute path={path} spot={guest} /> : null}
         overlay={(win) => {
           if (!guest) return null

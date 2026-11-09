@@ -1,3 +1,4 @@
+import { confettiCannons } from '../lib/confetti.ts'
 import { useRef, useState } from 'react'
 import { wedding as event } from '../data/events/wedding.ts'
 import BoardingPass from '../features/rsvp/BoardingPass.tsx'
@@ -56,6 +57,7 @@ export default function RsvpPage() {
     }
     writeJson(storageKey(event), next)
     setReply(next)
+    if (next.status === 'confirmed') confettiCannons()
     setEditing(false)
     setErrors({})
     setTimeout(() => heading.current?.focus(), 0)
@@ -65,7 +67,7 @@ export default function RsvpPage() {
     if (!reply) return
     try {
       await navigator.clipboard.writeText(replySummary(event, reply))
-      setCopyNote('Copied. Paste it into a message to us.')
+      setCopyNote('Copied. Paste it into a message to Maya and Theo.')
     } catch {
       setCopyNote('Your browser blocked copying. Select the text of your pass and copy it by hand.')
     }
@@ -88,7 +90,9 @@ export default function RsvpPage() {
         : 'See you at Willowmere'
       : reply?.status === 'waitlist'
         ? 'You are on the waitlist'
-        : 'We will miss you'
+        : first
+          ? `We will miss you, ${first}`
+          : 'We will miss you'
 
   return (
     <main id="main" className="focus:outline-hidden mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-8">
@@ -117,10 +121,9 @@ export default function RsvpPage() {
                 {title}
               </h1>
               <p className="mt-3 text-body">
-                {reply.status === 'confirmed' && 'You are on the list. Your boarding pass is below, to bring on your phone or on paper.'}
-                {reply.status === 'waitlist' && 'Your party is larger than the places we have left, so you are on the waitlist. We will write to you if places open up.'}
-                {reply.status === 'declined' && 'Thank you for letting us know. If your plans change, you can update your reply here.'}
-                {' '}Your reply is saved on this device only, so please copy it and send it to us.
+                {reply.status === 'confirmed' && 'You are on the list. Your boarding pass is below, to bring on your phone or on paper. Press Send my reply so Maya and Theo have your answer.'}
+                {reply.status === 'waitlist' && 'Your party is larger than the places we have left, so you are on the waitlist. Press Send my reply and we will write to you if places open up.'}
+                {reply.status === 'declined' && 'Thank you for letting us know. Press Send my reply so Maya and Theo hear it from you. If your plans change, you can update your reply here.'}
               </p>
             </header>
             {reply.status !== 'declined' && <BoardingPass event={event} values={reply.values} state={reply.status} code={reply.code} />}
@@ -131,18 +134,21 @@ export default function RsvpPage() {
                   Print or save as PDF
                 </button>
               )}
-              <button type="button" className={primaryBtn} onClick={copyReply}>
+              <a
+                className={primaryBtn}
+                href={`mailto:${event.rsvp?.to ?? ''}?subject=${encodeURIComponent(`RSVP from ${reply.values.name ?? 'a guest'}`)}&body=${encodeURIComponent(replySummary(event, reply))}`}
+              >
+                Send my reply
+              </a>
+              <button type="button" className={btn} onClick={copyReply}>
                 Copy my reply
               </button>
               <button type="button" className={btn} onClick={() => setEditing(true)}>
                 Change my reply
               </button>
               <button type="button" className={btn} onClick={clear}>
-                Clear my reply
+                Start over
               </button>
-              <a href="#/map" className={btn}>
-                {event.copy.ctaMap}
-              </a>
             </div>
             <p role="status" className="mt-3 text-small print:hidden">
               {copyNote}

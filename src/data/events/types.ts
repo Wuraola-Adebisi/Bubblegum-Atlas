@@ -32,9 +32,21 @@ export interface EventConfig {
   layers: Layer[]
   schedule: ScheduleItem[]
   people?: Person[]
-  passport: PassportConfig
+  /** The pop-up's loyalty trail. The wedding tells its story inside the walk instead (`WalkStation.story`). */
+  passport?: PassportConfig
   pass: PassConfig
   faq: { q: string; a: string }[]
+  /** What to wear, shown on the program page. */
+  dress?: { headline: string; notes: { label: string; text: string }[] }
+  /** Where a guest's reply goes. */
+  rsvp?: { to: string }
+  /** The gift page: a fund guests can chip in to, shops with registries, and a wall of notes. */
+  registry?: {
+    intro: string
+    fund: { title: string; blurb: string; items: { id: string; title: string; blurb: string; amount: number; raised: number }[] }
+    shops: { name: string; blurb: string; url: string }[]
+    notes: { title: string; intro: string; seed: { name: string; text: string }[] }
+  }
   copy: Record<string, string>
 }
 
@@ -69,6 +81,8 @@ export interface Pin {
   kind: string
   layerIds: string[]
   summary: string
+  /** What the building says when a guest taps it, in its own voice. Falls back to the summary. */
+  hello?: string
   details?: string
   activeHours?: { start: string; end: string } // HH:mm
   /** Step 3 addition: which side of the pin its label sits on. Default 'right'. */
@@ -139,7 +153,16 @@ export interface JourneyConfig {
   /** Illustration ids drawn by the journey itself, so the static map leaves them out. */
   hide: string[]
   /** Each leg is a path with a vehicle that travels it between two scroll positions. */
-  legs: { id: string; pathD: string; vehicle: string; scale: number; from: number; to: number }[]
+  legs: {
+    id: string
+    pathD: string
+    vehicle: string
+    scale: number
+    from: number
+    to: number
+    /** The vehicle sails or walks in from this far away (map units) before the leg begins. */
+    arrive?: { from: number; to: number; dx: number; dy: number }
+  }[]
   camera: JourneyCamera[]
   /** Pins that pop in once the journey has passed them. */
   stops: { pinId: string; at: number; side?: Pin['labelSide'] }[]
@@ -167,9 +190,13 @@ export interface WalkStation {
   art: WalkArt[]
   /** Draw a lawn behind the art. */
   lawn?: boolean
+  /** Chapters of the couple's story set at this place, shown in the station card in the order given. */
+  story?: { label: string; text: string }[]
 }
 
 export interface WalkConfig {
+  /** What the couple say, in turn, when a guest taps them on the path. */
+  coupleLines?: string[]
   intro: { title: string; body: string }
   stations: WalkStation[]
 }
